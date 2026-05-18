@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIRO Command Center</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #eef2f6;
+      --ink: #1f2933;
+      --muted: #667085;
+      --border: #d7dde5;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --warn: #b7791f;
+      --ok: #14804a;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      background: #202124;
+      color: #fff;
+      border-bottom: 4px solid var(--accent);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 20px; font-weight: 750; }
+    h2 { font-size: 16px; margin-bottom: 12px; }
+    h3 { font-size: 14px; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-self: start;
+      position: sticky;
+      top: 14px;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    select, textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 750;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .stack { display: grid; gap: 10px; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .metric {
+      min-height: 116px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .metric .value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--surface-2);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .badge.ok { background: #dcfce7; color: var(--ok); }
+    .badge.warn { background: #fef3c7; color: var(--warn); }
+    .badge.danger { background: #fee2e2; color: var(--danger); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .iteration {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .iteration.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+    }
+
+    .small { font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .summary { line-height: 1.55; }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 10px;
+      line-height: 1.45;
+    }
+
+    .trace-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+      gap: 14px;
+    }
+
+    pre {
+      margin: 0;
+      max-height: 460px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .artifact-list {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .artifact-list button {
+      justify-content: flex-start;
+      text-align: left;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      font-weight: 650;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .checkbox input { width: 16px; height: 16px; }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .timeline, .trace-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CIRO Crisis Intelligence & Response Orchestrator</h1>
+      <p class="small">Google ADK + Gemini iterative crisis-response demo</p>
+    </div>
+    <span id="approvalBadge" class="badge warn">Approval Pending</span>
+  </header>
+
+  <main>
+    <aside class="sidebar">
+      <section class="panel stack">
+        <h2>Scenario Control</h2>
+        <div>
+          <label for="scenarioSelect">Scenario</label>
+          <select id="scenarioSelect">
+            <option value="">Loading scenarios...</option>
+          </select>
+        </div>
+        <button id="runBtn" disabled>Run Iterative Pipeline</button>
+        <p id="runStatus" class="small">Select a scenario and run the three-iteration commander loop.</p>
+      </section>
+
+      <section class="panel stack">
+        <div class="row">
+          <h2 style="margin-right:auto;">CIRO Mini Assistant</h2>
+          <span class="badge ok">Permission Based</span>
+        </div>
+        <label class="checkbox">
+          <input id="assistantConsent" type="checkbox">
+          Approve this text for emergency signal analysis
+        </label>
+        <textarea id="assistantInput" placeholder="Paste visible public emergency context here"></textarea>
+        <button class="secondary" id="assistantBtn">Analyze Approved Text</button>
+        <ul id="assistantOutput" class="list">
+          <li class="small">No approved text analyzed yet.</li>
+        </ul>
+      </section>
+    </aside>
+
+    <section class="content">
+      <div class="grid">
+        <section class="panel metric">
+          <h3>Crisis Level</h3>
+          <div id="levelValue" class="value">Standby</div>
+          <span id="levelBadge" class="badge">No run</span>
+        </section>
+        <section class="panel metric">
+          <h3>Confidence</h3>
+          <div id="confidenceValue" class="value">0%</div>
+          <span class="small">Final iteration score</span>
+        </section>
+        <section class="panel metric">
+          <h3>Risk Score</h3>
+          <div id="riskValue" class="value">0%</div>
+          <span class="small">Combined signal, confidence, severity</span>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="row" style="margin-bottom:12px;">
+          <h2 style="margin-right:auto;">Agent Timeline</h2>
+          <span id="scenarioName" class="badge">Awaiting run</span>
+        </div>
+        <div id="timeline" class="timeline">
+          <button class="iteration" disabled>Iteration 1</button>
+          <button class="iteration" disabled>Iteration 2</button>
+          <button class="iteration" disabled>Iteration 3</button>
+        </div>
+      </section>
+
+      <section class="trace-grid">
+        <div class="panel stack">
+          <h2>Decision Trace</h2>
+          <p id="traceSummary" class="summary">Run a scenario to view concise reasoning and evaluation.</p>
+          <ul id="agentOutputs" class="list"></ul>
+        </div>
+
+        <div class="panel stack">
+          <div class="row">
+            <h2 style="margin-right:auto;">Action Plan</h2>
+            <span id="traceApproval" class="badge warn">Pending</span>
+          </div>
+          <ul id="actionPlan" class="list">
+            <li class="small">No action plan yet.</li>
+          </ul>
+          <h2>Simulated Actions</h2>
+          <ul id="simActions" class="list">
+            <li class="small">No simulated actions yet.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel stack">
+        <div class="row">
+          <h2 style="margin-right:auto;">Artifact Viewer</h2>
+          <button class="secondary" id="refreshArtifactsBtn">Refresh Artifacts</button>
+        </div>
+        <div id="artifactList" class="artifact-list"></div>
+        <pre id="artifactContent">Artifacts will appear after a run.</pre>
+      </section>
+
+      <section class="panel stack">
+        <h2>Final Report</h2>
+        <pre id="finalReport">Run the iterative pipeline to generate the final crisis report.</pre>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const scenarioSelect = document.getElementById('scenarioSelect');
+    const runBtn = document.getElementById('runBtn');
+    const runStatus = document.getElementById('runStatus');
+    const timeline = document.getElementById('timeline');
+    const artifactList = document.getElementById('artifactList');
+    const artifactContent = document.getElementById('artifactContent');
+    const finalReport = document.getElementById('finalReport');
+
+    let currentResult = null;
+    let selectedIteration = 0;
+
+    const escapeHtml = (value) => String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+    const pct = (value) => `${Math.round((value || 0) * 100)}%`;
+
+    async function loadScenarios() {
+      try {
+        const response = await fetch('/api/iterative/scenarios');
+        const scenarios = await response.json();
+        scenarioSelect.innerHTML = scenarios.map((scenario) =>
+          `<option value="${escapeHtml(scenario.scenario_id)}">${escapeHtml(scenario.title)}</option>`
+        ).join('');
+        runBtn.disabled = false;
+      } catch (error) {
+        scenarioSelect.innerHTML = '<option value="">Unable to load scenarios</option>';
+        runStatus.textContent = error.message;
+      }
+    }
+
+    async function runPipeline() {
+      const scenarioId = scenarioSelect.value;
+      if (!scenarioId) return;
+      runBtn.disabled = true;
+      runBtn.textContent = 'Running...';
+      runStatus.textContent = 'Commander loop running three iterations...';
+
+      try {
+        const response = await fetch('/api/iterative/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario_id: scenarioId })
+        });
+        if (!response.ok) throw new Error(await response.text());
+        currentResult = await response.json();
+        selectedIteration = currentResult.iterations.length - 1;
+        renderResult();
+        await loadArtifacts(currentResult.artifact_files);
+        runStatus.textContent = 'Iterative pipeline complete.';
+      } catch (error) {
+        runStatus.textContent = `Pipeline failed: ${error.message}`;
+      } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = 'Run Iterative Pipeline';
+      }
+    }
+
+    function renderResult() {
+      if (!currentResult) return;
+      const finalTrace = currentResult.iterations[currentResult.iterations.length - 1];
+      document.getElementById('scenarioName').textContent = currentResult.scenario_name;
+      document.getElementById('levelValue').textContent = finalTrace.crisis_level.replaceAll('_', ' ');
+      document.getElementById('confidenceValue').textContent = pct(finalTrace.confidence_score);
+      document.getElementById('riskValue').textContent = pct(finalTrace.risk_score);
+      document.getElementById('approvalBadge').textContent = currentResult.human_approval.approval_status;
+      document.getElementById('approvalBadge').className = 'badge ok';
+      document.getElementById('levelBadge').textContent = finalTrace.evaluation_result.split('.')[0];
+      document.getElementById('levelBadge').className = finalTrace.crisis_level === 'crisis' ? 'badge danger' : 'badge warn';
+      finalReport.textContent = currentResult.final_crisis_report;
+      renderTimeline();
+      renderTrace();
+    }
+
+    function renderTimeline() {
+      timeline.innerHTML = currentResult.iterations.map((trace, index) => `
+        <button class="iteration ${index === selectedIteration ? 'active' : ''}" data-index="${index}">
+          <strong>Iteration ${trace.iteration_number}</strong>
+          <div class="small">${escapeHtml(trace.crisis_level)} | ${pct(trace.confidence_score)} confidence</div>
+          <div class="small">${escapeHtml(trace.evaluation_result)}</div>
+        </button>
+      `).join('');
+      timeline.querySelectorAll('.iteration').forEach((button) => {
+        button.addEventListener('click', () => {
+          selectedIteration = Number(button.dataset.index);
+          renderTimeline();
+          renderTrace();
+        });
+      });
+    }
+
+    function renderTrace() {
+      const trace = currentResult.iterations[selectedIteration];
+      document.getElementById('traceSummary').textContent =
+        `${trace.concise_reasoning_summary} ${trace.evaluation_result} Next: ${trace.next_step}`;
+      document.getElementById('traceApproval').textContent = trace.approval_status;
+      document.getElementById('traceApproval').className = 'badge ok';
+      document.getElementById('agentOutputs').innerHTML = trace.agent_outputs.map((agent) => `
+        <li>
+          <strong>${escapeHtml(agent.agent_name)}</strong><br>
+          ${escapeHtml(agent.summary)}<br>
+          <span class="small">${escapeHtml(agent.reasoning_summary)}</span>
+        </li>
+      `).join('');
+      document.getElementById('actionPlan').innerHTML = trace.action_plan.map((line) =>
+        `<li>${escapeHtml(line)}</li>`
+      ).join('');
+      document.getElementById('simActions').innerHTML = trace.simulated_actions.map((line) =>
+        `<li>${escapeHtml(line)}</li>`
+      ).join('');
+    }
+
+    async function loadArtifacts(preferredFiles = null) {
+      const files = preferredFiles || (await (await fetch('/api/artifacts')).json()).map((item) => `artifacts\\${item.filename}`);
+      artifactList.innerHTML = files.map((file) => {
+        const filename = file.split(/[\\/]/).pop();
+        return `<button data-file="${escapeHtml(filename)}">${escapeHtml(filename)}</button>`;
+      }).join('');
+      artifactList.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => readArtifact(button.dataset.file));
+      });
+      if (files.length) {
+        await readArtifact(files[files.length - 1].split(/[\\/]/).pop());
+      }
+    }
+
+    async function readArtifact(filename) {
+      const response = await fetch(`/api/artifacts/${encodeURIComponent(filename)}`);
+      artifactContent.textContent = response.ok ? await response.text() : `Unable to read ${filename}`;
+    }
+
+    function analyzeAssistantText() {
+      const consent = document.getElementById('assistantConsent').checked;
+      const text = document.getElementById('assistantInput').value.trim();
+      const output = document.getElementById('assistantOutput');
+      if (!consent) {
+        output.innerHTML = '<li>Permission required before contextual analysis.</li>';
+        return;
+      }
+      if (!text) {
+        output.innerHTML = '<li>No approved text provided.</li>';
+        return;
+      }
+      const terms = ['flood', 'pani', 'paani', 'rain', 'road', 'block', 'blast', 'ambulance', 'urgent', 'traffic', 'stuck', 'phans'];
+      const lower = text.toLowerCase();
+      const found = terms.filter((term) => lower.includes(term));
+      if (!found.length) {
+        output.innerHTML = '<li>No emergency-relevant signal found in the approved text.</li>';
+        return;
+      }
+      output.innerHTML = `
+        <li><strong>Emergency terms:</strong> ${escapeHtml([...new Set(found)].join(', '))}</li>
+        <li><strong>Signal:</strong> Authorized public context may require verification by the pipeline.</li>
+      `;
+    }
+
+    runBtn.addEventListener('click', runPipeline);
+    document.getElementById('refreshArtifactsBtn').addEventListener('click', () => loadArtifacts());
+    document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
+    loadScenarios();
+  </script>
+</body>
+</html>

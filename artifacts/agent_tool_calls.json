@@ -1,0 +1,266 @@
+[
+  {
+    "iteration_number": 1,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "iteration_loop_state",
+    "purpose": "Manage scenario lifecycle and shared state.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Weather Risk Agent",
+    "tool_name": "get_weather_signal",
+    "purpose": "Analyze rainfall, alert level, and storm/flood risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Traffic Analysis Agent",
+    "tool_name": "get_traffic_signal",
+    "purpose": "Detect road blockage, congestion, and ambulance delay risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Social/Public Signal Agent",
+    "tool_name": "get_public_reports",
+    "purpose": "Read only authorized emergency-relevant public context.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Verification Agent",
+    "tool_name": "verify_signals",
+    "purpose": "Deduplicate signals and compute confidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Crisis Reasoning Agent",
+    "tool_name": "run_situation_analyst",
+    "purpose": "Determine crisis level from verified evidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Rescue Planning Agent",
+    "tool_name": "generate_rescue_plan",
+    "purpose": "Generate constrained rescue, reroute, warning, and shelter plan.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Action Execution Agent",
+    "tool_name": "simulate_action",
+    "purpose": "Simulate actions only after human approval.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "Evaluation/Replanning Agent",
+    "tool_name": "run_impact_reporter",
+    "purpose": "Evaluate outcome and decide next iteration.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "run_full_ciro_pipeline",
+    "purpose": "Verify iterative state against the preserved deterministic backend.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 1,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "save_artifact",
+    "purpose": "Saved iteration_1_decision_trace.json.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "iteration_loop_state",
+    "purpose": "Manage scenario lifecycle and shared state.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Weather Risk Agent",
+    "tool_name": "get_weather_signal",
+    "purpose": "Analyze rainfall, alert level, and storm/flood risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Traffic Analysis Agent",
+    "tool_name": "get_traffic_signal",
+    "purpose": "Detect road blockage, congestion, and ambulance delay risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Social/Public Signal Agent",
+    "tool_name": "get_public_reports",
+    "purpose": "Read only authorized emergency-relevant public context.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Verification Agent",
+    "tool_name": "verify_signals",
+    "purpose": "Deduplicate signals and compute confidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Crisis Reasoning Agent",
+    "tool_name": "run_situation_analyst",
+    "purpose": "Determine crisis level from verified evidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Rescue Planning Agent",
+    "tool_name": "generate_rescue_plan",
+    "purpose": "Generate constrained rescue, reroute, warning, and shelter plan.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Action Execution Agent",
+    "tool_name": "simulate_action",
+    "purpose": "Simulate actions only after human approval.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "Evaluation/Replanning Agent",
+    "tool_name": "run_impact_reporter",
+    "purpose": "Evaluate outcome and decide next iteration.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "run_full_ciro_pipeline",
+    "purpose": "Verify iterative state against the preserved deterministic backend.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 2,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "save_artifact",
+    "purpose": "Saved iteration_2_replan_trace.json.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "iteration_loop_state",
+    "purpose": "Manage scenario lifecycle and shared state.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Weather Risk Agent",
+    "tool_name": "get_weather_signal",
+    "purpose": "Analyze rainfall, alert level, and storm/flood risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Traffic Analysis Agent",
+    "tool_name": "get_traffic_signal",
+    "purpose": "Detect road blockage, congestion, and ambulance delay risk.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Social/Public Signal Agent",
+    "tool_name": "get_public_reports",
+    "purpose": "Read only authorized emergency-relevant public context.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Verification Agent",
+    "tool_name": "verify_signals",
+    "purpose": "Deduplicate signals and compute confidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Crisis Reasoning Agent",
+    "tool_name": "run_situation_analyst",
+    "purpose": "Determine crisis level from verified evidence.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Rescue Planning Agent",
+    "tool_name": "generate_rescue_plan",
+    "purpose": "Generate constrained rescue, reroute, warning, and shelter plan.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Action Execution Agent",
+    "tool_name": "simulate_action",
+    "purpose": "Simulate actions only after human approval.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "Evaluation/Replanning Agent",
+    "tool_name": "run_impact_reporter",
+    "purpose": "Evaluate outcome and decide next iteration.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "run_full_ciro_pipeline",
+    "purpose": "Verify iterative state against the preserved deterministic backend.",
+    "status": "completed",
+    "simulated": true
+  },
+  {
+    "iteration_number": 3,
+    "agent_name": "CIRO Commander Agent",
+    "tool_name": "save_artifact",
+    "purpose": "Saved iteration_3_final_trace.json.",
+    "status": "completed",
+    "simulated": true
+  }
+]

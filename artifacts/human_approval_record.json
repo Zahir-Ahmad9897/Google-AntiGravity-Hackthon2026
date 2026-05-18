@@ -1,0 +1,18 @@
+{
+  "scenario_id": "g10_urban_flooding",
+  "approved": true,
+  "approval_status": "approved_for_simulation",
+  "approved_by": "demo_operator",
+  "approval_scope": [
+    "Read authorized demo public emergency reports.",
+    "Use simulated weather and traffic feeds.",
+    "Generate simulated rescue plans and dashboard updates."
+  ],
+  "privacy_constraints": [
+    "No hidden screen reading.",
+    "No private messages stored.",
+    "No real emergency services contacted.",
+    "All actions are simulation only."
+  ],
+  "timestamp": "2026-05-18T22:08:36.955274Z"
+}

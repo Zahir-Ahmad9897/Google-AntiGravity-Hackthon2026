@@ -1,0 +1,120 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+.envrc
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+service-account*.json
+google-credentials*.json
+application_default_credentials.json
+credentials.json
+token.json
+.gcloud/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+__pypackages__/
+
+# Python cache, test, and build output
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+build/
+dist/
+sdist/
+wheels/
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+.eggs/
+dmypy.json
+
+# Local ADK / Antigravity runtime state
+.adk/
+*.session
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Logs and runtime output
+*.log
+logs/
+uvicorn*.log
+adk_web*.log
+*.pid
+*.pid.lock
+
+# Frontend dependency/build output, if the dashboard grows later
+node_modules/
+.vite/
+.next/
+.nuxt/
+.svelte-kit/
+coverage/
+playwright-report/
+test-results/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+.vs/
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# Local temporary files
+.cache/
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+*.bak
+
+# CIRO artifacts are intentionally kept available for the artifact-first demo.
+# Ignore only transient scratch files inside the artifact directory.
+artifacts/tmp/
+artifacts/*.tmp
+artifacts/*.log
+
+# Internal build strategy files (not for submission)
+prompt.txt
+codex_prompt.md
+Task_From_google.txt
+archive/
+scrach_prompt.txt
+documentation.txt
+antigravity-usage.md
+future_production_input_layer.md
+scratch_prompt.txt

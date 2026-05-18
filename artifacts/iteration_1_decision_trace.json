@@ -1,0 +1,444 @@
+{
+  "scenario_id": "g10_urban_flooding",
+  "scenario_name": "Islamabad G-10 urban flooding",
+  "iteration_number": 1,
+  "input_sources": [
+    "simulated_weather",
+    "simulated_traffic",
+    "user_approved_public_reports"
+  ],
+  "agent_outputs": [
+    {
+      "agent_name": "CIRO Commander Agent",
+      "summary": "Started scenario lifecycle and initialized shared crisis state.",
+      "confidence_score": 1.0,
+      "reasoning_summary": "Iteration 1 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Islamabad G-10 urban flooding.",
+      "output": {
+        "iteration": 1,
+        "transition": "initial_detection",
+        "update_note": "Initial public report; weather below alert threshold; traffic still moving.",
+        "shared_state_keys": [
+          "scenario",
+          "signals",
+          "confidence",
+          "plan",
+          "actions",
+          "evaluation"
+        ]
+      },
+      "actions": [
+        "coordinate_agents",
+        "maintain_shared_state",
+        "control_iteration_loop"
+      ]
+    },
+    {
+      "agent_name": "Weather Risk Agent",
+      "summary": "Weather risk is low; rainfall=4.8mm/hr, alert_active=False.",
+      "confidence_score": 0.29,
+      "reasoning_summary": "Weather severity is derived from rainfall intensity, alert activity, and alert level using mock PMD-style data.",
+      "output": {
+        "weather_signal": {
+          "location": "Islamabad",
+          "source": "mock_weather",
+          "district": "Islamabad",
+          "rainfall_mm_per_hour": 4.8,
+          "alert_active": false,
+          "alert_type": "rain_watch",
+          "alert_level": 1,
+          "timestamp": "2026-05-18T21:58:21.154472+00:00"
+        },
+        "severity": "low",
+        "flood_or_storm_detected": false
+      },
+      "actions": [
+        "analyze_weather_signal"
+      ]
+    },
+    {
+      "agent_name": "Traffic Analysis Agent",
+      "summary": "Traffic is degraded but no severe blockage is verified yet.",
+      "confidence_score": 0.35,
+      "reasoning_summary": "Traffic risk is based on mock speed, normal speed, congestion level, and ambulance-delay keywords.",
+      "output": {
+        "traffic_signals": [
+          {
+            "location": "Islamabad G-10 urban flooding",
+            "source": "mock_traffic",
+            "road_name": "Khayaban-e-Iqbal",
+            "speed_kmh": 14.0,
+            "normal_speed_kmh": 38.0,
+            "congestion_level": 3,
+            "timestamp": "2026-05-18T21:59:21.154472+00:00"
+          },
+          {
+            "location": "Islamabad G-10 urban flooding",
+            "source": "mock_traffic",
+            "road_name": "Margalla Road sector crossing",
+            "speed_kmh": 18.0,
+            "normal_speed_kmh": 35.0,
+            "congestion_level": 2,
+            "timestamp": "2026-05-18T21:59:21.154472+00:00"
+          }
+        ],
+        "blocked_roads": [],
+        "ambulance_delay_risk": false,
+        "alternate_routes": [
+          "Srinagar Highway G-10 underpass",
+          "Margalla Road sector crossing"
+        ]
+      },
+      "actions": [
+        "detect_road_blockage",
+        "estimate_ambulance_delay",
+        "suggest_alternate_routes"
+      ]
+    },
+    {
+      "agent_name": "Social/Public Signal Agent",
+      "summary": "Read 1 authorized emergency-relevant public report(s).",
+      "confidence_score": 0.55,
+      "reasoning_summary": "Only user-approved visible public reports were analyzed; unrelated or private content is ignored.",
+      "output": {
+        "permission_granted": true,
+        "approved_context": [
+          "User approved reading the visible G-10 public report for this demo run."
+        ],
+        "emergency_reports": [
+          {
+            "location": "Islamabad G-10 urban flooding",
+            "source": "authorized_public_report",
+            "post_id": "g10-i1-public-1",
+            "text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
+            "language": "mixed",
+            "timestamp": "2026-05-18T21:56:21.154472+00:00"
+          }
+        ],
+        "ignored_unrelated_or_private_count": 0,
+        "raw_private_content_stored": false
+      },
+      "actions": [
+        "request_permission",
+        "extract_authorized_emergency_signals"
+      ]
+    },
+    {
+      "agent_name": "Verification Agent",
+      "summary": "Verified 1 unique crisis signal(s) across 1 source type(s).",
+      "confidence_score": 0.5,
+      "reasoning_summary": "Signals are deduplicated by source, location, and crisis type before confidence scoring.",
+      "output": {
+        "signal_watcher": {
+          "agent_name": "signal_watcher",
+          "signals": [
+            {
+              "event_id": "g10-i1-public-1-event",
+              "source_type": "social",
+              "location": "G-10",
+              "crisis_type": "urban_flooding",
+              "urgency_score": 3,
+              "confidence_hint": 0.7,
+              "timestamp": "2026-05-18T21:56:21.154472Z",
+              "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
+              "evidence": [
+                "pani"
+              ],
+              "metadata": {
+                "platform": "simulated_social",
+                "language": "mixed",
+                "reporter_hash": "g10_user_1"
+              }
+            }
+          ],
+          "ignored_inputs": [
+            "Weather g10-i1-weather ignored: rainfall 4.8mm/hr and no active alert.",
+            "Traffic g10-i1-traffic-1 ignored: speed 14.0km/h is near normal.",
+            "Traffic g10-i1-traffic-2 ignored: speed 18.0km/h is near normal."
+          ],
+          "reasoning_chain": [
+            "Read simulated social, weather, and traffic inputs using the same schema expected from production collectors.",
+            "Social post g10-i1-public-1 mapped to urban_flooding at G-10 with urgency 3/5.",
+            "Agent 1 produced 1 structured SignalEvent objects."
+          ]
+        },
+        "crisis_detector": {
+          "agent_name": "crisis_detector",
+          "clusters": [
+            {
+              "cluster_id": "g10_urban_flooding-cluster-1",
+              "location": "G-10",
+              "crisis_type": "urban_flooding",
+              "signals": [
+                {
+                  "event_id": "g10-i1-public-1-event",
+                  "source_type": "social",
+                  "location": "G-10",
+                  "crisis_type": "urban_flooding",
+                  "urgency_score": 3,
+                  "confidence_hint": 0.7,
+                  "timestamp": "2026-05-18T21:56:21.154472Z",
+                  "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
+                  "evidence": [
+                    "pani"
+                  ],
+                  "metadata": {
+                    "platform": "simulated_social",
+                    "language": "mixed",
+                    "reporter_hash": "g10_user_1"
+                  }
+                }
+              ],
+              "source_types": [
+                "social"
+              ],
+              "time_window_minutes": 0.0,
+              "confidence": {
+                "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
+                "base_confidence": 0.5,
+                "correlated_signal_count": 1,
+                "source_type_count": 1,
+                "correlated_signal_addition": 0.1,
+                "weather_alert_addition": 0.0,
+                "stale_signal_penalty": 0.0,
+                "single_source_penalty": 0.1,
+                "raw_score_before_bounds": 0.5,
+                "final_score": 0.5
+              },
+              "confidence_band": "medium",
+              "escalation": "no_escalation",
+              "evidence": [
+                "pani"
+              ]
+            }
+          ],
+          "selected_cluster": {
+            "cluster_id": "g10_urban_flooding-cluster-1",
+            "location": "G-10",
+            "crisis_type": "urban_flooding",
+            "signals": [
+              {
+                "event_id": "g10-i1-public-1-event",
+                "source_type": "social",
+                "location": "G-10",
+                "crisis_type": "urban_flooding",
+                "urgency_score": 3,
+                "confidence_hint": 0.7,
+                "timestamp": "2026-05-18T21:56:21.154472Z",
+                "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
+                "evidence": [
+                  "pani"
+                ],
+                "metadata": {
+                  "platform": "simulated_social",
+                  "language": "mixed",
+                  "reporter_hash": "g10_user_1"
+                }
+              }
+            ],
+            "source_types": [
+              "social"
+            ],
+            "time_window_minutes": 0.0,
+            "confidence": {
+              "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
+              "base_confidence": 0.5,
+              "correlated_signal_count": 1,
+              "source_type_count": 1,
+              "correlated_signal_addition": 0.1,
+              "weather_alert_addition": 0.0,
+              "stale_signal_penalty": 0.0,
+              "single_source_penalty": 0.1,
+              "raw_score_before_bounds": 0.5,
+              "final_score": 0.5
+            },
+            "confidence_band": "medium",
+            "escalation": "no_escalation",
+            "evidence": [
+              "pani"
+            ]
+          },
+          "reasoning_chain": [
+            "Examined SignalEvent objects for crisis vocabulary, source diversity, and time-window correlation.",
+            "Cluster contains 1 total signals and 1 correlated crisis signals.",
+            "Source diversity is 1 source type(s): social.",
+            "Confidence math: 0.5 base + 0.1 signal addition + 0.0 weather alert addition - 0.0 stale penalty - 0.1 single-source penalty = 0.5.",
+            "Escalation decision is no_escalation with confidence band medium."
+          ]
+        },
+        "verification": {
+          "total_signals": 1,
+          "unique_crisis_signals": [
+            "g10-i1-public-1-event"
+          ],
+          "duplicates_removed": [],
+          "noise_removed": [],
+          "verified_count": 1
+        },
+        "risk_score": 0.56
+      },
+      "actions": [
+        "verify_signals",
+        "remove_duplicates",
+        "calculate_confidence"
+      ]
+    },
+    {
+      "agent_name": "Crisis Reasoning Agent",
+      "summary": "Urban flooding detected in G-10; crisis level=no_escalation.",
+      "confidence_score": 0.5,
+      "reasoning_summary": "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.; Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.; Traffic evidence: all simulated traffic reports are near normal speed.",
+      "output": {
+        "agent_name": "situation_analyst",
+        "analysis": {
+          "detected_situation": "Urban flooding detected in G-10",
+          "location": "G-10",
+          "crisis_type": "urban_flooding",
+          "severity_score": 1,
+          "confidence": {
+            "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
+            "base_confidence": 0.5,
+            "correlated_signal_count": 1,
+            "source_type_count": 1,
+            "correlated_signal_addition": 0.1,
+            "weather_alert_addition": 0.0,
+            "stale_signal_penalty": 0.0,
+            "single_source_penalty": 0.1,
+            "raw_score_before_bounds": 0.5,
+            "final_score": 0.5
+          },
+          "confidence_band": "medium",
+          "escalation": "no_escalation",
+          "affected_roads": [],
+          "affected_population_density_per_sq_km": 8400,
+          "primary_risks": [
+            "vehicle entrapment",
+            "infrastructure damage from standing floodwater"
+          ],
+          "secondary_risks": [
+            "displacement pressure for low-income residents near G-10",
+            "delayed rescue access if congestion is not reduced"
+          ],
+          "reasoning_chain": [
+            "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.",
+            "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.",
+            "Traffic evidence: all simulated traffic reports are near normal speed.",
+            "Residential population density for G-10 is estimated at 8400 per square kilometre.",
+            "Severity logic: severity score is 1 of 5 because crisis_type=urban_flooding, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=3.",
+            "Confidence formula: 0.5 base + 0.1 signal addition (min(0.1 * 1, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.1 single-source penalty = 0.5, bounded to final score 0.5.",
+            "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater",
+            "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
+            "Escalation decision remains no_escalation; system state is passive monitoring."
+          ]
+        },
+        "reasoning_chain": [
+          "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.",
+          "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.",
+          "Traffic evidence: all simulated traffic reports are near normal speed.",
+          "Residential population density for G-10 is estimated at 8400 per square kilometre.",
+          "Severity logic: severity score is 1 of 5 because crisis_type=urban_flooding, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=3.",
+          "Confidence formula: 0.5 base + 0.1 signal addition (min(0.1 * 1, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.1 single-source penalty = 0.5, bounded to final score 0.5.",
+          "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater",
+          "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
+          "Escalation decision remains no_escalation; system state is passive monitoring."
+        ]
+      },
+      "actions": [
+        "determine_crisis_level",
+        "connect_multi_source_evidence"
+      ]
+    },
+    {
+      "agent_name": "Rescue Planning Agent",
+      "summary": "Generated 0 simulated rescue planning action(s).",
+      "confidence_score": 0.4,
+      "reasoning_summary": "Examined escalation level, crisis type, affected roads, and approved resource lists.; Escalation is no_escalation, so Agent 4 generated no action plan.",
+      "output": {
+        "agent_name": "response_planner",
+        "plan": {
+          "should_escalate": false,
+          "selected_depot": null,
+          "selected_shelter": null,
+          "alternate_routes": [],
+          "actions": [],
+          "limitations": [
+            "No emergency plan generated because evidence did not reach crisis escalation threshold."
+          ]
+        },
+        "reasoning_chain": [
+          "Examined escalation level, crisis type, affected roads, and approved resource lists.",
+          "Escalation is no_escalation, so Agent 4 generated no action plan."
+        ]
+      },
+      "actions": []
+    },
+    {
+      "agent_name": "Action Execution Agent",
+      "summary": "Simulation status=no_escalation_monitoring; approval=approved_for_simulation.",
+      "confidence_score": 0.5,
+      "reasoning_summary": "All actions are simulated; no authority, API, or public network was contacted.",
+      "output": {
+        "approval_status": "approved_for_simulation",
+        "simulation_only": true,
+        "execution": {
+          "agent_name": "execution_simulator",
+          "execution": {
+            "route_updates": [],
+            "alerts_sent": [],
+            "tickets_created": [],
+            "state_changes": [],
+            "system_status": "no_escalation_monitoring"
+          },
+          "reasoning_chain": [
+            "Simulated only the actions returned by Agent 4; no real API calls were made.",
+            "No actions were simulated because Agent 4 generated no emergency plan."
+          ]
+        }
+      },
+      "actions": [
+        "No simulated action executed; monitoring state retained."
+      ]
+    },
+    {
+      "agent_name": "Evaluation/Replanning Agent",
+      "summary": "Initial detection baseline established",
+      "confidence_score": 0.5,
+      "reasoning_summary": "Evaluation compares current risk, crisis level, simulated impact, and prior iteration state.",
+      "output": {
+        "agent_name": "impact_reporter",
+        "report": {
+          "summary": "No confirmed crisis impact: CIRO stayed in monitoring mode.",
+          "before_after": [],
+          "impact_score": 0.0,
+          "remaining_risk": "Low. Continue passive monitoring for new corroborating signals.",
+          "no_escalation_reason": "Confidence 0.5 is below escalation threshold and source diversity is 1; no emergency action was generated.",
+          "reasoning_chain": [
+            "Confidence 0.5 is below escalation threshold and source diversity is 1; no emergency action was generated.",
+            "This prevents over-alerting on weak or stale single-source reports."
+          ]
+        },
+        "reasoning_chain": [
+          "Confidence 0.5 is below escalation threshold and source diversity is 1; no emergency action was generated.",
+          "This prevents over-alerting on weak or stale single-source reports."
+        ]
+      },
+      "actions": [
+        "evaluate_outcome",
+        "decide_escalation_or_deescalation",
+        "set_next_iteration"
+      ]
+    }
+  ],
+  "confidence_score": 0.5,
+  "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=0.5; severity=1/5; affected roads=no severe road blockage.",
+  "action_plan": [
+    "Monitor only; no simulated emergency action generated."
+  ],
+  "simulated_actions": [
+    "No simulated action executed; monitoring state retained."
+  ],
+  "evaluation_result": "Initial detection baseline established. No confirmed crisis impact: CIRO stayed in monitoring mode.",
+  "next_step": "Continue monitoring and run the next iteration with updated signals.",
+  "approval_status": "approved_for_simulation",
+  "crisis_level": "no_escalation",
+  "risk_score": 0.47
+}
