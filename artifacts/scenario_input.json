@@ -1,49 +1,41 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "title": "Islamabad G-10 urban flooding",
-  "description": "Flooding signals grow from one public report into verified weather and traffic disruption.",
+  "scenario_id": "peshawar_ring_road_blast",
+  "title": "Peshawar Ring Road blast and blockage",
+  "description": "Blast report evolves into verified road closure, then partial de-escalation after rerouting.",
   "steps": [
     {
       "iteration_number": 1,
-      "update_note": "Initial public report; weather below alert threshold; traffic still moving.",
+      "update_note": "Single authorized public report mentions a blast; traffic impact not yet confirmed.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "Initial G-10 flooding detection.",
+        "scenario_id": "peshawar_ring_road_blast",
+        "title": "Peshawar Ring Road blast and blockage",
+        "description": "Initial Peshawar blast report.",
         "social_posts": [
           {
-            "post_id": "g10-i1-public-1",
-            "text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
+            "post_id": "prr-i1-public-1",
+            "text": "Peshawar Ring Road ke qareeb blast ki awaz ayi hai, log ruk gaye hain",
             "platform": "simulated_social",
-            "timestamp": "2026-05-18T21:56:21.154472Z",
+            "timestamp": "2026-05-18T21:57:21.154472Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_1"
+            "reporter_hash": "prr_user_1"
           }
         ],
         "weather": {
-          "report_id": "g10-i1-weather",
-          "district": "Islamabad",
-          "rainfall_mm_per_hour": 4.8,
+          "report_id": "prr-i1-weather",
+          "district": "Peshawar",
+          "rainfall_mm_per_hour": 0.0,
           "alert_active": false,
-          "alert_type": "rain_watch",
-          "alert_level": 1,
+          "alert_type": "none",
+          "alert_level": 0,
           "timestamp": "2026-05-18T21:58:21.154472Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i1-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
-            "speed_kmh": 14.0,
-            "normal_speed_kmh": 38.0,
+            "report_id": "prr-i1-traffic-1",
+            "road_name": "Peshawar Ring Road",
+            "speed_kmh": 20.0,
+            "normal_speed_kmh": 45.0,
             "congestion_level": 3,
-            "timestamp": "2026-05-18T21:59:21.154472Z"
-          },
-          {
-            "report_id": "g10-i1-traffic-2",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 18.0,
-            "normal_speed_kmh": 35.0,
-            "congestion_level": 2,
             "timestamp": "2026-05-18T21:59:21.154472Z"
           }
         ],
@@ -51,51 +43,51 @@
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the visible G-10 public report for this demo run."
+        "User approved the visible Ring Road emergency post for this demo run."
       ],
       "permission_granted": true
     },
     {
       "iteration_number": 2,
-      "update_note": "Rainfall alert activates and roads become blocked.",
+      "update_note": "Traffic confirms blockage and a second authorized report requests avoidance.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "Verified G-10 flooding escalation.",
+        "scenario_id": "peshawar_ring_road_blast",
+        "title": "Peshawar Ring Road blast and blockage",
+        "description": "Verified Peshawar Ring Road blockage.",
         "social_posts": [
           {
-            "post_id": "g10-i2-public-1",
-            "text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+            "post_id": "prr-i2-public-1",
+            "text": "Ring Road Peshawar pe blast ke baad road block hai, ambulance ko alternate route chahiye",
             "platform": "simulated_social",
-            "timestamp": "2026-05-18T22:02:21.154472Z",
+            "timestamp": "2026-05-18T22:03:21.154472Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_2"
+            "reporter_hash": "prr_user_2"
           }
         ],
         "weather": {
-          "report_id": "g10-i2-weather",
-          "district": "Islamabad",
-          "rainfall_mm_per_hour": 9.1,
-          "alert_active": true,
-          "alert_type": "flood_alert",
-          "alert_level": 3,
+          "report_id": "prr-i2-weather",
+          "district": "Peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
           "timestamp": "2026-05-18T22:03:21.154472Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i2-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
+            "report_id": "prr-i2-traffic-1",
+            "road_name": "Peshawar Ring Road",
             "speed_kmh": 0.0,
-            "normal_speed_kmh": 38.0,
+            "normal_speed_kmh": 45.0,
             "congestion_level": 5,
             "timestamp": "2026-05-18T22:04:21.154472Z"
           },
           {
-            "report_id": "g10-i2-traffic-2",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 3.0,
-            "normal_speed_kmh": 35.0,
-            "congestion_level": 5,
+            "report_id": "prr-i2-traffic-2",
+            "road_name": "University Road diversion",
+            "speed_kmh": 4.0,
+            "normal_speed_kmh": 32.0,
+            "congestion_level": 4,
             "timestamp": "2026-05-18T22:04:21.154472Z"
           }
         ],
@@ -103,51 +95,51 @@
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the updated G-10 public report for this demo run."
+        "User approved reading the updated Ring Road emergency post for this demo run."
       ],
       "permission_granted": true
     },
     {
       "iteration_number": 3,
-      "update_note": "One corridor improves, but water shifts toward the Margalla crossing.",
+      "update_note": "Primary blockage remains sealed, but diversion traffic improves after simulated reroute.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "G-10 flood response re-planning.",
+        "scenario_id": "peshawar_ring_road_blast",
+        "title": "Peshawar Ring Road blast and blockage",
+        "description": "Peshawar Ring Road re-planning and partial de-escalation.",
         "social_posts": [
           {
-            "post_id": "g10-i3-public-1",
-            "text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
+            "post_id": "prr-i3-public-1",
+            "text": "Ring Road abhi sealed hai lekin University Road diversion chal rahi hai, rush kam ho raha hai",
             "platform": "simulated_social",
             "timestamp": "2026-05-18T22:06:21.154472Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_3"
+            "reporter_hash": "prr_user_3"
           }
         ],
         "weather": {
-          "report_id": "g10-i3-weather",
-          "district": "Islamabad",
-          "rainfall_mm_per_hour": 6.2,
-          "alert_active": true,
-          "alert_type": "flood_alert",
-          "alert_level": 2,
+          "report_id": "prr-i3-weather",
+          "district": "Peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
           "timestamp": "2026-05-18T22:06:21.154472Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i3-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
-            "speed_kmh": 12.0,
-            "normal_speed_kmh": 38.0,
-            "congestion_level": 3,
+            "report_id": "prr-i3-traffic-1",
+            "road_name": "Peshawar Ring Road",
+            "speed_kmh": 6.0,
+            "normal_speed_kmh": 45.0,
+            "congestion_level": 4,
             "timestamp": "2026-05-18T22:07:21.154472Z"
           },
           {
-            "report_id": "g10-i3-traffic-2",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 4.0,
-            "normal_speed_kmh": 35.0,
-            "congestion_level": 4,
+            "report_id": "prr-i3-traffic-2",
+            "road_name": "University Road diversion",
+            "speed_kmh": 18.0,
+            "normal_speed_kmh": 32.0,
+            "congestion_level": 2,
             "timestamp": "2026-05-18T22:07:21.154472Z"
           }
         ],
@@ -155,7 +147,7 @@
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the latest G-10 public report for this demo run."
+        "User approved reading the final Ring Road status post for this demo run."
       ],
       "permission_granted": true
     }

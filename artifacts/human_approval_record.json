@@ -1,5 +1,5 @@
 {
-  "scenario_id": "g10_urban_flooding",
+  "scenario_id": "peshawar_ring_road_blast",
   "approved": true,
   "approval_status": "approved_for_simulation",
   "approved_by": "demo_operator",
@@ -14,5 +14,5 @@
     "No real emergency services contacted.",
     "All actions are simulation only."
   ],
-  "timestamp": "2026-05-18T22:08:36.955274Z"
+  "timestamp": "2026-05-18T22:25:08.058337Z"
 }

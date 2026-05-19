@@ -6,6 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.agent_pipeline import run_pipeline_by_id
@@ -16,7 +17,10 @@ from backend.services.scenario_store import get_scenario, list_scenarios
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DASHBOARD_PATH = BASE_DIR / "dashboard" / "index.html"
+DASHBOARD_DIR = BASE_DIR / "dashboard"
+DASHBOARD_PATH = DASHBOARD_DIR / "index.html"
+MANIFEST_PATH = DASHBOARD_DIR / "manifest.json"
+SERVICE_WORKER_PATH = DASHBOARD_DIR / "sw.js"
 
 
 class PipelineRunRequest(BaseModel):
@@ -36,6 +40,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/dashboard", StaticFiles(directory=DASHBOARD_DIR), name="dashboard")
 
 
 @app.get("/health")
@@ -123,6 +129,20 @@ def dashboard() -> FileResponse:
     if not DASHBOARD_PATH.exists():
         raise HTTPException(status_code=404, detail="Dashboard file not found.")
     return FileResponse(DASHBOARD_PATH, media_type="text/html")
+
+
+@app.get("/manifest.json", include_in_schema=False)
+def manifest() -> FileResponse:
+    if not MANIFEST_PATH.exists():
+        raise HTTPException(status_code=404, detail="Manifest file not found.")
+    return FileResponse(MANIFEST_PATH, media_type="application/manifest+json")
+
+
+@app.get("/sw.js", include_in_schema=False)
+def service_worker() -> FileResponse:
+    if not SERVICE_WORKER_PATH.exists():
+        raise HTTPException(status_code=404, detail="Service worker file not found.")
+    return FileResponse(SERVICE_WORKER_PATH, media_type="application/javascript")
 
 
 @app.get("/favicon.ico", include_in_schema=False)

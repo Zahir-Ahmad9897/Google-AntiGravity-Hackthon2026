@@ -3,7 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>CIRO Command Center</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/dashboard/icons/icon-192.png">
   <style>
     :root {
       --bg: #f4f6f8;
@@ -526,6 +530,14 @@
     document.getElementById('refreshArtifactsBtn').addEventListener('click', () => loadArtifacts());
     document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
     loadScenarios();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((error) => {
+          console.warn('Service worker registration failed:', error);
+        });
+      });
+    }
   </script>
 </body>
 </html>

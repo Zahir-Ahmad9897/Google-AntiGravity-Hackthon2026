@@ -1,6 +1,6 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "scenario_name": "Islamabad G-10 urban flooding",
+  "scenario_id": "peshawar_ring_road_blast",
+  "scenario_name": "Peshawar Ring Road blast and blockage",
   "iteration_number": 2,
   "input_sources": [
     "simulated_weather",
@@ -12,11 +12,11 @@
       "agent_name": "CIRO Commander Agent",
       "summary": "Loaded prior crisis level no_escalation and prepared updated signal pass.",
       "confidence_score": 1.0,
-      "reasoning_summary": "Iteration 2 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Islamabad G-10 urban flooding.",
+      "reasoning_summary": "Iteration 2 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Peshawar Ring Road blast and blockage.",
       "output": {
         "iteration": 2,
         "transition": "updated_signal_review",
-        "update_note": "Rainfall alert activates and roads become blocked.",
+        "update_note": "Traffic confirms blockage and a second authorized report requests avoidance.",
         "shared_state_keys": [
           "scenario",
           "signals",
@@ -34,22 +34,22 @@
     },
     {
       "agent_name": "Weather Risk Agent",
-      "summary": "Weather risk is high; rainfall=9.1mm/hr, alert_active=True.",
-      "confidence_score": 0.73,
+      "summary": "Weather risk is low; rainfall=0.0mm/hr, alert_active=False.",
+      "confidence_score": 0.0,
       "reasoning_summary": "Weather severity is derived from rainfall intensity, alert activity, and alert level using mock PMD-style data.",
       "output": {
         "weather_signal": {
-          "location": "Islamabad",
+          "location": "Peshawar",
           "source": "mock_weather",
-          "district": "Islamabad",
-          "rainfall_mm_per_hour": 9.1,
-          "alert_active": true,
-          "alert_type": "flood_alert",
-          "alert_level": 3,
+          "district": "Peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
           "timestamp": "2026-05-18T22:03:21.154472+00:00"
         },
-        "severity": "high",
-        "flood_or_storm_detected": true
+        "severity": "low",
+        "flood_or_storm_detected": false
       },
       "actions": [
         "analyze_weather_signal"
@@ -58,37 +58,37 @@
     {
       "agent_name": "Traffic Analysis Agent",
       "summary": "Detected 2 blocked or severely congested road segment(s).",
-      "confidence_score": 0.71,
+      "confidence_score": 0.86,
       "reasoning_summary": "Traffic risk is based on mock speed, normal speed, congestion level, and ambulance-delay keywords.",
       "output": {
         "traffic_signals": [
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Peshawar Ring Road blast and blockage",
             "source": "mock_traffic",
-            "road_name": "Khayaban-e-Iqbal",
+            "road_name": "Peshawar Ring Road",
             "speed_kmh": 0.0,
-            "normal_speed_kmh": 38.0,
+            "normal_speed_kmh": 45.0,
             "congestion_level": 5,
             "timestamp": "2026-05-18T22:04:21.154472+00:00"
           },
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Peshawar Ring Road blast and blockage",
             "source": "mock_traffic",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 3.0,
-            "normal_speed_kmh": 35.0,
-            "congestion_level": 5,
+            "road_name": "University Road diversion",
+            "speed_kmh": 4.0,
+            "normal_speed_kmh": 32.0,
+            "congestion_level": 4,
             "timestamp": "2026-05-18T22:04:21.154472+00:00"
           }
         ],
         "blocked_roads": [
-          "Khayaban-e-Iqbal",
-          "Margalla Road sector crossing"
+          "Peshawar Ring Road",
+          "University Road diversion"
         ],
-        "ambulance_delay_risk": false,
+        "ambulance_delay_risk": true,
         "alternate_routes": [
           "Srinagar Highway G-10 underpass",
-          "Peshawar Ring Road"
+          "Margalla Road sector crossing"
         ]
       },
       "actions": [
@@ -105,16 +105,16 @@
       "output": {
         "permission_granted": true,
         "approved_context": [
-          "User approved reading the updated G-10 public report for this demo run."
+          "User approved reading the updated Ring Road emergency post for this demo run."
         ],
         "emergency_reports": [
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Peshawar Ring Road blast and blockage",
             "source": "authorized_public_report",
-            "post_id": "g10-i2-public-1",
-            "text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+            "post_id": "prr-i2-public-1",
+            "text": "Ring Road Peshawar pe blast ke baad road block hai, ambulance ko alternate route chahiye",
             "language": "mixed",
-            "timestamp": "2026-05-18T22:02:21.154472+00:00"
+            "timestamp": "2026-05-18T22:03:21.154472+00:00"
           }
         ],
         "ignored_unrelated_or_private_count": 0,
@@ -127,365 +127,309 @@
     },
     {
       "agent_name": "Verification Agent",
-      "summary": "Verified 4 unique crisis signal(s) across 3 source type(s).",
-      "confidence_score": 1.0,
+      "summary": "Verified 3 unique crisis signal(s) across 2 source type(s).",
+      "confidence_score": 0.8,
       "reasoning_summary": "Signals are deduplicated by source, location, and crisis type before confidence scoring.",
       "output": {
         "signal_watcher": {
           "agent_name": "signal_watcher",
           "signals": [
             {
-              "event_id": "g10-i2-public-1-event",
+              "event_id": "prr-i2-public-1-event",
               "source_type": "social",
-              "location": "G-10",
-              "crisis_type": "urban_flooding",
+              "location": "Peshawar Ring Road",
+              "crisis_type": "accident",
               "urgency_score": 4,
               "confidence_hint": 0.7,
-              "timestamp": "2026-05-18T22:02:21.154472Z",
-              "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+              "timestamp": "2026-05-18T22:03:21.154472Z",
+              "raw_text": "Ring Road Peshawar pe blast ke baad road block hai, ambulance ko alternate route chahiye",
               "evidence": [
-                "pani"
+                "blast",
+                "road block",
+                "block hai"
               ],
               "metadata": {
                 "platform": "simulated_social",
                 "language": "mixed",
-                "reporter_hash": "g10_user_2"
+                "reporter_hash": "prr_user_2"
               }
             },
             {
-              "event_id": "g10-i2-weather-event",
-              "source_type": "weather",
-              "location": "Islamabad",
-              "crisis_type": "urban_flooding",
-              "urgency_score": 3,
-              "confidence_hint": 0.8,
-              "timestamp": "2026-05-18T22:03:21.154472Z",
-              "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
-              "evidence": [
-                "rainfall_mm_per_hour=9.1",
-                "alert_level=3"
-              ],
-              "metadata": {
-                "district": "Islamabad",
-                "alert_active": true,
-                "alert_type": "flood_alert",
-                "rainfall_mm_per_hour": 9.1
-              }
-            },
-            {
-              "event_id": "g10-i2-traffic-1-event",
+              "event_id": "prr-i2-traffic-1-event",
               "source_type": "traffic",
-              "location": "Khayaban-e-Iqbal",
+              "location": "Peshawar Ring Road",
               "crisis_type": "road_blockage",
               "urgency_score": 5,
               "confidence_hint": 0.75,
               "timestamp": "2026-05-18T22:04:21.154472Z",
-              "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
+              "raw_text": "Peshawar Ring Road: speed 0.0km/h, normal 45.0km/h",
               "evidence": [
                 "speed_kmh=0.0",
-                "normal_speed_kmh=38.0",
+                "normal_speed_kmh=45.0",
                 "congestion_level=5"
               ],
               "metadata": {
-                "road_name": "Khayaban-e-Iqbal",
+                "road_name": "Peshawar Ring Road",
                 "speed_kmh": 0.0,
-                "normal_speed_kmh": 38.0,
+                "normal_speed_kmh": 45.0,
                 "congestion_level": 5
               }
             },
             {
-              "event_id": "g10-i2-traffic-2-event",
+              "event_id": "prr-i2-traffic-2-event",
               "source_type": "traffic",
-              "location": "Margalla Road sector crossing",
+              "location": "University Road diversion",
               "crisis_type": "road_blockage",
               "urgency_score": 4,
               "confidence_hint": 0.75,
               "timestamp": "2026-05-18T22:04:21.154472Z",
-              "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+              "raw_text": "University Road diversion: speed 4.0km/h, normal 32.0km/h",
               "evidence": [
-                "speed_kmh=3.0",
-                "normal_speed_kmh=35.0",
-                "congestion_level=5"
+                "speed_kmh=4.0",
+                "normal_speed_kmh=32.0",
+                "congestion_level=4"
               ],
               "metadata": {
-                "road_name": "Margalla Road sector crossing",
-                "speed_kmh": 3.0,
-                "normal_speed_kmh": 35.0,
-                "congestion_level": 5
+                "road_name": "University Road diversion",
+                "speed_kmh": 4.0,
+                "normal_speed_kmh": 32.0,
+                "congestion_level": 4
               }
             }
           ],
-          "ignored_inputs": [],
+          "ignored_inputs": [
+            "Weather prr-i2-weather ignored: rainfall 0.0mm/hr and no active alert."
+          ],
           "reasoning_chain": [
             "Read simulated social, weather, and traffic inputs using the same schema expected from production collectors.",
-            "Social post g10-i2-public-1 mapped to urban_flooding at G-10 with urgency 4/5.",
-            "Weather report g10-i2-weather became a urban_flooding signal because rainfall is 9.1mm/hr and alert_active=True.",
-            "Traffic report g10-i2-traffic-1 became a road_blockage signal because speed is 0.0km/h with congestion level 5/5.",
-            "Traffic report g10-i2-traffic-2 became a road_blockage signal because speed is 3.0km/h with congestion level 5/5.",
-            "Agent 1 produced 4 structured SignalEvent objects."
+            "Social post prr-i2-public-1 mapped to accident at Peshawar Ring Road with urgency 4/5.",
+            "Traffic report prr-i2-traffic-1 became a road_blockage signal because speed is 0.0km/h with congestion level 5/5.",
+            "Traffic report prr-i2-traffic-2 became a road_blockage signal because speed is 4.0km/h with congestion level 4/5.",
+            "Agent 1 produced 3 structured SignalEvent objects."
           ]
         },
         "crisis_detector": {
           "agent_name": "crisis_detector",
           "clusters": [
             {
-              "cluster_id": "g10_urban_flooding-cluster-1",
-              "location": "G-10",
-              "crisis_type": "urban_flooding",
+              "cluster_id": "peshawar_ring_road_blast-cluster-1",
+              "location": "Peshawar Ring Road",
+              "crisis_type": "accident",
               "signals": [
                 {
-                  "event_id": "g10-i2-public-1-event",
+                  "event_id": "prr-i2-public-1-event",
                   "source_type": "social",
-                  "location": "G-10",
-                  "crisis_type": "urban_flooding",
+                  "location": "Peshawar Ring Road",
+                  "crisis_type": "accident",
                   "urgency_score": 4,
                   "confidence_hint": 0.7,
-                  "timestamp": "2026-05-18T22:02:21.154472Z",
-                  "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+                  "timestamp": "2026-05-18T22:03:21.154472Z",
+                  "raw_text": "Ring Road Peshawar pe blast ke baad road block hai, ambulance ko alternate route chahiye",
                   "evidence": [
-                    "pani"
+                    "blast",
+                    "road block",
+                    "block hai"
                   ],
                   "metadata": {
                     "platform": "simulated_social",
                     "language": "mixed",
-                    "reporter_hash": "g10_user_2"
+                    "reporter_hash": "prr_user_2"
                   }
                 },
                 {
-                  "event_id": "g10-i2-weather-event",
-                  "source_type": "weather",
-                  "location": "Islamabad",
-                  "crisis_type": "urban_flooding",
-                  "urgency_score": 3,
-                  "confidence_hint": 0.8,
-                  "timestamp": "2026-05-18T22:03:21.154472Z",
-                  "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
-                  "evidence": [
-                    "rainfall_mm_per_hour=9.1",
-                    "alert_level=3"
-                  ],
-                  "metadata": {
-                    "district": "Islamabad",
-                    "alert_active": true,
-                    "alert_type": "flood_alert",
-                    "rainfall_mm_per_hour": 9.1
-                  }
-                },
-                {
-                  "event_id": "g10-i2-traffic-1-event",
+                  "event_id": "prr-i2-traffic-1-event",
                   "source_type": "traffic",
-                  "location": "Khayaban-e-Iqbal",
+                  "location": "Peshawar Ring Road",
                   "crisis_type": "road_blockage",
                   "urgency_score": 5,
                   "confidence_hint": 0.75,
                   "timestamp": "2026-05-18T22:04:21.154472Z",
-                  "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
+                  "raw_text": "Peshawar Ring Road: speed 0.0km/h, normal 45.0km/h",
                   "evidence": [
                     "speed_kmh=0.0",
-                    "normal_speed_kmh=38.0",
+                    "normal_speed_kmh=45.0",
                     "congestion_level=5"
                   ],
                   "metadata": {
-                    "road_name": "Khayaban-e-Iqbal",
+                    "road_name": "Peshawar Ring Road",
                     "speed_kmh": 0.0,
-                    "normal_speed_kmh": 38.0,
+                    "normal_speed_kmh": 45.0,
                     "congestion_level": 5
                   }
                 },
                 {
-                  "event_id": "g10-i2-traffic-2-event",
+                  "event_id": "prr-i2-traffic-2-event",
                   "source_type": "traffic",
-                  "location": "Margalla Road sector crossing",
+                  "location": "University Road diversion",
                   "crisis_type": "road_blockage",
                   "urgency_score": 4,
                   "confidence_hint": 0.75,
                   "timestamp": "2026-05-18T22:04:21.154472Z",
-                  "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+                  "raw_text": "University Road diversion: speed 4.0km/h, normal 32.0km/h",
                   "evidence": [
-                    "speed_kmh=3.0",
-                    "normal_speed_kmh=35.0",
-                    "congestion_level=5"
+                    "speed_kmh=4.0",
+                    "normal_speed_kmh=32.0",
+                    "congestion_level=4"
                   ],
                   "metadata": {
-                    "road_name": "Margalla Road sector crossing",
-                    "speed_kmh": 3.0,
-                    "normal_speed_kmh": 35.0,
-                    "congestion_level": 5
+                    "road_name": "University Road diversion",
+                    "speed_kmh": 4.0,
+                    "normal_speed_kmh": 32.0,
+                    "congestion_level": 4
                   }
                 }
               ],
               "source_types": [
                 "social",
-                "traffic",
-                "weather"
+                "traffic"
               ],
-              "time_window_minutes": 2.0,
+              "time_window_minutes": 1.0,
               "confidence": {
                 "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
                 "base_confidence": 0.5,
-                "correlated_signal_count": 4,
-                "source_type_count": 3,
-                "correlated_signal_addition": 0.4,
-                "weather_alert_addition": 0.1,
+                "correlated_signal_count": 3,
+                "source_type_count": 2,
+                "correlated_signal_addition": 0.3,
+                "weather_alert_addition": 0.0,
                 "stale_signal_penalty": 0.0,
                 "single_source_penalty": 0.0,
-                "raw_score_before_bounds": 1.0,
-                "final_score": 1.0
+                "raw_score_before_bounds": 0.8,
+                "final_score": 0.8
               },
               "confidence_band": "high",
               "escalation": "crisis",
               "evidence": [
-                "pani",
-                "rainfall_mm_per_hour=9.1",
-                "alert_level=3",
+                "blast",
+                "road block",
+                "block hai",
                 "speed_kmh=0.0",
-                "normal_speed_kmh=38.0",
+                "normal_speed_kmh=45.0",
                 "congestion_level=5",
-                "speed_kmh=3.0",
-                "normal_speed_kmh=35.0",
-                "congestion_level=5"
+                "speed_kmh=4.0",
+                "normal_speed_kmh=32.0",
+                "congestion_level=4"
               ]
             }
           ],
           "selected_cluster": {
-            "cluster_id": "g10_urban_flooding-cluster-1",
-            "location": "G-10",
-            "crisis_type": "urban_flooding",
+            "cluster_id": "peshawar_ring_road_blast-cluster-1",
+            "location": "Peshawar Ring Road",
+            "crisis_type": "accident",
             "signals": [
               {
-                "event_id": "g10-i2-public-1-event",
+                "event_id": "prr-i2-public-1-event",
                 "source_type": "social",
-                "location": "G-10",
-                "crisis_type": "urban_flooding",
+                "location": "Peshawar Ring Road",
+                "crisis_type": "accident",
                 "urgency_score": 4,
                 "confidence_hint": 0.7,
-                "timestamp": "2026-05-18T22:02:21.154472Z",
-                "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+                "timestamp": "2026-05-18T22:03:21.154472Z",
+                "raw_text": "Ring Road Peshawar pe blast ke baad road block hai, ambulance ko alternate route chahiye",
                 "evidence": [
-                  "pani"
+                  "blast",
+                  "road block",
+                  "block hai"
                 ],
                 "metadata": {
                   "platform": "simulated_social",
                   "language": "mixed",
-                  "reporter_hash": "g10_user_2"
+                  "reporter_hash": "prr_user_2"
                 }
               },
               {
-                "event_id": "g10-i2-weather-event",
-                "source_type": "weather",
-                "location": "Islamabad",
-                "crisis_type": "urban_flooding",
-                "urgency_score": 3,
-                "confidence_hint": 0.8,
-                "timestamp": "2026-05-18T22:03:21.154472Z",
-                "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
-                "evidence": [
-                  "rainfall_mm_per_hour=9.1",
-                  "alert_level=3"
-                ],
-                "metadata": {
-                  "district": "Islamabad",
-                  "alert_active": true,
-                  "alert_type": "flood_alert",
-                  "rainfall_mm_per_hour": 9.1
-                }
-              },
-              {
-                "event_id": "g10-i2-traffic-1-event",
+                "event_id": "prr-i2-traffic-1-event",
                 "source_type": "traffic",
-                "location": "Khayaban-e-Iqbal",
+                "location": "Peshawar Ring Road",
                 "crisis_type": "road_blockage",
                 "urgency_score": 5,
                 "confidence_hint": 0.75,
                 "timestamp": "2026-05-18T22:04:21.154472Z",
-                "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
+                "raw_text": "Peshawar Ring Road: speed 0.0km/h, normal 45.0km/h",
                 "evidence": [
                   "speed_kmh=0.0",
-                  "normal_speed_kmh=38.0",
+                  "normal_speed_kmh=45.0",
                   "congestion_level=5"
                 ],
                 "metadata": {
-                  "road_name": "Khayaban-e-Iqbal",
+                  "road_name": "Peshawar Ring Road",
                   "speed_kmh": 0.0,
-                  "normal_speed_kmh": 38.0,
+                  "normal_speed_kmh": 45.0,
                   "congestion_level": 5
                 }
               },
               {
-                "event_id": "g10-i2-traffic-2-event",
+                "event_id": "prr-i2-traffic-2-event",
                 "source_type": "traffic",
-                "location": "Margalla Road sector crossing",
+                "location": "University Road diversion",
                 "crisis_type": "road_blockage",
                 "urgency_score": 4,
                 "confidence_hint": 0.75,
                 "timestamp": "2026-05-18T22:04:21.154472Z",
-                "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+                "raw_text": "University Road diversion: speed 4.0km/h, normal 32.0km/h",
                 "evidence": [
-                  "speed_kmh=3.0",
-                  "normal_speed_kmh=35.0",
-                  "congestion_level=5"
+                  "speed_kmh=4.0",
+                  "normal_speed_kmh=32.0",
+                  "congestion_level=4"
                 ],
                 "metadata": {
-                  "road_name": "Margalla Road sector crossing",
-                  "speed_kmh": 3.0,
-                  "normal_speed_kmh": 35.0,
-                  "congestion_level": 5
+                  "road_name": "University Road diversion",
+                  "speed_kmh": 4.0,
+                  "normal_speed_kmh": 32.0,
+                  "congestion_level": 4
                 }
               }
             ],
             "source_types": [
               "social",
-              "traffic",
-              "weather"
+              "traffic"
             ],
-            "time_window_minutes": 2.0,
+            "time_window_minutes": 1.0,
             "confidence": {
               "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
               "base_confidence": 0.5,
-              "correlated_signal_count": 4,
-              "source_type_count": 3,
-              "correlated_signal_addition": 0.4,
-              "weather_alert_addition": 0.1,
+              "correlated_signal_count": 3,
+              "source_type_count": 2,
+              "correlated_signal_addition": 0.3,
+              "weather_alert_addition": 0.0,
               "stale_signal_penalty": 0.0,
               "single_source_penalty": 0.0,
-              "raw_score_before_bounds": 1.0,
-              "final_score": 1.0
+              "raw_score_before_bounds": 0.8,
+              "final_score": 0.8
             },
             "confidence_band": "high",
             "escalation": "crisis",
             "evidence": [
-              "pani",
-              "rainfall_mm_per_hour=9.1",
-              "alert_level=3",
+              "blast",
+              "road block",
+              "block hai",
               "speed_kmh=0.0",
-              "normal_speed_kmh=38.0",
+              "normal_speed_kmh=45.0",
               "congestion_level=5",
-              "speed_kmh=3.0",
-              "normal_speed_kmh=35.0",
-              "congestion_level=5"
+              "speed_kmh=4.0",
+              "normal_speed_kmh=32.0",
+              "congestion_level=4"
             ]
           },
           "reasoning_chain": [
             "Examined SignalEvent objects for crisis vocabulary, source diversity, and time-window correlation.",
-            "Cluster contains 4 total signals and 4 correlated crisis signals.",
-            "Source diversity is 3 source type(s): social, traffic, weather.",
-            "Confidence math: 0.5 base + 0.4 signal addition + 0.1 weather alert addition - 0.0 stale penalty - 0.0 single-source penalty = 1.0.",
+            "Cluster contains 3 total signals and 3 correlated crisis signals.",
+            "Source diversity is 2 source type(s): social, traffic.",
+            "Confidence math: 0.5 base + 0.3 signal addition + 0.0 weather alert addition - 0.0 stale penalty - 0.0 single-source penalty = 0.8.",
             "Escalation decision is crisis with confidence band high."
           ]
         },
         "verification": {
-          "total_signals": 4,
+          "total_signals": 3,
           "unique_crisis_signals": [
-            "g10-i2-public-1-event",
-            "g10-i2-weather-event",
-            "g10-i2-traffic-1-event",
-            "g10-i2-traffic-2-event"
+            "prr-i2-public-1-event",
+            "prr-i2-traffic-1-event",
+            "prr-i2-traffic-2-event"
           ],
           "duplicates_removed": [],
           "noise_removed": [],
-          "verified_count": 4
+          "verified_count": 3
         },
-        "risk_score": 0.94
+        "risk_score": 0.84
       },
       "actions": [
         "verify_signals",
@@ -495,65 +439,64 @@
     },
     {
       "agent_name": "Crisis Reasoning Agent",
-      "summary": "Urban flooding detected in G-10; crisis level=crisis.",
-      "confidence_score": 1.0,
-      "reasoning_summary": "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.; Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.; Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
+      "summary": "Major accident and road blockage detected in Peshawar Ring Road; crisis level=crisis.",
+      "confidence_score": 0.8,
+      "reasoning_summary": "Signal count is 3 correlated crisis signal(s) from 3 total observed signal(s) within Peshawar Ring Road over 1.0 minutes.; Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.; Traffic evidence: Peshawar Ring Road speed 0.0km/h versus normal 45.0km/h, congestion 5/5; University Road diversion speed 4.0km/h versus normal 32.0km/h, congestion 4/5.",
       "output": {
         "agent_name": "situation_analyst",
         "analysis": {
-          "detected_situation": "Urban flooding detected in G-10",
-          "location": "G-10",
-          "crisis_type": "urban_flooding",
+          "detected_situation": "Major accident and road blockage detected in Peshawar Ring Road",
+          "location": "Peshawar Ring Road",
+          "crisis_type": "accident",
           "severity_score": 4,
           "confidence": {
             "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
             "base_confidence": 0.5,
-            "correlated_signal_count": 4,
-            "source_type_count": 3,
-            "correlated_signal_addition": 0.4,
-            "weather_alert_addition": 0.1,
+            "correlated_signal_count": 3,
+            "source_type_count": 2,
+            "correlated_signal_addition": 0.3,
+            "weather_alert_addition": 0.0,
             "stale_signal_penalty": 0.0,
             "single_source_penalty": 0.0,
-            "raw_score_before_bounds": 1.0,
-            "final_score": 1.0
+            "raw_score_before_bounds": 0.8,
+            "final_score": 0.8
           },
           "confidence_band": "high",
           "escalation": "crisis",
           "affected_roads": [
-            "Khayaban-e-Iqbal",
-            "Margalla Road sector crossing"
+            "Peshawar Ring Road",
+            "University Road diversion"
           ],
-          "affected_population_density_per_sq_km": 8400,
+          "affected_population_density_per_sq_km": 6800,
           "primary_risks": [
-            "vehicle entrapment",
-            "infrastructure damage from standing floodwater",
-            "traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing"
+            "injury risk at crash site",
+            "secondary collisions from queue buildup"
           ],
           "secondary_risks": [
-            "displacement pressure for low-income residents near G-10",
-            "delayed rescue access if congestion is not reduced"
+            "spillover congestion into adjacent approaches",
+            "ambulance access delay"
           ],
           "reasoning_chain": [
-            "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.",
-            "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.",
-            "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
-            "Residential population density for G-10 is estimated at 8400 per square kilometre.",
-            "Severity logic: severity score is 4 of 5 because crisis_type=urban_flooding, escalation=crisis, weather_alert=True, affected_roads=2, and max_urgency=5.",
-            "Confidence formula: 0.5 base + 0.4 signal addition (min(0.1 * 4, 0.4)) + 0.1 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 1.0, bounded to final score 1.0.",
-            "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing",
-            "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
+            "Signal count is 3 correlated crisis signal(s) from 3 total observed signal(s) within Peshawar Ring Road over 1.0 minutes.",
+            "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.",
+            "Traffic evidence: Peshawar Ring Road speed 0.0km/h versus normal 45.0km/h, congestion 5/5; University Road diversion speed 4.0km/h versus normal 32.0km/h, congestion 4/5.",
+            "Residential population density for Peshawar Ring Road is estimated at 6800 per square kilometre.",
+            "Severity logic: severity score is 4 of 5 because crisis_type=accident, escalation=crisis, weather_alert=False, affected_roads=2, and max_urgency=5.",
+            "Confidence formula: 0.5 base + 0.3 signal addition (min(0.1 * 3, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 0.8, bounded to final score 0.8.",
+            "Primary risks: injury risk at crash site; secondary collisions from queue buildup",
+            "Secondary risks: spillover congestion into adjacent approaches; ambulance access delay",
             "Escalation decision remains crisis; system state is crisis active."
           ]
         },
         "reasoning_chain": [
-          "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.",
-          "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.",
-          "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
-          "Residential population density for G-10 is estimated at 8400 per square kilometre.",
-          "Severity logic: severity score is 4 of 5 because crisis_type=urban_flooding, escalation=crisis, weather_alert=True, affected_roads=2, and max_urgency=5.",
-          "Confidence formula: 0.5 base + 0.4 signal addition (min(0.1 * 4, 0.4)) + 0.1 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 1.0, bounded to final score 1.0.",
-          "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing",
-          "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
+          "Signal count is 3 correlated crisis signal(s) from 3 total observed signal(s) within Peshawar Ring Road over 1.0 minutes.",
+          "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.",
+          "Traffic evidence: Peshawar Ring Road speed 0.0km/h versus normal 45.0km/h, congestion 5/5; University Road diversion speed 4.0km/h versus normal 32.0km/h, congestion 4/5.",
+          "Residential population density for Peshawar Ring Road is estimated at 6800 per square kilometre.",
+          "Severity logic: severity score is 4 of 5 because crisis_type=accident, escalation=crisis, weather_alert=False, affected_roads=2, and max_urgency=5.",
+          "Confidence formula: 0.5 base + 0.3 signal addition (min(0.1 * 3, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 0.8, bounded to final score 0.8.",
+          "Primary risks: injury risk at crash site; secondary collisions from queue buildup",
+          "Secondary risks: spillover congestion into adjacent approaches; ambulance access delay",
           "Escalation decision remains crisis; system state is crisis active."
         ]
       },
@@ -564,34 +507,34 @@
     },
     {
       "agent_name": "Rescue Planning Agent",
-      "summary": "Generated 5 simulated rescue planning action(s).",
-      "confidence_score": 1.0,
-      "reasoning_summary": "Examined escalation level, crisis type, affected roads, and approved resource lists.; Selected depot: G-6 Markaz Emergency Centre.; Selected shelter: G-10 Community Centre.",
+      "summary": "Generated 4 simulated rescue planning action(s).",
+      "confidence_score": 0.8,
+      "reasoning_summary": "Examined escalation level, crisis type, affected roads, and approved resource lists.; Selected depot: Peshawar Ring Road Simulation Depot.; Selected shelter: none required.",
       "output": {
         "agent_name": "response_planner",
         "plan": {
           "should_escalate": true,
-          "selected_depot": "G-6 Markaz Emergency Centre",
-          "selected_shelter": "G-10 Community Centre",
+          "selected_depot": "Peshawar Ring Road Simulation Depot",
+          "selected_shelter": null,
           "alternate_routes": [
-            "Lehtrar Road",
-            "Srinagar Highway G-10 underpass"
+            "Khayaban-e-Iqbal",
+            "Lehtrar Road"
           ],
           "actions": [
             {
               "action_id": "action-1-dispatch",
               "action_type": "dispatch_emergency",
-              "description": "Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-              "target": "G-10",
+              "description": "Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.",
+              "target": "Peshawar Ring Road",
               "priority": 4,
-              "assigned_resource": "G-6 Markaz Emergency Centre",
+              "assigned_resource": "Peshawar Ring Road Simulation Depot",
               "status": "planned"
             },
             {
               "action_id": "action-2-alert",
               "action_type": "send_alert",
-              "description": "Send public alert for Urban flooding detected in G-10.",
-              "target": "G-10",
+              "description": "Send public alert for Major accident and road blockage detected in Peshawar Ring Road.",
+              "target": "Peshawar Ring Road",
               "priority": 3,
               "assigned_resource": null,
               "status": "planned"
@@ -599,8 +542,8 @@
             {
               "action_id": "action-3-reroute-1",
               "action_type": "reroute_traffic",
-              "description": "Update mock map routing away from Khayaban-e-Iqbal.",
-              "target": "Khayaban-e-Iqbal",
+              "description": "Update mock map routing away from Peshawar Ring Road.",
+              "target": "Peshawar Ring Road",
               "priority": 3,
               "assigned_resource": null,
               "status": "planned"
@@ -608,19 +551,10 @@
             {
               "action_id": "action-3-reroute-2",
               "action_type": "reroute_traffic",
-              "description": "Update mock map routing away from Margalla Road sector crossing.",
-              "target": "Margalla Road sector crossing",
+              "description": "Update mock map routing away from University Road diversion.",
+              "target": "University Road diversion",
               "priority": 3,
               "assigned_resource": null,
-              "status": "planned"
-            },
-            {
-              "action_id": "action-4-shelter",
-              "action_type": "open_shelter",
-              "description": "Prepare intake capacity at G-10 Community Centre.",
-              "target": "G-10 Community Centre",
-              "priority": 4,
-              "assigned_resource": "G-10 Community Centre",
               "status": "planned"
             }
           ],
@@ -628,24 +562,23 @@
         },
         "reasoning_chain": [
           "Examined escalation level, crisis type, affected roads, and approved resource lists.",
-          "Selected depot: G-6 Markaz Emergency Centre.",
-          "Selected shelter: G-10 Community Centre.",
-          "Approved road targets: Khayaban-e-Iqbal, Margalla Road sector crossing.",
-          "Generated 5 coordinated response action(s)."
+          "Selected depot: Peshawar Ring Road Simulation Depot.",
+          "Selected shelter: none required.",
+          "Approved road targets: Peshawar Ring Road, University Road diversion.",
+          "Generated 4 coordinated response action(s)."
         ]
       },
       "actions": [
-        "dispatch_emergency: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-        "send_alert: Send public alert for Urban flooding detected in G-10.",
-        "reroute_traffic: Update mock map routing away from Khayaban-e-Iqbal.",
-        "reroute_traffic: Update mock map routing away from Margalla Road sector crossing.",
-        "open_shelter: Prepare intake capacity at G-10 Community Centre."
+        "dispatch_emergency: Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.",
+        "send_alert: Send public alert for Major accident and road blockage detected in Peshawar Ring Road.",
+        "reroute_traffic: Update mock map routing away from Peshawar Ring Road.",
+        "reroute_traffic: Update mock map routing away from University Road diversion."
       ]
     },
     {
       "agent_name": "Action Execution Agent",
       "summary": "Simulation status=simulated_response_complete; approval=approved_for_simulation.",
-      "confidence_score": 1.0,
+      "confidence_score": 0.8,
       "reasoning_summary": "All actions are simulated; no authority, API, or public network was contacted.",
       "output": {
         "approval_status": "approved_for_simulation",
@@ -654,18 +587,18 @@
           "agent_name": "execution_simulator",
           "execution": {
             "route_updates": [
-              "Mock map route updated away from Khayaban-e-Iqbal.",
-              "Mock map route updated away from Margalla Road sector crossing."
+              "Mock map route updated away from Peshawar Ring Road.",
+              "Mock map route updated away from University Road diversion."
             ],
             "alerts_sent": [
-              "Simulated public alert sent for G-10."
+              "Simulated public alert sent for Peshawar Ring Road."
             ],
             "tickets_created": [
               {
-                "ticket_id": "ticket-g10_urban_flooding",
-                "location": "G-10",
-                "crisis_type": "urban_flooding",
-                "assigned_depot": "G-6 Markaz Emergency Centre",
+                "ticket_id": "ticket-peshawar_ring_road_blast",
+                "location": "Peshawar Ring Road",
+                "crisis_type": "accident",
+                "assigned_depot": "Peshawar Ring Road Simulation Depot",
                 "priority": 4,
                 "status": "simulated"
               }
@@ -684,22 +617,16 @@
                 "unit": "count"
               },
               {
-                "metric": "traffic_speed_Khayaban-e-Iqbal",
+                "metric": "traffic_speed_Peshawar Ring Road",
                 "before": "0.0km/h",
-                "after": "17.1km/h",
+                "after": "20.2km/h",
                 "unit": "km/h"
               },
               {
-                "metric": "traffic_speed_Margalla Road sector crossing",
-                "before": "3.0km/h",
-                "after": "15.8km/h",
+                "metric": "traffic_speed_University Road diversion",
+                "before": "4.0km/h",
+                "after": "16.0km/h",
                 "unit": "km/h"
-              },
-              {
-                "metric": "shelter_status_G-10 Community Centre",
-                "before": "standby",
-                "after": "prepared",
-                "unit": "status"
               }
             ],
             "system_status": "simulated_response_complete"
@@ -709,31 +636,30 @@
             "Simulated 2 route update(s).",
             "Simulated 1 public alert broadcast(s).",
             "Created 1 emergency ticket(s).",
-            "Recorded 5 before/after state change(s)."
+            "Recorded 4 before/after state change(s)."
           ]
         }
       },
       "actions": [
-        "Mock map route updated away from Khayaban-e-Iqbal.",
-        "Mock map route updated away from Margalla Road sector crossing.",
-        "Simulated public alert sent for G-10.",
-        "Simulated ticket ticket-g10_urban_flooding assigned to G-6 Markaz Emergency Centre.",
+        "Mock map route updated away from Peshawar Ring Road.",
+        "Mock map route updated away from University Road diversion.",
+        "Simulated public alert sent for Peshawar Ring Road.",
+        "Simulated ticket ticket-peshawar_ring_road_blast assigned to Peshawar Ring Road Simulation Depot.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Khayaban-e-Iqbal: 0.0km/h -> 17.1km/h",
-        "traffic_speed_Margalla Road sector crossing: 3.0km/h -> 15.8km/h",
-        "shelter_status_G-10 Community Centre: standby -> prepared"
+        "traffic_speed_Peshawar Ring Road: 0.0km/h -> 20.2km/h",
+        "traffic_speed_University Road diversion: 4.0km/h -> 16.0km/h"
       ]
     },
     {
       "agent_name": "Evaluation/Replanning Agent",
-      "summary": "Escalated: risk increased by 0.46",
-      "confidence_score": 1.0,
+      "summary": "Escalated: risk increased by 0.31",
+      "confidence_score": 0.8,
       "reasoning_summary": "Evaluation compares current risk, crisis level, simulated impact, and prior iteration state.",
       "output": {
         "agent_name": "impact_reporter",
         "report": {
-          "summary": "Simulated response for Urban flooding detected in G-10: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+          "summary": "Simulated response for Major accident and road blockage detected in Peshawar Ring Road: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
           "before_after": [
             {
               "metric": "emergency_tickets_created",
@@ -748,36 +674,30 @@
               "unit": "count"
             },
             {
-              "metric": "traffic_speed_Khayaban-e-Iqbal",
+              "metric": "traffic_speed_Peshawar Ring Road",
               "before": "0.0km/h",
-              "after": "17.1km/h",
+              "after": "20.2km/h",
               "unit": "km/h"
             },
             {
-              "metric": "traffic_speed_Margalla Road sector crossing",
-              "before": "3.0km/h",
-              "after": "15.8km/h",
+              "metric": "traffic_speed_University Road diversion",
+              "before": "4.0km/h",
+              "after": "16.0km/h",
               "unit": "km/h"
-            },
-            {
-              "metric": "shelter_status_G-10 Community Centre",
-              "before": "standby",
-              "after": "prepared",
-              "unit": "status"
             }
           ],
-          "impact_score": 1.0,
+          "impact_score": 0.92,
           "remaining_risk": "Medium. Initial response is active, with congestion and public safety still monitored.",
           "no_escalation_reason": null,
           "reasoning_chain": [
             "Compared pre-action crisis state against simulated execution outputs.",
-            "Impact score 1.0 is based on simulated state changes, alerts, and emergency tickets.",
+            "Impact score 0.92 is based on simulated state changes, alerts, and emergency tickets.",
             "Remaining risk after simulation: Medium. Initial response is active, with congestion and public safety still monitored."
           ]
         },
         "reasoning_chain": [
           "Compared pre-action crisis state against simulated execution outputs.",
-          "Impact score 1.0 is based on simulated state changes, alerts, and emergency tickets.",
+          "Impact score 0.92 is based on simulated state changes, alerts, and emergency tickets.",
           "Remaining risk after simulation: Medium. Initial response is active, with congestion and public safety still monitored."
         ]
       },
@@ -788,29 +708,27 @@
       ]
     }
   ],
-  "confidence_score": 1.0,
-  "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=1.0; severity=4/5; affected roads=Khayaban-e-Iqbal, Margalla Road sector crossing.",
+  "confidence_score": 0.8,
+  "concise_reasoning_summary": "Major accident and road blockage detected in Peshawar Ring Road; confidence=0.8; severity=4/5; affected roads=Peshawar Ring Road, University Road diversion.",
   "action_plan": [
-    "dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-    "send_alert -> G-10: Send public alert for Urban flooding detected in G-10.",
-    "reroute_traffic -> Khayaban-e-Iqbal: Update mock map routing away from Khayaban-e-Iqbal.",
-    "reroute_traffic -> Margalla Road sector crossing: Update mock map routing away from Margalla Road sector crossing.",
-    "open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre."
+    "dispatch_emergency -> Peshawar Ring Road: Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.",
+    "send_alert -> Peshawar Ring Road: Send public alert for Major accident and road blockage detected in Peshawar Ring Road.",
+    "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road.",
+    "reroute_traffic -> University Road diversion: Update mock map routing away from University Road diversion."
   ],
   "simulated_actions": [
-    "Mock map route updated away from Khayaban-e-Iqbal.",
-    "Mock map route updated away from Margalla Road sector crossing.",
-    "Simulated public alert sent for G-10.",
-    "Simulated ticket ticket-g10_urban_flooding assigned to G-6 Markaz Emergency Centre.",
+    "Mock map route updated away from Peshawar Ring Road.",
+    "Mock map route updated away from University Road diversion.",
+    "Simulated public alert sent for Peshawar Ring Road.",
+    "Simulated ticket ticket-peshawar_ring_road_blast assigned to Peshawar Ring Road Simulation Depot.",
     "emergency_tickets_created: 0 -> 1",
     "public_alerts_sent: 0 -> 1",
-    "traffic_speed_Khayaban-e-Iqbal: 0.0km/h -> 17.1km/h",
-    "traffic_speed_Margalla Road sector crossing: 3.0km/h -> 15.8km/h",
-    "shelter_status_G-10 Community Centre: standby -> prepared"
+    "traffic_speed_Peshawar Ring Road: 0.0km/h -> 20.2km/h",
+    "traffic_speed_University Road diversion: 4.0km/h -> 16.0km/h"
   ],
-  "evaluation_result": "Escalated: risk increased by 0.46. Simulated response for Urban flooding detected in G-10: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+  "evaluation_result": "Escalated: risk increased by 0.31. Simulated response for Major accident and road blockage detected in Peshawar Ring Road: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
   "next_step": "Continue monitoring and run the next iteration with updated signals.",
   "approval_status": "approved_for_simulation",
   "crisis_level": "crisis",
-  "risk_score": 0.93
+  "risk_score": 0.82
 }
