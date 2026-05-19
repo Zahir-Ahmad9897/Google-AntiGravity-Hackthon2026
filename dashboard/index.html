@@ -11,8 +11,6 @@
   <title>CIRO Command Center</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/dashboard/icons/icon-192.png">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
       --bg: #f4f6f8;
@@ -232,6 +230,69 @@
       gap: 14px;
     }
 
+    .map-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 14px;
+    }
+
+    .map-frame {
+      min-height: 430px;
+      display: grid;
+      grid-template-rows: auto minmax(320px, 1fr) auto;
+      gap: 10px;
+    }
+
+    #map {
+      width: 100%;
+      min-height: 320px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #dbeafe;
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+    }
+
+    .segmented button {
+      min-height: 32px;
+      padding: 6px 10px;
+      background: transparent;
+      color: var(--ink);
+      border: 0;
+    }
+
+    .segmented button.active {
+      background: #fff;
+      color: var(--accent);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+    }
+
+    .intel-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: minmax(110px, 0.45fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .kv span:first-child {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
     pre {
       margin: 0;
       max-height: 460px;
@@ -274,7 +335,7 @@
     @media (max-width: 980px) {
       main { grid-template-columns: 1fr; }
       .sidebar { position: static; }
-      .grid, .timeline, .trace-grid { grid-template-columns: 1fr; }
+      .grid, .timeline, .trace-grid, .map-layout { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -360,6 +421,42 @@
         </section>
       </div>
 
+      <section class="map-layout">
+        <div class="panel map-frame">
+          <div class="row">
+            <h2 style="margin-right:auto;">Crisis Map</h2>
+            <div class="segmented" aria-label="Map mode">
+              <button id="beforeMapBtn" class="active" type="button" data-map-mode="before">Before</button>
+              <button id="afterMapBtn" type="button" data-map-mode="after">After</button>
+            </div>
+          </div>
+          <div id="map" role="img" aria-label="Google crisis response map"></div>
+          <p id="mapStatus" class="small">Map will load after configuration is checked.</p>
+        </div>
+
+        <div class="intel-grid">
+          <section class="panel stack">
+            <div class="row">
+              <h2 style="margin-right:auto;">Weather Intelligence</h2>
+              <span id="weatherSourceBadge" class="badge">No data</span>
+            </div>
+            <div id="weatherPanel" class="stack">
+              <p class="small">Run a scenario to generate weather intelligence.</p>
+            </div>
+          </section>
+
+          <section class="panel stack">
+            <div class="row">
+              <h2 style="margin-right:auto;">Route Intelligence</h2>
+              <span id="routeSourceBadge" class="badge">No data</span>
+            </div>
+            <div id="routePanel" class="stack">
+              <p class="small">Run a scenario to generate route intelligence.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="panel">
         <div class="row" style="margin-bottom:12px;">
           <h2 style="margin-right:auto;">Agent Timeline</h2>
@@ -394,22 +491,6 @@
         </div>
       </section>
 
-      <section class="trace-grid">
-        <div class="panel stack">
-          <div class="row">
-            <h2 style="margin-right:auto;">Live Trace API (/api/trace)</h2>
-            <button class="secondary" id="fetchTraceBtn">Fetch Trace</button>
-          </div>
-          <pre id="liveTraceContent">Click to fetch trace from /api/trace</pre>
-        </div>
-
-        <div class="panel stack">
-          <h2>Simulated Crisis Map</h2>
-          <div id="map" style="height: 300px; border-radius: var(--radius); z-index: 1;"></div>
-          <p id="mapStatus" class="small">Waiting for scenario execution...</p>
-        </div>
-      </section>
-
       <section class="panel stack">
         <div class="row">
           <h2 style="margin-right:auto;">Artifact Viewer</h2>
@@ -435,10 +516,20 @@
     const artifactContent = document.getElementById('artifactContent');
     const finalReport = document.getElementById('finalReport');
     const installBtn = document.getElementById('installBtn');
+    const mapStatus = document.getElementById('mapStatus');
+    const weatherPanel = document.getElementById('weatherPanel');
+    const routePanel = document.getElementById('routePanel');
+    const beforeMapBtn = document.getElementById('beforeMapBtn');
+    const afterMapBtn = document.getElementById('afterMapBtn');
 
     let currentResult = null;
+    let currentMapTrace = null;
     let selectedIteration = 0;
     let deferredInstallPrompt = null;
+    let googleMap = null;
+    let googleMapsReady = false;
+    let mapMode = 'before';
+    let mapLayers = [];
 
     const escapeHtml = (value) => String(value)
       .replaceAll('&', '&amp;')
@@ -447,47 +538,216 @@
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
 
-    let map;
-    function initMap() {
-      if(!document.getElementById('map')) return;
-      map = L.map('map').setView([33.6844, 73.0479], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-    }
-    window.addEventListener('load', initMap);
+    const pct = (value) => `${Math.round((value || 0) * 100)}%`;
 
-    function updateMapForScenario(scenarioId) {
-      if(!map) return;
-      if(scenarioId === 'peshawar_ring_road_blast') {
-        map.setView([33.9995, 71.4651], 13);
-      } else {
-        map.setView([33.6844, 73.0479], 13);
+    async function loadGoogleMaps() {
+      try {
+        const configResponse = await fetch('/api/config');
+        const config = await configResponse.json();
+        const apiKey = config.google_maps_api_key || '';
+        if (!apiKey) {
+          mapStatus.textContent = 'GOOGLE_MAPS_API_KEY is not configured; route and weather panels will use fallback artifacts.';
+          return false;
+        }
+        if (window.google && window.google.maps) {
+          googleMapsReady = true;
+          initializeMap();
+          renderMapTrace();
+          return true;
+        }
+        await new Promise((resolve, reject) => {
+          window.initCiroGoogleMap = () => resolve();
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&loading=async&callback=initCiroGoogleMap&v=weekly`;
+          script.async = true;
+          script.onerror = () => reject(new Error('Google Maps JavaScript API failed to load.'));
+          document.head.appendChild(script);
+        });
+        googleMapsReady = true;
+        initializeMap();
+        renderMapTrace();
+        if (!currentMapTrace) mapStatus.textContent = 'Google Maps ready. Run a scenario to draw routes.';
+        return true;
+      } catch (error) {
+        mapStatus.textContent = `Map unavailable: ${error.message}`;
+        return false;
       }
-      map.eachLayer((layer) => {
-        if(layer instanceof L.Marker) {
-          map.removeLayer(layer);
+    }
+
+    function initializeMap(center = { lat: 33.6844, lng: 73.0479 }) {
+      if (!googleMapsReady) return;
+      if (!googleMap) {
+        googleMap = new google.maps.Map(document.getElementById('map'), {
+          center,
+          zoom: 13,
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: true
+        });
+        return;
+      }
+      googleMap.setCenter(center);
+    }
+
+    function clearMapLayers() {
+      mapLayers.forEach((layer) => layer.setMap(null));
+      mapLayers = [];
+    }
+
+    function addMapMarker(marker, color, labelText) {
+      if (!marker || !marker.position) return null;
+      const mapMarker = new google.maps.Marker({
+        map: googleMap,
+        position: marker.position,
+        title: marker.label || labelText,
+        label: {
+          text: labelText,
+          color: '#ffffff',
+          fontWeight: '800'
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 11,
+          fillColor: color,
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 2
         }
       });
-      L.marker(map.getCenter()).addTo(map)
-        .bindPopup("Simulated Crisis Location").openPopup();
-      document.getElementById('mapStatus').textContent = `Map updated for ${scenarioId} (Simulation-only)`;
+      mapLayers.push(mapMarker);
+      return mapMarker;
     }
 
-    async function fetchLiveTrace() {
-      const liveTraceContent = document.getElementById('liveTraceContent');
-      liveTraceContent.textContent = 'Fetching...';
+    function addRoutePolyline(route, color) {
+      if (!route || !Array.isArray(route.polyline) || !route.polyline.length) return null;
+      const path = route.polyline
+        .map((point) => ({ lat: Number(point.lat), lng: Number(point.lng) }))
+        .filter((point) => Number.isFinite(point.lat) && Number.isFinite(point.lng));
+      if (!path.length) return null;
+      const polyline = new google.maps.Polyline({
+        map: googleMap,
+        path,
+        strokeColor: color,
+        strokeOpacity: 0.95,
+        strokeWeight: 6
+      });
+      mapLayers.push(polyline);
+      return path;
+    }
+
+    function fitMapToTrace(paths, markers) {
+      const bounds = new google.maps.LatLngBounds();
+      let hasBounds = false;
+      paths.flat().forEach((point) => {
+        bounds.extend(point);
+        hasBounds = true;
+      });
+      markers.forEach((marker) => {
+        if (marker && marker.position) {
+          bounds.extend(marker.position);
+          hasBounds = true;
+        }
+      });
+      if (hasBounds) googleMap.fitBounds(bounds, 44);
+    }
+
+    function renderMapTrace() {
+      if (!currentMapTrace) return;
+      renderWeatherPanel(currentMapTrace.weather_intelligence);
+      renderRoutePanel(currentMapTrace.route_intelligence);
+      if (!googleMapsReady) {
+        const source = currentMapTrace.route_intelligence?.source || 'fallback artifacts';
+        mapStatus.textContent = `Map canvas unavailable; latest route intelligence source: ${source}.`;
+        return;
+      }
+      initializeMap(currentMapTrace.center);
+      clearMapLayers();
+
+      const markers = currentMapTrace.markers || {};
+      const drawnMarkers = [addMapMarker(markers.crisis, '#dc2626', '!')];
+      const drawnPaths = [];
+      if (mapMode === 'before') {
+        drawnMarkers.push(addMapMarker(markers.weather, '#2563eb', 'W'));
+        const blockedPath = addRoutePolyline(currentMapTrace.blocked_route, '#dc2626');
+        if (blockedPath) drawnPaths.push(blockedPath);
+        mapStatus.textContent = 'Before response: blocked route shown in red with crisis and weather-risk markers.';
+      } else {
+        drawnMarkers.push(addMapMarker(markers.rescue, '#14804a', '+'));
+        const alternatePath = addRoutePolyline(currentMapTrace.alternate_route, '#14804a');
+        if (alternatePath) drawnPaths.push(alternatePath);
+        mapStatus.textContent = 'After simulated response: alternate rescue route shown in green with dispatch marker.';
+      }
+      fitMapToTrace(drawnPaths, drawnMarkers.filter(Boolean));
+    }
+
+    function setMapMode(mode) {
+      mapMode = mode;
+      beforeMapBtn.classList.toggle('active', mode === 'before');
+      afterMapBtn.classList.toggle('active', mode === 'after');
+      renderMapTrace();
+    }
+
+    function riskBadgeClass(risk) {
+      if (risk === 'high') return 'badge danger';
+      if (risk === 'medium') return 'badge warn';
+      return 'badge ok';
+    }
+
+    function renderWeatherPanel(weather) {
+      const badge = document.getElementById('weatherSourceBadge');
+      if (!weather) {
+        badge.textContent = 'No data';
+        badge.className = 'badge';
+        weatherPanel.innerHTML = '<p class="small">Run a scenario to generate weather intelligence.</p>';
+        return;
+      }
+      badge.textContent = weather.fallback_used ? 'Mock fallback' : 'Google Weather';
+      badge.className = weather.fallback_used ? 'badge warn' : 'badge ok';
+      weatherPanel.innerHTML = `
+        <div class="kv"><span>Location</span><strong>${escapeHtml(weather.location)}</strong></div>
+        <div class="kv"><span>Condition</span><strong>${escapeHtml(weather.condition)}</strong></div>
+        <div class="kv"><span>Precipitation</span><strong>${escapeHtml(weather.precipitation_mm)} mm / ${escapeHtml(weather.precipitation_probability_percent)}%</strong></div>
+        <div class="kv"><span>Rainfall Signal</span><strong>${escapeHtml(weather.rainfall_mm_per_hour)} mm/hr</strong></div>
+        <div class="kv"><span>Risk</span><strong><span class="${riskBadgeClass(weather.risk_level)}">${escapeHtml(weather.risk_level)}</span></strong></div>
+        <div class="kv"><span>Confidence</span><strong>${pct(weather.confidence)}</strong></div>
+        <div class="kv"><span>Source</span><strong>${escapeHtml(weather.source)}</strong></div>
+      `;
+    }
+
+    function renderRoutePanel(route) {
+      const badge = document.getElementById('routeSourceBadge');
+      if (!route) {
+        badge.textContent = 'No data';
+        badge.className = 'badge';
+        routePanel.innerHTML = '<p class="small">Run a scenario to generate route intelligence.</p>';
+        return;
+      }
+      badge.textContent = route.fallback_used ? 'Mock fallback' : 'Google Routes';
+      badge.className = route.fallback_used ? 'badge warn' : 'badge ok';
+      routePanel.innerHTML = `
+        <div class="kv"><span>Blocked Route</span><strong>${escapeHtml(route.blocked_route)}</strong></div>
+        <div class="kv"><span>Alternate</span><strong>${escapeHtml(route.alternate_route)}</strong></div>
+        <div class="kv"><span>ETA</span><strong>${escapeHtml(route.estimated_travel_time)}</strong></div>
+        <div class="kv"><span>Distance</span><strong>${escapeHtml(route.distance)}</strong></div>
+        <div class="kv"><span>Reason</span><strong>${escapeHtml(route.rerouting_reason)}</strong></div>
+        <div class="kv"><span>Source</span><strong>${escapeHtml(route.source)}</strong></div>
+      `;
+    }
+
+    async function readJsonArtifact(filename) {
+      const response = await fetch(`/api/artifacts/${encodeURIComponent(filename)}`);
+      if (!response.ok) throw new Error(`Unable to read ${filename}`);
+      return response.json();
+    }
+
+    async function loadScenarioIntelligence() {
       try {
-        const response = await fetch('/api/trace');
-        const data = await response.json();
-        liveTraceContent.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        liveTraceContent.textContent = 'Failed to fetch trace: ' + err.message;
+        currentMapTrace = await readJsonArtifact('map_route_trace.json');
+        setMapMode('before');
+      } catch (error) {
+        mapStatus.textContent = `Map intelligence unavailable: ${error.message}`;
       }
     }
-
-    const pct = (value) => `${Math.round((value || 0) * 100)}%`;
 
     async function loadScenarios() {
       try {
@@ -521,7 +781,7 @@
         selectedIteration = currentResult.iterations.length - 1;
         renderResult();
         await loadArtifacts(currentResult.artifact_files);
-        updateMapForScenario(scenarioId);
+        await loadScenarioIntelligence();
         runStatus.textContent = 'Iterative pipeline complete.';
       } catch (error) {
         runStatus.textContent = `Pipeline failed: ${error.message}`;
@@ -632,8 +892,10 @@
     runBtn.addEventListener('click', runPipeline);
     document.getElementById('refreshArtifactsBtn').addEventListener('click', () => loadArtifacts());
     document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
-    document.getElementById('fetchTraceBtn').addEventListener('click', fetchLiveTrace);
+    beforeMapBtn.addEventListener('click', () => setMapMode('before'));
+    afterMapBtn.addEventListener('click', () => setMapMode('after'));
     loadScenarios();
+    loadGoogleMaps();
 
     function isStandalone() {
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;

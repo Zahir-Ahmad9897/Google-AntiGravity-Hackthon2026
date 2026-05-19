@@ -1,0 +1,22 @@
+{
+  "scenario_id": "g10_urban_flooding",
+  "scenario_name": "Islamabad G-10 urban flooding",
+  "generated_at": "2026-05-19T02:50:37.124427+00:00",
+  "simulation_only": true,
+  "weather_intelligence": {
+    "location": "G-10 Islamabad",
+    "resolved_location": "G-10 Islamabad",
+    "lat": 33.6767,
+    "lng": 73.0149,
+    "condition": "flood_alert",
+    "condition_type": "flood_alert",
+    "precipitation_mm": 6.2,
+    "precipitation_probability_percent": 80.0,
+    "rainfall_mm_per_hour": 6.2,
+    "risk_level": "medium",
+    "confidence": 0.66,
+    "source": "mock_weather",
+    "fallback_used": true,
+    "fallback_reason": "GOOGLE_MAPS_API_KEY is missing."
+  }
+}

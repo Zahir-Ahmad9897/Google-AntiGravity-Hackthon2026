@@ -24,6 +24,7 @@ from backend.iterative_schemas import (
 )
 from backend.schemas import ResponsePlannerOutput, SituationAnalystOutput
 from backend.services.artifacts import save_artifact
+from backend.services.google_maps import build_scenario_map_payload, reset_google_api_trace
 from backend.services.iterative_scenario_store import get_iterative_scenario
 
 
@@ -131,11 +132,15 @@ def run_iterative_pipeline_by_id(scenario_id: str) -> IterativePipelineResult:
     risk_record = _risk_record(scenario_definition.scenario_id, scenario_definition.title, traces)
     rescue_plan = _rescue_action_plan_markdown(scenario_definition.title, traces, approval)
     final_report = _final_crisis_report_markdown(scenario_definition.title, traces, approval, latest_planner, latest_analyst)
+    map_payload = _google_map_payload(scenario_definition.scenario_id, scenario_definition.title, scenario_definition.steps[-1].scenario)
 
     artifact_files.append(save_artifact("risk_score.json", risk_record))
     artifact_files.append(save_artifact("agent_tool_calls.json", [call.model_dump(mode="json") for call in tool_calls]))
     artifact_files.append(save_artifact("rescue_action_plan.md", rescue_plan))
     artifact_files.append(save_artifact("final_crisis_report.md", final_report))
+    artifact_files.append(save_artifact("map_route_trace.json", map_payload))
+    artifact_files.append(save_artifact("weather_signal_trace.json", _weather_trace_from_map_payload(map_payload)))
+    artifact_files.append("artifacts\\google_api_trace.json")
 
     final_trace = traces[-1]
     return IterativePipelineResult(
@@ -157,6 +162,21 @@ def run_iterative_pipeline_by_id(scenario_id: str) -> IterativePipelineResult:
         ),
         latest_artifact="final_crisis_report.md",
     )
+
+
+def _google_map_payload(scenario_id: str, scenario_name: str, scenario: Any) -> dict[str, Any]:
+    reset_google_api_trace()
+    return build_scenario_map_payload(scenario_id, scenario_name, scenario)
+
+
+def _weather_trace_from_map_payload(map_payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "scenario_id": map_payload["scenario_id"],
+        "scenario_name": map_payload["scenario_name"],
+        "generated_at": map_payload["generated_at"],
+        "simulation_only": True,
+        "weather_intelligence": map_payload["weather_intelligence"],
+    }
 
 
 def _approval_record(scenario_id: str) -> HumanApprovalRecord:

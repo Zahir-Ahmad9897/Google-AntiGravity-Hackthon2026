@@ -1,0 +1,141 @@
+{
+  "scenario_id": "g10_urban_flooding",
+  "scenario_name": "Islamabad G-10 urban flooding",
+  "generated_at": "2026-05-19T02:50:37.124427+00:00",
+  "simulation_only": true,
+  "center": {
+    "lat": 33.6767,
+    "lng": 73.0149
+  },
+  "markers": {
+    "crisis": {
+      "label": "G-10 urban flooding",
+      "position": {
+        "lat": 33.6767,
+        "lng": 73.0149
+      },
+      "severity": "medium"
+    },
+    "weather": {
+      "label": "Weather risk: medium",
+      "position": {
+        "lat": 33.6807,
+        "lng": 73.0119
+      },
+      "condition": "flood_alert"
+    },
+    "rescue": {
+      "label": "Rescue unit from G-6 Markaz",
+      "position": {
+        "lat": 33.7182,
+        "lng": 73.0731
+      },
+      "status": "simulated_dispatch_ready"
+    }
+  },
+  "blocked_route": {
+    "label": "Srinagar Highway G-10 underpass",
+    "route_type": "blocked",
+    "distance_meters": 7148,
+    "distance_text": "7.1 km",
+    "duration_seconds": 735,
+    "duration_text": "12 min",
+    "encoded_polyline": "",
+    "polyline": [
+      {
+        "lat": 33.7182,
+        "lng": 73.0731
+      },
+      {
+        "lat": 33.6747,
+        "lng": 73.0162
+      }
+    ],
+    "source": "mock_route"
+  },
+  "alternate_route": {
+    "label": "Margalla Road alternate corridor",
+    "route_type": "alternate",
+    "distance_meters": 7677,
+    "distance_text": "7.7 km",
+    "duration_seconds": 789,
+    "duration_text": "13 min",
+    "encoded_polyline": "",
+    "polyline": [
+      {
+        "lat": 33.7182,
+        "lng": 73.0731
+      },
+      {
+        "lat": 33.720975,
+        "lng": 73.073185
+      },
+      {
+        "lat": 33.70575,
+        "lng": 73.05327
+      },
+      {
+        "lat": 33.6747,
+        "lng": 73.0162
+      }
+    ],
+    "source": "mock_route"
+  },
+  "dispatch_route": {
+    "label": "Margalla Road alternate corridor",
+    "route_type": "alternate",
+    "distance_meters": 7677,
+    "distance_text": "7.7 km",
+    "duration_seconds": 789,
+    "duration_text": "13 min",
+    "encoded_polyline": "",
+    "polyline": [
+      {
+        "lat": 33.7182,
+        "lng": 73.0731
+      },
+      {
+        "lat": 33.720975,
+        "lng": 73.073185
+      },
+      {
+        "lat": 33.70575,
+        "lng": 73.05327
+      },
+      {
+        "lat": 33.6747,
+        "lng": 73.0162
+      }
+    ],
+    "source": "mock_route"
+  },
+  "route_intelligence": {
+    "blocked_route": "Srinagar Highway G-10 underpass",
+    "alternate_route": "Margalla Road alternate corridor",
+    "estimated_travel_time": "13 min",
+    "distance": "7.7 km",
+    "rerouting_reason": "Floodwater and congestion around G-10 require avoiding the blocked underpass.",
+    "source": "mock_route",
+    "fallback_used": true
+  },
+  "weather_intelligence": {
+    "location": "G-10 Islamabad",
+    "resolved_location": "G-10 Islamabad",
+    "lat": 33.6767,
+    "lng": 73.0149,
+    "condition": "flood_alert",
+    "condition_type": "flood_alert",
+    "precipitation_mm": 6.2,
+    "precipitation_probability_percent": 80.0,
+    "rainfall_mm_per_hour": 6.2,
+    "risk_level": "medium",
+    "confidence": 0.66,
+    "source": "mock_weather",
+    "fallback_used": true,
+    "fallback_reason": "GOOGLE_MAPS_API_KEY is missing."
+  },
+  "map_behavior": {
+    "before_response": "Show crisis marker, weather marker, and blocked route in red.",
+    "after_simulated_response": "Show rescue marker, alternate route in green, and dispatch path."
+  }
+}

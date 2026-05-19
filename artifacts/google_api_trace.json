@@ -1,0 +1,108 @@
+[
+  {
+    "timestamp": "2026-05-19T02:50:36.957374+00:00",
+    "api_name": "Geocoding API",
+    "input": {
+      "location": "G-10 Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "formatted_address": "G-10, Islamabad, Pakistan",
+      "lat": 33.6767,
+      "lng": 73.0149,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.003603+00:00",
+    "api_name": "Geocoding API",
+    "input": {
+      "location": "G-6 Markaz Emergency Centre, Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "formatted_address": "G-6 Markaz, Islamabad, Pakistan",
+      "lat": 33.7182,
+      "lng": 73.0731,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.023357+00:00",
+    "api_name": "Geocoding API",
+    "input": {
+      "location": "G-10 Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "formatted_address": "G-10, Islamabad, Pakistan",
+      "lat": 33.6767,
+      "lng": 73.0149,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.065211+00:00",
+    "api_name": "Weather API",
+    "input": {
+      "location": "G-10 Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "condition": "flood_alert",
+      "rainfall_mm_per_hour": 6.2,
+      "risk_level": "medium",
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.085046+00:00",
+    "api_name": "Geocoding API",
+    "input": {
+      "location": "G-6 Markaz Emergency Centre, Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "formatted_address": "G-6 Markaz, Islamabad, Pakistan",
+      "lat": 33.7182,
+      "lng": 73.0731,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.104608+00:00",
+    "api_name": "Geocoding API",
+    "input": {
+      "location": "G-10 Markaz Islamabad"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "formatted_address": "G-10 Markaz, Islamabad, Pakistan",
+      "lat": 33.6747,
+      "lng": 73.0162,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  },
+  {
+    "timestamp": "2026-05-19T02:50:37.123577+00:00",
+    "api_name": "Routes API",
+    "input": {
+      "origin": "G-6 Markaz, Islamabad, Pakistan",
+      "destination": "G-10 Markaz, Islamabad, Pakistan",
+      "blocked_route": "Srinagar Highway G-10 underpass"
+    },
+    "success": false,
+    "fallback_used": true,
+    "summarized_output": {
+      "normal_distance_m": 7148,
+      "alternate_distance_m": 7677,
+      "reason": "GOOGLE_MAPS_API_KEY is missing."
+    }
+  }
+]

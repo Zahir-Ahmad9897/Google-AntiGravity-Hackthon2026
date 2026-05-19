@@ -118,3 +118,7 @@ documentation.txt
 antigravity-usage.md
 future_production_input_layer.md
 scratch_prompt.txt
+
+# Remove all md files except README.md
+*.md
+!README.md

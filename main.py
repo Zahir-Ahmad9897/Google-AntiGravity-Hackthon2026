@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, Response
@@ -17,10 +19,13 @@ from backend.services.scenario_store import get_scenario, list_scenarios
 
 
 BASE_DIR = Path(__file__).resolve().parent
+ENV_PATH = BASE_DIR / ".env"
 DASHBOARD_DIR = BASE_DIR / "dashboard"
 DASHBOARD_PATH = DASHBOARD_DIR / "index.html"
 MANIFEST_PATH = DASHBOARD_DIR / "manifest.json"
 SERVICE_WORKER_PATH = DASHBOARD_DIR / "sw.js"
+
+load_dotenv(dotenv_path=ENV_PATH)
 
 
 class PipelineRunRequest(BaseModel):
@@ -47,6 +52,13 @@ app.mount("/dashboard", StaticFiles(directory=DASHBOARD_DIR), name="dashboard")
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/config")
+def api_config() -> dict[str, str]:
+    return {
+        "google_maps_api_key": os.getenv("GOOGLE_MAPS_API_KEY", ""),
+    }
 
 
 @app.get("/api/scenarios")
@@ -122,16 +134,6 @@ def api_artifact(filename: str) -> Response:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     media_type = "application/json" if filename.endswith(".json") else "text/markdown"
     return Response(content=content, media_type=media_type)
-
-
-@app.get("/api/trace")
-def api_trace() -> dict:
-    import json
-    try:
-        content = read_artifact("agent_tool_calls.json")
-        return json.loads(content)
-    except Exception:
-        return {"status": "no trace yet", "detail": "Run a scenario to generate a trace."}
 
 
 @app.get("/", response_class=HTMLResponse)
