@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1a1a2e">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CIRO">
+  <meta name="application-name" content="CIRO">
   <title>CIRO Command Center</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/dashboard/icons/icon-192.png">
@@ -43,6 +46,14 @@
       background: #202124;
       color: #fff;
       border-bottom: 4px solid var(--accent);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     h1, h2, h3, p { margin: 0; }
@@ -132,6 +143,14 @@
     button:disabled {
       opacity: 0.55;
       cursor: not-allowed;
+    }
+
+    button[hidden] { display: none; }
+
+    .install-button {
+      min-height: 36px;
+      padding: 8px 12px;
+      font-size: 13px;
     }
 
     .stack { display: grid; gap: 10px; }
@@ -255,6 +274,26 @@
       .sidebar { position: static; }
       .grid, .timeline, .trace-grid { grid-template-columns: 1fr; }
     }
+
+    @media (max-width: 640px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px;
+      }
+
+      main { padding: 10px; gap: 12px; }
+      .content { gap: 12px; }
+      .panel { padding: 12px; }
+      .header-actions { width: 100%; justify-content: space-between; }
+      h1 { font-size: 18px; line-height: 1.25; }
+      button { width: 100%; }
+      .header-actions button,
+      .artifact-list button,
+      .iteration { width: auto; }
+      .row button { width: auto; }
+      pre { max-height: 340px; }
+    }
   </style>
 </head>
 <body>
@@ -263,7 +302,10 @@
       <h1>CIRO Crisis Intelligence & Response Orchestrator</h1>
       <p class="small">Google ADK + Gemini iterative crisis-response demo</p>
     </div>
-    <span id="approvalBadge" class="badge warn">Approval Pending</span>
+    <div class="header-actions">
+      <button id="installBtn" class="secondary install-button" hidden>Install App</button>
+      <span id="approvalBadge" class="badge warn">Approval Pending</span>
+    </div>
   </header>
 
   <main>
@@ -374,9 +416,11 @@
     const artifactList = document.getElementById('artifactList');
     const artifactContent = document.getElementById('artifactContent');
     const finalReport = document.getElementById('finalReport');
+    const installBtn = document.getElementById('installBtn');
 
     let currentResult = null;
     let selectedIteration = 0;
+    let deferredInstallPrompt = null;
 
     const escapeHtml = (value) => String(value)
       .replaceAll('&', '&amp;')
@@ -531,11 +575,38 @@
     document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
     loadScenarios();
 
+    function isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      if (isStandalone()) return;
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      installBtn.hidden = false;
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      installBtn.hidden = true;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      installBtn.hidden = true;
+    });
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch((error) => {
-          console.warn('Service worker registration failed:', error);
-        });
+        navigator.serviceWorker
+          .register('/sw.js', { scope: '/' })
+          .then((registration) => registration.update())
+          .catch((error) => {
+            console.warn('Service worker registration failed:', error);
+          });
       });
     }
   </script>

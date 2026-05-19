@@ -1,6 +1,6 @@
 {
-  "scenario_id": "peshawar_ring_road_blast",
-  "scenario_name": "Peshawar Ring Road blast and blockage",
+  "scenario_id": "g10_urban_flooding",
+  "scenario_name": "Islamabad G-10 urban flooding",
   "iteration_number": 1,
   "input_sources": [
     "simulated_weather",
@@ -12,11 +12,11 @@
       "agent_name": "CIRO Commander Agent",
       "summary": "Started scenario lifecycle and initialized shared crisis state.",
       "confidence_score": 1.0,
-      "reasoning_summary": "Iteration 1 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Peshawar Ring Road blast and blockage.",
+      "reasoning_summary": "Iteration 1 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Islamabad G-10 urban flooding.",
       "output": {
         "iteration": 1,
         "transition": "initial_detection",
-        "update_note": "Single authorized public report mentions a blast; traffic impact not yet confirmed.",
+        "update_note": "Initial public report; weather below alert threshold; traffic still moving.",
         "shared_state_keys": [
           "scenario",
           "signals",
@@ -34,19 +34,19 @@
     },
     {
       "agent_name": "Weather Risk Agent",
-      "summary": "Weather risk is low; rainfall=0.0mm/hr, alert_active=False.",
-      "confidence_score": 0.0,
+      "summary": "Weather risk is low; rainfall=4.8mm/hr, alert_active=False.",
+      "confidence_score": 0.29,
       "reasoning_summary": "Weather severity is derived from rainfall intensity, alert activity, and alert level using mock PMD-style data.",
       "output": {
         "weather_signal": {
-          "location": "Peshawar",
+          "location": "Islamabad",
           "source": "mock_weather",
-          "district": "Peshawar",
-          "rainfall_mm_per_hour": 0.0,
+          "district": "Islamabad",
+          "rainfall_mm_per_hour": 4.8,
           "alert_active": false,
-          "alert_type": "none",
-          "alert_level": 0,
-          "timestamp": "2026-05-18T21:58:21.154472+00:00"
+          "alert_type": "rain_watch",
+          "alert_level": 1,
+          "timestamp": "2026-05-19T00:15:44.118443+00:00"
         },
         "severity": "low",
         "flood_or_storm_detected": false
@@ -63,13 +63,22 @@
       "output": {
         "traffic_signals": [
           {
-            "location": "Peshawar Ring Road blast and blockage",
+            "location": "Islamabad G-10 urban flooding",
             "source": "mock_traffic",
-            "road_name": "Peshawar Ring Road",
-            "speed_kmh": 20.0,
-            "normal_speed_kmh": 45.0,
+            "road_name": "Khayaban-e-Iqbal",
+            "speed_kmh": 14.0,
+            "normal_speed_kmh": 38.0,
             "congestion_level": 3,
-            "timestamp": "2026-05-18T21:59:21.154472+00:00"
+            "timestamp": "2026-05-19T00:16:44.118443+00:00"
+          },
+          {
+            "location": "Islamabad G-10 urban flooding",
+            "source": "mock_traffic",
+            "road_name": "Margalla Road sector crossing",
+            "speed_kmh": 18.0,
+            "normal_speed_kmh": 35.0,
+            "congestion_level": 2,
+            "timestamp": "2026-05-19T00:16:44.118443+00:00"
           }
         ],
         "blocked_roads": [],
@@ -93,16 +102,16 @@
       "output": {
         "permission_granted": true,
         "approved_context": [
-          "User approved the visible Ring Road emergency post for this demo run."
+          "User approved reading the visible G-10 public report for this demo run."
         ],
         "emergency_reports": [
           {
-            "location": "Peshawar Ring Road blast and blockage",
+            "location": "Islamabad G-10 urban flooding",
             "source": "authorized_public_report",
-            "post_id": "prr-i1-public-1",
-            "text": "Peshawar Ring Road ke qareeb blast ki awaz ayi hai, log ruk gaye hain",
+            "post_id": "g10-i1-public-1",
+            "text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
             "language": "mixed",
-            "timestamp": "2026-05-18T21:57:21.154472+00:00"
+            "timestamp": "2026-05-19T00:13:44.118443+00:00"
           }
         ],
         "ignored_unrelated_or_private_count": 0,
@@ -123,31 +132,32 @@
           "agent_name": "signal_watcher",
           "signals": [
             {
-              "event_id": "prr-i1-public-1-event",
+              "event_id": "g10-i1-public-1-event",
               "source_type": "social",
-              "location": "Peshawar Ring Road",
-              "crisis_type": "accident",
-              "urgency_score": 4,
+              "location": "G-10",
+              "crisis_type": "urban_flooding",
+              "urgency_score": 3,
               "confidence_hint": 0.7,
-              "timestamp": "2026-05-18T21:57:21.154472Z",
-              "raw_text": "Peshawar Ring Road ke qareeb blast ki awaz ayi hai, log ruk gaye hain",
+              "timestamp": "2026-05-19T00:13:44.118443Z",
+              "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
               "evidence": [
-                "blast"
+                "pani"
               ],
               "metadata": {
                 "platform": "simulated_social",
                 "language": "mixed",
-                "reporter_hash": "prr_user_1"
+                "reporter_hash": "g10_user_1"
               }
             }
           ],
           "ignored_inputs": [
-            "Weather prr-i1-weather ignored: rainfall 0.0mm/hr and no active alert.",
-            "Traffic prr-i1-traffic-1 ignored: speed 20.0km/h is near normal."
+            "Weather g10-i1-weather ignored: rainfall 4.8mm/hr and no active alert.",
+            "Traffic g10-i1-traffic-1 ignored: speed 14.0km/h is near normal.",
+            "Traffic g10-i1-traffic-2 ignored: speed 18.0km/h is near normal."
           ],
           "reasoning_chain": [
             "Read simulated social, weather, and traffic inputs using the same schema expected from production collectors.",
-            "Social post prr-i1-public-1 mapped to accident at Peshawar Ring Road with urgency 4/5.",
+            "Social post g10-i1-public-1 mapped to urban_flooding at G-10 with urgency 3/5.",
             "Agent 1 produced 1 structured SignalEvent objects."
           ]
         },
@@ -155,26 +165,26 @@
           "agent_name": "crisis_detector",
           "clusters": [
             {
-              "cluster_id": "peshawar_ring_road_blast-cluster-1",
-              "location": "Peshawar Ring Road",
-              "crisis_type": "accident",
+              "cluster_id": "g10_urban_flooding-cluster-1",
+              "location": "G-10",
+              "crisis_type": "urban_flooding",
               "signals": [
                 {
-                  "event_id": "prr-i1-public-1-event",
+                  "event_id": "g10-i1-public-1-event",
                   "source_type": "social",
-                  "location": "Peshawar Ring Road",
-                  "crisis_type": "accident",
-                  "urgency_score": 4,
+                  "location": "G-10",
+                  "crisis_type": "urban_flooding",
+                  "urgency_score": 3,
                   "confidence_hint": 0.7,
-                  "timestamp": "2026-05-18T21:57:21.154472Z",
-                  "raw_text": "Peshawar Ring Road ke qareeb blast ki awaz ayi hai, log ruk gaye hain",
+                  "timestamp": "2026-05-19T00:13:44.118443Z",
+                  "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
                   "evidence": [
-                    "blast"
+                    "pani"
                   ],
                   "metadata": {
                     "platform": "simulated_social",
                     "language": "mixed",
-                    "reporter_hash": "prr_user_1"
+                    "reporter_hash": "g10_user_1"
                   }
                 }
               ],
@@ -197,31 +207,31 @@
               "confidence_band": "medium",
               "escalation": "no_escalation",
               "evidence": [
-                "blast"
+                "pani"
               ]
             }
           ],
           "selected_cluster": {
-            "cluster_id": "peshawar_ring_road_blast-cluster-1",
-            "location": "Peshawar Ring Road",
-            "crisis_type": "accident",
+            "cluster_id": "g10_urban_flooding-cluster-1",
+            "location": "G-10",
+            "crisis_type": "urban_flooding",
             "signals": [
               {
-                "event_id": "prr-i1-public-1-event",
+                "event_id": "g10-i1-public-1-event",
                 "source_type": "social",
-                "location": "Peshawar Ring Road",
-                "crisis_type": "accident",
-                "urgency_score": 4,
+                "location": "G-10",
+                "crisis_type": "urban_flooding",
+                "urgency_score": 3,
                 "confidence_hint": 0.7,
-                "timestamp": "2026-05-18T21:57:21.154472Z",
-                "raw_text": "Peshawar Ring Road ke qareeb blast ki awaz ayi hai, log ruk gaye hain",
+                "timestamp": "2026-05-19T00:13:44.118443Z",
+                "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
                 "evidence": [
-                  "blast"
+                  "pani"
                 ],
                 "metadata": {
                   "platform": "simulated_social",
                   "language": "mixed",
-                  "reporter_hash": "prr_user_1"
+                  "reporter_hash": "g10_user_1"
                 }
               }
             ],
@@ -244,7 +254,7 @@
             "confidence_band": "medium",
             "escalation": "no_escalation",
             "evidence": [
-              "blast"
+              "pani"
             ]
           },
           "reasoning_chain": [
@@ -258,13 +268,13 @@
         "verification": {
           "total_signals": 1,
           "unique_crisis_signals": [
-            "prr-i1-public-1-event"
+            "g10-i1-public-1-event"
           ],
           "duplicates_removed": [],
           "noise_removed": [],
           "verified_count": 1
         },
-        "risk_score": 0.65
+        "risk_score": 0.56
       },
       "actions": [
         "verify_signals",
@@ -274,15 +284,15 @@
     },
     {
       "agent_name": "Crisis Reasoning Agent",
-      "summary": "Major accident and road blockage detected in Peshawar Ring Road; crisis level=no_escalation.",
+      "summary": "Urban flooding detected in G-10; crisis level=no_escalation.",
       "confidence_score": 0.5,
-      "reasoning_summary": "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within Peshawar Ring Road over 0.0 minutes.; Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.; Traffic evidence: all simulated traffic reports are near normal speed.",
+      "reasoning_summary": "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.; Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.; Traffic evidence: all simulated traffic reports are near normal speed.",
       "output": {
         "agent_name": "situation_analyst",
         "analysis": {
-          "detected_situation": "Major accident and road blockage detected in Peshawar Ring Road",
-          "location": "Peshawar Ring Road",
-          "crisis_type": "accident",
+          "detected_situation": "Urban flooding detected in G-10",
+          "location": "G-10",
+          "crisis_type": "urban_flooding",
           "severity_score": 1,
           "confidence": {
             "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
@@ -299,36 +309,36 @@
           "confidence_band": "medium",
           "escalation": "no_escalation",
           "affected_roads": [],
-          "affected_population_density_per_sq_km": 6800,
+          "affected_population_density_per_sq_km": 8400,
           "primary_risks": [
-            "injury risk at crash site",
-            "secondary collisions from queue buildup"
+            "vehicle entrapment",
+            "infrastructure damage from standing floodwater"
           ],
           "secondary_risks": [
-            "spillover congestion into adjacent approaches",
-            "ambulance access delay"
+            "displacement pressure for low-income residents near G-10",
+            "delayed rescue access if congestion is not reduced"
           ],
           "reasoning_chain": [
-            "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within Peshawar Ring Road over 0.0 minutes.",
-            "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.",
+            "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.",
+            "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.",
             "Traffic evidence: all simulated traffic reports are near normal speed.",
-            "Residential population density for Peshawar Ring Road is estimated at 6800 per square kilometre.",
-            "Severity logic: severity score is 1 of 5 because crisis_type=accident, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=4.",
+            "Residential population density for G-10 is estimated at 8400 per square kilometre.",
+            "Severity logic: severity score is 1 of 5 because crisis_type=urban_flooding, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=3.",
             "Confidence formula: 0.5 base + 0.1 signal addition (min(0.1 * 1, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.1 single-source penalty = 0.5, bounded to final score 0.5.",
-            "Primary risks: injury risk at crash site; secondary collisions from queue buildup",
-            "Secondary risks: spillover congestion into adjacent approaches; ambulance access delay",
+            "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater",
+            "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
             "Escalation decision remains no_escalation; system state is passive monitoring."
           ]
         },
         "reasoning_chain": [
-          "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within Peshawar Ring Road over 0.0 minutes.",
-          "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 0.0mm per hour.",
+          "Signal count is 1 correlated crisis signal(s) from 1 total observed signal(s) within G-10 over 0.0 minutes.",
+          "Weather evidence: no active weather alert confirmed from simulated PMD API; rainfall is 4.8mm per hour.",
           "Traffic evidence: all simulated traffic reports are near normal speed.",
-          "Residential population density for Peshawar Ring Road is estimated at 6800 per square kilometre.",
-          "Severity logic: severity score is 1 of 5 because crisis_type=accident, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=4.",
+          "Residential population density for G-10 is estimated at 8400 per square kilometre.",
+          "Severity logic: severity score is 1 of 5 because crisis_type=urban_flooding, escalation=no_escalation, weather_alert=False, affected_roads=0, and max_urgency=3.",
           "Confidence formula: 0.5 base + 0.1 signal addition (min(0.1 * 1, 0.4)) + 0.0 weather-alert addition - 0.0 stale-signal penalty - 0.1 single-source penalty = 0.5, bounded to final score 0.5.",
-          "Primary risks: injury risk at crash site; secondary collisions from queue buildup",
-          "Secondary risks: spillover congestion into adjacent approaches; ambulance access delay",
+          "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater",
+          "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
           "Escalation decision remains no_escalation; system state is passive monitoring."
         ]
       },
@@ -419,7 +429,7 @@
     }
   ],
   "confidence_score": 0.5,
-  "concise_reasoning_summary": "Major accident and road blockage detected in Peshawar Ring Road; confidence=0.5; severity=1/5; affected roads=no severe road blockage.",
+  "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=0.5; severity=1/5; affected roads=no severe road blockage.",
   "action_plan": [
     "Monitor only; no simulated emergency action generated."
   ],
@@ -430,5 +440,5 @@
   "next_step": "Continue monitoring and run the next iteration with updated signals.",
   "approval_status": "approved_for_simulation",
   "crisis_level": "no_escalation",
-  "risk_score": 0.51
+  "risk_score": 0.47
 }

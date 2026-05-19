@@ -142,7 +142,11 @@ def manifest() -> FileResponse:
 def service_worker() -> FileResponse:
     if not SERVICE_WORKER_PATH.exists():
         raise HTTPException(status_code=404, detail="Service worker file not found.")
-    return FileResponse(SERVICE_WORKER_PATH, media_type="application/javascript")
+    return FileResponse(
+        SERVICE_WORKER_PATH,
+        media_type="application/javascript",
+        headers={"Cache-Control": "no-cache"},
+    )
 
 
 @app.get("/favicon.ico", include_in_schema=False)
