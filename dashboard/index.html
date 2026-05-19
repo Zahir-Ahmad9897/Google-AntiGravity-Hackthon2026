@@ -11,6 +11,8 @@
   <title>CIRO Command Center</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/dashboard/icons/icon-192.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
       --bg: #f4f6f8;
@@ -392,6 +394,22 @@
         </div>
       </section>
 
+      <section class="trace-grid">
+        <div class="panel stack">
+          <div class="row">
+            <h2 style="margin-right:auto;">Live Trace API (/api/trace)</h2>
+            <button class="secondary" id="fetchTraceBtn">Fetch Trace</button>
+          </div>
+          <pre id="liveTraceContent">Click to fetch trace from /api/trace</pre>
+        </div>
+
+        <div class="panel stack">
+          <h2>Simulated Crisis Map</h2>
+          <div id="map" style="height: 300px; border-radius: var(--radius); z-index: 1;"></div>
+          <p id="mapStatus" class="small">Waiting for scenario execution...</p>
+        </div>
+      </section>
+
       <section class="panel stack">
         <div class="row">
           <h2 style="margin-right:auto;">Artifact Viewer</h2>
@@ -429,6 +447,46 @@
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
 
+    let map;
+    function initMap() {
+      if(!document.getElementById('map')) return;
+      map = L.map('map').setView([33.6844, 73.0479], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+    }
+    window.addEventListener('load', initMap);
+
+    function updateMapForScenario(scenarioId) {
+      if(!map) return;
+      if(scenarioId === 'peshawar_ring_road_blast') {
+        map.setView([33.9995, 71.4651], 13);
+      } else {
+        map.setView([33.6844, 73.0479], 13);
+      }
+      map.eachLayer((layer) => {
+        if(layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+      L.marker(map.getCenter()).addTo(map)
+        .bindPopup("Simulated Crisis Location").openPopup();
+      document.getElementById('mapStatus').textContent = `Map updated for ${scenarioId} (Simulation-only)`;
+    }
+
+    async function fetchLiveTrace() {
+      const liveTraceContent = document.getElementById('liveTraceContent');
+      liveTraceContent.textContent = 'Fetching...';
+      try {
+        const response = await fetch('/api/trace');
+        const data = await response.json();
+        liveTraceContent.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        liveTraceContent.textContent = 'Failed to fetch trace: ' + err.message;
+      }
+    }
+
     const pct = (value) => `${Math.round((value || 0) * 100)}%`;
 
     async function loadScenarios() {
@@ -463,6 +521,7 @@
         selectedIteration = currentResult.iterations.length - 1;
         renderResult();
         await loadArtifacts(currentResult.artifact_files);
+        updateMapForScenario(scenarioId);
         runStatus.textContent = 'Iterative pipeline complete.';
       } catch (error) {
         runStatus.textContent = `Pipeline failed: ${error.message}`;
@@ -573,6 +632,7 @@
     runBtn.addEventListener('click', runPipeline);
     document.getElementById('refreshArtifactsBtn').addEventListener('click', () => loadArtifacts());
     document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
+    document.getElementById('fetchTraceBtn').addEventListener('click', fetchLiveTrace);
     loadScenarios();
 
     function isStandalone() {

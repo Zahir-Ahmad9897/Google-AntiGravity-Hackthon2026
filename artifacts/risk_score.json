@@ -1,12 +1,12 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "scenario_name": "Islamabad G-10 urban flooding",
+  "scenario_id": "ambulance_rain_congestion",
+  "scenario_name": "Ambulance stuck during rain and congestion",
   "iteration_scores": [
     {
       "iteration_number": 1,
-      "risk_score": 0.47,
-      "confidence_score": 0.5,
-      "crisis_level": "no_escalation"
+      "risk_score": 0.86,
+      "confidence_score": 0.9,
+      "crisis_level": "crisis"
     },
     {
       "iteration_number": 2,

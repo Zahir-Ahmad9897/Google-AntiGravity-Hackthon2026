@@ -124,6 +124,16 @@ def api_artifact(filename: str) -> Response:
     return Response(content=content, media_type=media_type)
 
 
+@app.get("/api/trace")
+def api_trace() -> dict:
+    import json
+    try:
+        content = read_artifact("agent_tool_calls.json")
+        return json.loads(content)
+    except Exception:
+        return {"status": "no trace yet", "detail": "Run a scenario to generate a trace."}
+
+
 @app.get("/", response_class=HTMLResponse)
 def dashboard() -> FileResponse:
     if not DASHBOARD_PATH.exists():

@@ -1,6 +1,6 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "scenario_name": "Islamabad G-10 urban flooding",
+  "scenario_id": "ambulance_rain_congestion",
+  "scenario_name": "Ambulance stuck during rain and congestion",
   "iteration_number": 2,
   "input_sources": [
     "simulated_weather",
@@ -10,13 +10,13 @@
   "agent_outputs": [
     {
       "agent_name": "CIRO Commander Agent",
-      "summary": "Loaded prior crisis level no_escalation and prepared updated signal pass.",
+      "summary": "Loaded prior crisis level crisis and prepared updated signal pass.",
       "confidence_score": 1.0,
-      "reasoning_summary": "Iteration 2 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Islamabad G-10 urban flooding.",
+      "reasoning_summary": "Iteration 2 runs Observe, Verify, Reason, Plan, Act, Evaluate, Re-plan for Ambulance stuck during rain and congestion.",
       "output": {
         "iteration": 2,
         "transition": "updated_signal_review",
-        "update_note": "Rainfall alert activates and roads become blocked.",
+        "update_note": "Congestion worsens and ambulance is reported stuck.",
         "shared_state_keys": [
           "scenario",
           "signals",
@@ -34,19 +34,19 @@
     },
     {
       "agent_name": "Weather Risk Agent",
-      "summary": "Weather risk is high; rainfall=9.1mm/hr, alert_active=True.",
-      "confidence_score": 0.73,
+      "summary": "Weather risk is high; rainfall=8.0mm/hr, alert_active=True.",
+      "confidence_score": 0.68,
       "reasoning_summary": "Weather severity is derived from rainfall intensity, alert activity, and alert level using mock PMD-style data.",
       "output": {
         "weather_signal": {
           "location": "Islamabad",
           "source": "mock_weather",
           "district": "Islamabad",
-          "rainfall_mm_per_hour": 9.1,
+          "rainfall_mm_per_hour": 8.0,
           "alert_active": true,
           "alert_type": "flood_alert",
           "alert_level": 3,
-          "timestamp": "2026-05-19T00:20:44.118443+00:00"
+          "timestamp": "2026-05-19T01:14:00.280495+00:00"
         },
         "severity": "high",
         "flood_or_storm_detected": true
@@ -58,36 +58,36 @@
     {
       "agent_name": "Traffic Analysis Agent",
       "summary": "Detected 2 blocked or severely congested road segment(s).",
-      "confidence_score": 0.71,
+      "confidence_score": 0.86,
       "reasoning_summary": "Traffic risk is based on mock speed, normal speed, congestion level, and ambulance-delay keywords.",
       "output": {
         "traffic_signals": [
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Ambulance stuck during rain and congestion",
             "source": "mock_traffic",
             "road_name": "Khayaban-e-Iqbal",
             "speed_kmh": 0.0,
             "normal_speed_kmh": 38.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-19T00:21:44.118443+00:00"
+            "timestamp": "2026-05-19T01:15:00.280495+00:00"
           },
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Ambulance stuck during rain and congestion",
             "source": "mock_traffic",
-            "road_name": "Margalla Road sector crossing",
+            "road_name": "Srinagar Highway G-10 underpass",
             "speed_kmh": 3.0,
-            "normal_speed_kmh": 35.0,
+            "normal_speed_kmh": 50.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-19T00:21:44.118443+00:00"
+            "timestamp": "2026-05-19T01:15:00.280495+00:00"
           }
         ],
         "blocked_roads": [
           "Khayaban-e-Iqbal",
-          "Margalla Road sector crossing"
+          "Srinagar Highway G-10 underpass"
         ],
-        "ambulance_delay_risk": false,
+        "ambulance_delay_risk": true,
         "alternate_routes": [
-          "Srinagar Highway G-10 underpass",
+          "Margalla Road sector crossing",
           "Peshawar Ring Road"
         ]
       },
@@ -105,16 +105,16 @@
       "output": {
         "permission_granted": true,
         "approved_context": [
-          "User approved reading the updated G-10 public report for this demo run."
+          "User approved reading the updated ambulance delay report for this demo run."
         ],
         "emergency_reports": [
           {
-            "location": "Islamabad G-10 urban flooding",
+            "location": "Ambulance stuck during rain and congestion",
             "source": "authorized_public_report",
-            "post_id": "g10-i2-public-1",
-            "text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+            "post_id": "amb-i2-public-1",
+            "text": "Ambulance G-10 signal pe phans gayi hai, pani aur congestion bohot zyada hai urgent reroute karo",
             "language": "mixed",
-            "timestamp": "2026-05-19T00:19:44.118443+00:00"
+            "timestamp": "2026-05-19T01:14:00.280495+00:00"
           }
         ],
         "ignored_unrelated_or_private_count": 0,
@@ -135,51 +135,51 @@
           "agent_name": "signal_watcher",
           "signals": [
             {
-              "event_id": "g10-i2-public-1-event",
+              "event_id": "amb-i2-public-1-event",
               "source_type": "social",
               "location": "G-10",
               "crisis_type": "urban_flooding",
               "urgency_score": 4,
               "confidence_hint": 0.7,
-              "timestamp": "2026-05-19T00:19:44.118443Z",
-              "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+              "timestamp": "2026-05-19T01:14:00.280495Z",
+              "raw_text": "Ambulance G-10 signal pe phans gayi hai, pani aur congestion bohot zyada hai urgent reroute karo",
               "evidence": [
                 "pani"
               ],
               "metadata": {
                 "platform": "simulated_social",
                 "language": "mixed",
-                "reporter_hash": "g10_user_2"
+                "reporter_hash": "amb_user_2"
               }
             },
             {
-              "event_id": "g10-i2-weather-event",
+              "event_id": "amb-i2-weather-event",
               "source_type": "weather",
               "location": "Islamabad",
               "crisis_type": "urban_flooding",
               "urgency_score": 3,
               "confidence_hint": 0.8,
-              "timestamp": "2026-05-19T00:20:44.118443Z",
-              "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
+              "timestamp": "2026-05-19T01:14:00.280495Z",
+              "raw_text": "flood_alert: rainfall 8.0mm/hr, alert_active=True",
               "evidence": [
-                "rainfall_mm_per_hour=9.1",
+                "rainfall_mm_per_hour=8.0",
                 "alert_level=3"
               ],
               "metadata": {
                 "district": "Islamabad",
                 "alert_active": true,
                 "alert_type": "flood_alert",
-                "rainfall_mm_per_hour": 9.1
+                "rainfall_mm_per_hour": 8.0
               }
             },
             {
-              "event_id": "g10-i2-traffic-1-event",
+              "event_id": "amb-i2-traffic-1-event",
               "source_type": "traffic",
               "location": "Khayaban-e-Iqbal",
               "crisis_type": "road_blockage",
               "urgency_score": 5,
               "confidence_hint": 0.75,
-              "timestamp": "2026-05-19T00:21:44.118443Z",
+              "timestamp": "2026-05-19T01:15:00.280495Z",
               "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
               "evidence": [
                 "speed_kmh=0.0",
@@ -194,23 +194,23 @@
               }
             },
             {
-              "event_id": "g10-i2-traffic-2-event",
+              "event_id": "amb-i2-traffic-2-event",
               "source_type": "traffic",
-              "location": "Margalla Road sector crossing",
+              "location": "Srinagar Highway G-10 underpass",
               "crisis_type": "road_blockage",
               "urgency_score": 4,
               "confidence_hint": 0.75,
-              "timestamp": "2026-05-19T00:21:44.118443Z",
-              "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+              "timestamp": "2026-05-19T01:15:00.280495Z",
+              "raw_text": "Srinagar Highway G-10 underpass: speed 3.0km/h, normal 50.0km/h",
               "evidence": [
                 "speed_kmh=3.0",
-                "normal_speed_kmh=35.0",
+                "normal_speed_kmh=50.0",
                 "congestion_level=5"
               ],
               "metadata": {
-                "road_name": "Margalla Road sector crossing",
+                "road_name": "Srinagar Highway G-10 underpass",
                 "speed_kmh": 3.0,
-                "normal_speed_kmh": 35.0,
+                "normal_speed_kmh": 50.0,
                 "congestion_level": 5
               }
             }
@@ -218,10 +218,10 @@
           "ignored_inputs": [],
           "reasoning_chain": [
             "Read simulated social, weather, and traffic inputs using the same schema expected from production collectors.",
-            "Social post g10-i2-public-1 mapped to urban_flooding at G-10 with urgency 4/5.",
-            "Weather report g10-i2-weather became a urban_flooding signal because rainfall is 9.1mm/hr and alert_active=True.",
-            "Traffic report g10-i2-traffic-1 became a road_blockage signal because speed is 0.0km/h with congestion level 5/5.",
-            "Traffic report g10-i2-traffic-2 became a road_blockage signal because speed is 3.0km/h with congestion level 5/5.",
+            "Social post amb-i2-public-1 mapped to urban_flooding at G-10 with urgency 4/5.",
+            "Weather report amb-i2-weather became a urban_flooding signal because rainfall is 8.0mm/hr and alert_active=True.",
+            "Traffic report amb-i2-traffic-1 became a road_blockage signal because speed is 0.0km/h with congestion level 5/5.",
+            "Traffic report amb-i2-traffic-2 became a road_blockage signal because speed is 3.0km/h with congestion level 5/5.",
             "Agent 1 produced 4 structured SignalEvent objects."
           ]
         },
@@ -229,56 +229,56 @@
           "agent_name": "crisis_detector",
           "clusters": [
             {
-              "cluster_id": "g10_urban_flooding-cluster-1",
+              "cluster_id": "ambulance_rain_congestion-cluster-1",
               "location": "G-10",
               "crisis_type": "urban_flooding",
               "signals": [
                 {
-                  "event_id": "g10-i2-public-1-event",
+                  "event_id": "amb-i2-public-1-event",
                   "source_type": "social",
                   "location": "G-10",
                   "crisis_type": "urban_flooding",
                   "urgency_score": 4,
                   "confidence_hint": 0.7,
-                  "timestamp": "2026-05-19T00:19:44.118443Z",
-                  "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+                  "timestamp": "2026-05-19T01:14:00.280495Z",
+                  "raw_text": "Ambulance G-10 signal pe phans gayi hai, pani aur congestion bohot zyada hai urgent reroute karo",
                   "evidence": [
                     "pani"
                   ],
                   "metadata": {
                     "platform": "simulated_social",
                     "language": "mixed",
-                    "reporter_hash": "g10_user_2"
+                    "reporter_hash": "amb_user_2"
                   }
                 },
                 {
-                  "event_id": "g10-i2-weather-event",
+                  "event_id": "amb-i2-weather-event",
                   "source_type": "weather",
                   "location": "Islamabad",
                   "crisis_type": "urban_flooding",
                   "urgency_score": 3,
                   "confidence_hint": 0.8,
-                  "timestamp": "2026-05-19T00:20:44.118443Z",
-                  "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
+                  "timestamp": "2026-05-19T01:14:00.280495Z",
+                  "raw_text": "flood_alert: rainfall 8.0mm/hr, alert_active=True",
                   "evidence": [
-                    "rainfall_mm_per_hour=9.1",
+                    "rainfall_mm_per_hour=8.0",
                     "alert_level=3"
                   ],
                   "metadata": {
                     "district": "Islamabad",
                     "alert_active": true,
                     "alert_type": "flood_alert",
-                    "rainfall_mm_per_hour": 9.1
+                    "rainfall_mm_per_hour": 8.0
                   }
                 },
                 {
-                  "event_id": "g10-i2-traffic-1-event",
+                  "event_id": "amb-i2-traffic-1-event",
                   "source_type": "traffic",
                   "location": "Khayaban-e-Iqbal",
                   "crisis_type": "road_blockage",
                   "urgency_score": 5,
                   "confidence_hint": 0.75,
-                  "timestamp": "2026-05-19T00:21:44.118443Z",
+                  "timestamp": "2026-05-19T01:15:00.280495Z",
                   "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
                   "evidence": [
                     "speed_kmh=0.0",
@@ -293,23 +293,23 @@
                   }
                 },
                 {
-                  "event_id": "g10-i2-traffic-2-event",
+                  "event_id": "amb-i2-traffic-2-event",
                   "source_type": "traffic",
-                  "location": "Margalla Road sector crossing",
+                  "location": "Srinagar Highway G-10 underpass",
                   "crisis_type": "road_blockage",
                   "urgency_score": 4,
                   "confidence_hint": 0.75,
-                  "timestamp": "2026-05-19T00:21:44.118443Z",
-                  "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+                  "timestamp": "2026-05-19T01:15:00.280495Z",
+                  "raw_text": "Srinagar Highway G-10 underpass: speed 3.0km/h, normal 50.0km/h",
                   "evidence": [
                     "speed_kmh=3.0",
-                    "normal_speed_kmh=35.0",
+                    "normal_speed_kmh=50.0",
                     "congestion_level=5"
                   ],
                   "metadata": {
-                    "road_name": "Margalla Road sector crossing",
+                    "road_name": "Srinagar Highway G-10 underpass",
                     "speed_kmh": 3.0,
-                    "normal_speed_kmh": 35.0,
+                    "normal_speed_kmh": 50.0,
                     "congestion_level": 5
                   }
                 }
@@ -319,7 +319,7 @@
                 "traffic",
                 "weather"
               ],
-              "time_window_minutes": 2.0,
+              "time_window_minutes": 1.0,
               "confidence": {
                 "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
                 "base_confidence": 0.5,
@@ -336,68 +336,68 @@
               "escalation": "crisis",
               "evidence": [
                 "pani",
-                "rainfall_mm_per_hour=9.1",
+                "rainfall_mm_per_hour=8.0",
                 "alert_level=3",
                 "speed_kmh=0.0",
                 "normal_speed_kmh=38.0",
                 "congestion_level=5",
                 "speed_kmh=3.0",
-                "normal_speed_kmh=35.0",
+                "normal_speed_kmh=50.0",
                 "congestion_level=5"
               ]
             }
           ],
           "selected_cluster": {
-            "cluster_id": "g10_urban_flooding-cluster-1",
+            "cluster_id": "ambulance_rain_congestion-cluster-1",
             "location": "G-10",
             "crisis_type": "urban_flooding",
             "signals": [
               {
-                "event_id": "g10-i2-public-1-event",
+                "event_id": "amb-i2-public-1-event",
                 "source_type": "social",
                 "location": "G-10",
                 "crisis_type": "urban_flooding",
                 "urgency_score": 4,
                 "confidence_hint": 0.7,
-                "timestamp": "2026-05-19T00:19:44.118443Z",
-                "raw_text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
+                "timestamp": "2026-05-19T01:14:00.280495Z",
+                "raw_text": "Ambulance G-10 signal pe phans gayi hai, pani aur congestion bohot zyada hai urgent reroute karo",
                 "evidence": [
                   "pani"
                 ],
                 "metadata": {
                   "platform": "simulated_social",
                   "language": "mixed",
-                  "reporter_hash": "g10_user_2"
+                  "reporter_hash": "amb_user_2"
                 }
               },
               {
-                "event_id": "g10-i2-weather-event",
+                "event_id": "amb-i2-weather-event",
                 "source_type": "weather",
                 "location": "Islamabad",
                 "crisis_type": "urban_flooding",
                 "urgency_score": 3,
                 "confidence_hint": 0.8,
-                "timestamp": "2026-05-19T00:20:44.118443Z",
-                "raw_text": "flood_alert: rainfall 9.1mm/hr, alert_active=True",
+                "timestamp": "2026-05-19T01:14:00.280495Z",
+                "raw_text": "flood_alert: rainfall 8.0mm/hr, alert_active=True",
                 "evidence": [
-                  "rainfall_mm_per_hour=9.1",
+                  "rainfall_mm_per_hour=8.0",
                   "alert_level=3"
                 ],
                 "metadata": {
                   "district": "Islamabad",
                   "alert_active": true,
                   "alert_type": "flood_alert",
-                  "rainfall_mm_per_hour": 9.1
+                  "rainfall_mm_per_hour": 8.0
                 }
               },
               {
-                "event_id": "g10-i2-traffic-1-event",
+                "event_id": "amb-i2-traffic-1-event",
                 "source_type": "traffic",
                 "location": "Khayaban-e-Iqbal",
                 "crisis_type": "road_blockage",
                 "urgency_score": 5,
                 "confidence_hint": 0.75,
-                "timestamp": "2026-05-19T00:21:44.118443Z",
+                "timestamp": "2026-05-19T01:15:00.280495Z",
                 "raw_text": "Khayaban-e-Iqbal: speed 0.0km/h, normal 38.0km/h",
                 "evidence": [
                   "speed_kmh=0.0",
@@ -412,23 +412,23 @@
                 }
               },
               {
-                "event_id": "g10-i2-traffic-2-event",
+                "event_id": "amb-i2-traffic-2-event",
                 "source_type": "traffic",
-                "location": "Margalla Road sector crossing",
+                "location": "Srinagar Highway G-10 underpass",
                 "crisis_type": "road_blockage",
                 "urgency_score": 4,
                 "confidence_hint": 0.75,
-                "timestamp": "2026-05-19T00:21:44.118443Z",
-                "raw_text": "Margalla Road sector crossing: speed 3.0km/h, normal 35.0km/h",
+                "timestamp": "2026-05-19T01:15:00.280495Z",
+                "raw_text": "Srinagar Highway G-10 underpass: speed 3.0km/h, normal 50.0km/h",
                 "evidence": [
                   "speed_kmh=3.0",
-                  "normal_speed_kmh=35.0",
+                  "normal_speed_kmh=50.0",
                   "congestion_level=5"
                 ],
                 "metadata": {
-                  "road_name": "Margalla Road sector crossing",
+                  "road_name": "Srinagar Highway G-10 underpass",
                   "speed_kmh": 3.0,
-                  "normal_speed_kmh": 35.0,
+                  "normal_speed_kmh": 50.0,
                   "congestion_level": 5
                 }
               }
@@ -438,7 +438,7 @@
               "traffic",
               "weather"
             ],
-            "time_window_minutes": 2.0,
+            "time_window_minutes": 1.0,
             "confidence": {
               "formula_text": "Base confidence starts at 0.5. Add 0.1 for each correlated independent signal up to a maximum addition of 0.4. Add 0.1 if an active weather alert from PMD API is confirmed. Subtract 0.1 if all signals are older than 20 minutes. Subtract 0.1 if only one source type is represented. The minimum possible score is 0.2. The maximum possible score is 1.0.",
               "base_confidence": 0.5,
@@ -455,13 +455,13 @@
             "escalation": "crisis",
             "evidence": [
               "pani",
-              "rainfall_mm_per_hour=9.1",
+              "rainfall_mm_per_hour=8.0",
               "alert_level=3",
               "speed_kmh=0.0",
               "normal_speed_kmh=38.0",
               "congestion_level=5",
               "speed_kmh=3.0",
-              "normal_speed_kmh=35.0",
+              "normal_speed_kmh=50.0",
               "congestion_level=5"
             ]
           },
@@ -476,10 +476,10 @@
         "verification": {
           "total_signals": 4,
           "unique_crisis_signals": [
-            "g10-i2-public-1-event",
-            "g10-i2-weather-event",
-            "g10-i2-traffic-1-event",
-            "g10-i2-traffic-2-event"
+            "amb-i2-public-1-event",
+            "amb-i2-weather-event",
+            "amb-i2-traffic-1-event",
+            "amb-i2-traffic-2-event"
           ],
           "duplicates_removed": [],
           "noise_removed": [],
@@ -497,7 +497,7 @@
       "agent_name": "Crisis Reasoning Agent",
       "summary": "Urban flooding detected in G-10; crisis level=crisis.",
       "confidence_score": 1.0,
-      "reasoning_summary": "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.; Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.; Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
+      "reasoning_summary": "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 1.0 minutes.; Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 8.0mm per hour.; Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Srinagar Highway G-10 underpass speed 3.0km/h versus normal 50.0km/h, congestion 5/5.",
       "output": {
         "agent_name": "situation_analyst",
         "analysis": {
@@ -521,38 +521,38 @@
           "escalation": "crisis",
           "affected_roads": [
             "Khayaban-e-Iqbal",
-            "Margalla Road sector crossing"
+            "Srinagar Highway G-10 underpass"
           ],
           "affected_population_density_per_sq_km": 8400,
           "primary_risks": [
             "vehicle entrapment",
             "infrastructure damage from standing floodwater",
-            "traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing"
+            "traffic immobilisation on Khayaban-e-Iqbal, Srinagar Highway G-10 underpass"
           ],
           "secondary_risks": [
             "displacement pressure for low-income residents near G-10",
             "delayed rescue access if congestion is not reduced"
           ],
           "reasoning_chain": [
-            "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.",
-            "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.",
-            "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
+            "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 1.0 minutes.",
+            "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 8.0mm per hour.",
+            "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Srinagar Highway G-10 underpass speed 3.0km/h versus normal 50.0km/h, congestion 5/5.",
             "Residential population density for G-10 is estimated at 8400 per square kilometre.",
             "Severity logic: severity score is 4 of 5 because crisis_type=urban_flooding, escalation=crisis, weather_alert=True, affected_roads=2, and max_urgency=5.",
             "Confidence formula: 0.5 base + 0.4 signal addition (min(0.1 * 4, 0.4)) + 0.1 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 1.0, bounded to final score 1.0.",
-            "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing",
+            "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Srinagar Highway G-10 underpass",
             "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
             "Escalation decision remains crisis; system state is crisis active."
           ]
         },
         "reasoning_chain": [
-          "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 2.0 minutes.",
-          "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 9.1mm per hour.",
-          "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Margalla Road sector crossing speed 3.0km/h versus normal 35.0km/h, congestion 5/5.",
+          "Signal count is 4 correlated crisis signal(s) from 4 total observed signal(s) within G-10 over 1.0 minutes.",
+          "Weather evidence: active rainfall alert level 3 confirmed from simulated PMD API; rainfall is 8.0mm per hour.",
+          "Traffic evidence: Khayaban-e-Iqbal speed 0.0km/h versus normal 38.0km/h, congestion 5/5; Srinagar Highway G-10 underpass speed 3.0km/h versus normal 50.0km/h, congestion 5/5.",
           "Residential population density for G-10 is estimated at 8400 per square kilometre.",
           "Severity logic: severity score is 4 of 5 because crisis_type=urban_flooding, escalation=crisis, weather_alert=True, affected_roads=2, and max_urgency=5.",
           "Confidence formula: 0.5 base + 0.4 signal addition (min(0.1 * 4, 0.4)) + 0.1 weather-alert addition - 0.0 stale-signal penalty - 0.0 single-source penalty = 1.0, bounded to final score 1.0.",
-          "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Margalla Road sector crossing",
+          "Primary risks: vehicle entrapment; infrastructure damage from standing floodwater; traffic immobilisation on Khayaban-e-Iqbal, Srinagar Highway G-10 underpass",
           "Secondary risks: displacement pressure for low-income residents near G-10; delayed rescue access if congestion is not reduced",
           "Escalation decision remains crisis; system state is crisis active."
         ]
@@ -575,7 +575,7 @@
           "selected_shelter": "G-10 Community Centre",
           "alternate_routes": [
             "Lehtrar Road",
-            "Srinagar Highway G-10 underpass"
+            "Margalla Road sector crossing"
           ],
           "actions": [
             {
@@ -608,8 +608,8 @@
             {
               "action_id": "action-3-reroute-2",
               "action_type": "reroute_traffic",
-              "description": "Update mock map routing away from Margalla Road sector crossing.",
-              "target": "Margalla Road sector crossing",
+              "description": "Update mock map routing away from Srinagar Highway G-10 underpass.",
+              "target": "Srinagar Highway G-10 underpass",
               "priority": 3,
               "assigned_resource": null,
               "status": "planned"
@@ -630,7 +630,7 @@
           "Examined escalation level, crisis type, affected roads, and approved resource lists.",
           "Selected depot: G-6 Markaz Emergency Centre.",
           "Selected shelter: G-10 Community Centre.",
-          "Approved road targets: Khayaban-e-Iqbal, Margalla Road sector crossing.",
+          "Approved road targets: Khayaban-e-Iqbal, Srinagar Highway G-10 underpass.",
           "Generated 5 coordinated response action(s)."
         ]
       },
@@ -638,7 +638,7 @@
         "dispatch_emergency: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
         "send_alert: Send public alert for Urban flooding detected in G-10.",
         "reroute_traffic: Update mock map routing away from Khayaban-e-Iqbal.",
-        "reroute_traffic: Update mock map routing away from Margalla Road sector crossing.",
+        "reroute_traffic: Update mock map routing away from Srinagar Highway G-10 underpass.",
         "open_shelter: Prepare intake capacity at G-10 Community Centre."
       ]
     },
@@ -655,14 +655,14 @@
           "execution": {
             "route_updates": [
               "Mock map route updated away from Khayaban-e-Iqbal.",
-              "Mock map route updated away from Margalla Road sector crossing."
+              "Mock map route updated away from Srinagar Highway G-10 underpass."
             ],
             "alerts_sent": [
               "Simulated public alert sent for G-10."
             ],
             "tickets_created": [
               {
-                "ticket_id": "ticket-g10_urban_flooding",
+                "ticket_id": "ticket-ambulance_rain_congestion",
                 "location": "G-10",
                 "crisis_type": "urban_flooding",
                 "assigned_depot": "G-6 Markaz Emergency Centre",
@@ -690,9 +690,9 @@
                 "unit": "km/h"
               },
               {
-                "metric": "traffic_speed_Margalla Road sector crossing",
+                "metric": "traffic_speed_Srinagar Highway G-10 underpass",
                 "before": "3.0km/h",
-                "after": "15.8km/h",
+                "after": "22.5km/h",
                 "unit": "km/h"
               },
               {
@@ -715,19 +715,19 @@
       },
       "actions": [
         "Mock map route updated away from Khayaban-e-Iqbal.",
-        "Mock map route updated away from Margalla Road sector crossing.",
+        "Mock map route updated away from Srinagar Highway G-10 underpass.",
         "Simulated public alert sent for G-10.",
-        "Simulated ticket ticket-g10_urban_flooding assigned to G-6 Markaz Emergency Centre.",
+        "Simulated ticket ticket-ambulance_rain_congestion assigned to G-6 Markaz Emergency Centre.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
         "traffic_speed_Khayaban-e-Iqbal: 0.0km/h -> 17.1km/h",
-        "traffic_speed_Margalla Road sector crossing: 3.0km/h -> 15.8km/h",
+        "traffic_speed_Srinagar Highway G-10 underpass: 3.0km/h -> 22.5km/h",
         "shelter_status_G-10 Community Centre: standby -> prepared"
       ]
     },
     {
       "agent_name": "Evaluation/Replanning Agent",
-      "summary": "Escalated: risk increased by 0.46",
+      "summary": "Re-planned: risk level stayed similar but latest signals updated the plan",
       "confidence_score": 1.0,
       "reasoning_summary": "Evaluation compares current risk, crisis level, simulated impact, and prior iteration state.",
       "output": {
@@ -754,9 +754,9 @@
               "unit": "km/h"
             },
             {
-              "metric": "traffic_speed_Margalla Road sector crossing",
+              "metric": "traffic_speed_Srinagar Highway G-10 underpass",
               "before": "3.0km/h",
-              "after": "15.8km/h",
+              "after": "22.5km/h",
               "unit": "km/h"
             },
             {
@@ -789,26 +789,26 @@
     }
   ],
   "confidence_score": 1.0,
-  "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=1.0; severity=4/5; affected roads=Khayaban-e-Iqbal, Margalla Road sector crossing.",
+  "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=1.0; severity=4/5; affected roads=Khayaban-e-Iqbal, Srinagar Highway G-10 underpass.",
   "action_plan": [
     "dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
     "send_alert -> G-10: Send public alert for Urban flooding detected in G-10.",
     "reroute_traffic -> Khayaban-e-Iqbal: Update mock map routing away from Khayaban-e-Iqbal.",
-    "reroute_traffic -> Margalla Road sector crossing: Update mock map routing away from Margalla Road sector crossing.",
+    "reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.",
     "open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre."
   ],
   "simulated_actions": [
     "Mock map route updated away from Khayaban-e-Iqbal.",
-    "Mock map route updated away from Margalla Road sector crossing.",
+    "Mock map route updated away from Srinagar Highway G-10 underpass.",
     "Simulated public alert sent for G-10.",
-    "Simulated ticket ticket-g10_urban_flooding assigned to G-6 Markaz Emergency Centre.",
+    "Simulated ticket ticket-ambulance_rain_congestion assigned to G-6 Markaz Emergency Centre.",
     "emergency_tickets_created: 0 -> 1",
     "public_alerts_sent: 0 -> 1",
     "traffic_speed_Khayaban-e-Iqbal: 0.0km/h -> 17.1km/h",
-    "traffic_speed_Margalla Road sector crossing: 3.0km/h -> 15.8km/h",
+    "traffic_speed_Srinagar Highway G-10 underpass: 3.0km/h -> 22.5km/h",
     "shelter_status_G-10 Community Centre: standby -> prepared"
   ],
-  "evaluation_result": "Escalated: risk increased by 0.46. Simulated response for Urban flooding detected in G-10: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+  "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Urban flooding detected in G-10: 2 route update(s), 1 alert(s), and 1 emergency ticket(s).",
   "next_step": "Continue monitoring and run the next iteration with updated signals.",
   "approval_status": "approved_for_simulation",
   "crisis_level": "crisis",

@@ -307,7 +307,7 @@ The deterministic FastAPI dashboard can run without Gemini, but the ADK/Gemini d
 | `GOOGLE_API_KEY` | Required for ADK/Gemini demo | Used by Google ADK and `google-genai` Gemini narration/test scripts. |
 | `CIRO_ADK_MODEL` | Optional | Overrides Gemini model. Defaults to `gemini-2.0-flash`. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | Optional | `adk_ciro/agent.py` defaults this to `False` unless already configured. |
-| `CIRO_SKIP_NARRATION` | Development-only | Skips optional Gemini narration in `adk_ciro/run_adk_demo.py`; not recommended for final demo. |
+
 | `GROQ_API_KEY` | Optional / unused by current code | Present in `.env.example`; no active CIRO runtime dependency found. |
 | `HUGGINGFACEHUB_API_TOKEN` | Optional / unused by current code | Present in `.env.example`; no active CIRO runtime dependency found. |
 
@@ -556,24 +556,20 @@ Use phrase for demo: **permission-based contextual emergency signal analysis**.
 - Not connected to real Rescue 1122, NDMA, police, ambulance dispatch, weather, traffic, map, or public alert systems.
 - Dashboard is useful but intentionally minimal.
 - Mobile support is an installable PWA, not a native Android app.
-- Leaflet/OpenStreetMap crisis map is planned but not currently implemented.
-- Live ADK trace API such as `/api/trace` is planned but not currently implemented.
 - Custom Urdu/English input is currently a dashboard Mini Assistant keyword prototype, not a dynamic full-pipeline scenario generator.
 - Human approval is currently generated as a demo approval artifact, not an interactive approve/reject workflow.
 - `collect_screen_signal_tool` is a legacy/prototype simulated ADK tool over static scenario posts; it should not be described as real screen reading.
-- `CIRO_SKIP_NARRATION` can skip optional Gemini narration for development, but final demos should show the Gemini/ADK path when quota and credentials allow.
+
 
 ---
 
 ## Future Work
 
-- Leaflet/OpenStreetMap crisis map with before/after route visualization.
 - Real Google Maps integration after safety review.
 - Privacy-safe verified community reporter mode.
 - Real-time weather and traffic API integrations.
 - Native Android app in addition to the PWA.
 - Interactive human approval workflow with approve/reject history.
-- Live ADK trace endpoint and dashboard trace polling.
 - Admin dashboard for scenario management.
 - Stronger multilingual Urdu/Pashto/English signal extraction.
 - Structured validation for dynamic custom crisis input.

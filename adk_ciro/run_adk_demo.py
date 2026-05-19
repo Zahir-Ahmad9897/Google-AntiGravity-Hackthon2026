@@ -169,9 +169,7 @@ def _gemini_narration(summary: list[dict[str, Any]]) -> dict[str, str]:
 def _print_optional_narration(summary: list[dict[str, Any]]) -> None:
     print()
     print("Optional narration")
-    if os.getenv("CIRO_SKIP_NARRATION", "").lower() in {"1", "true", "yes"}:
-        print("Gemini narration skipped by CIRO_SKIP_NARRATION; deterministic CIRO tools continue unchanged.")
-        return
+
 
     gemini = _gemini_narration(summary)
 
