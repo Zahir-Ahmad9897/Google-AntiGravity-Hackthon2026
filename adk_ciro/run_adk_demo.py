@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 import sys
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 from pathlib import Path
 from typing import Any, Callable
 
@@ -166,6 +168,62 @@ def _gemini_narration(summary: list[dict[str, Any]]) -> dict[str, str]:
         return {"status": "error", "text": f"Gemini narration failed: {type(exc).__name__}: {exc}"}
 
 
+def _groq_narration(summary: list[dict[str, Any]], gemini_status: str) -> dict[str, str]:
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        return {"status": "missing_key", "text": "Groq fallback skipped: GROQ_API_KEY is missing."}
+
+    model = os.getenv("CIRO_GROQ_MODEL", "openai/gpt-oss-120b")
+    prompt = (
+        "Gemini narration was unavailable with status "
+        f"{gemini_status}. Summarize this CIRO Google ADK demo in 5 concise judge-facing bullets. "
+        "Keep Google ADK as the primary orchestrator, state that Groq was used only as fallback narration, "
+        "and do not change any scores or escalation decisions. "
+        f"Demo summary JSON: {json.dumps(summary, ensure_ascii=True)}"
+    )
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a concise hackathon demo narrator. Do not invent crisis metrics.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.2,
+        "max_tokens": 500,
+    }
+
+    request = Request(
+        "https://api.groq.com/openai/v1/chat/completions",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urlopen(request, timeout=20) as response:
+            body = json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")[:500]
+        return {"status": "error", "text": f"Groq fallback failed: HTTP {exc.code}: {detail}"}
+    except URLError as exc:
+        return {"status": "error", "text": f"Groq fallback failed: {exc.reason}"}
+    except Exception as exc:
+        return {"status": "error", "text": f"Groq fallback failed: {type(exc).__name__}: {exc}"}
+
+    choices = body.get("choices") or []
+    text = ""
+    if choices:
+        text = str(choices[0].get("message", {}).get("content") or "").strip()
+    if not text:
+        return {"status": "error", "text": "Groq fallback returned no narration text."}
+    return {"status": "success", "text": text}
+
+
 def _print_optional_narration(summary: list[dict[str, Any]]) -> None:
     print()
     print("Optional narration")
@@ -182,10 +240,16 @@ def _print_optional_narration(summary: list[dict[str, Any]]) -> None:
 
     if gemini["status"] == "quota_exhausted":
         print("Gemini returned 429 RESOURCE_EXHAUSTED; deterministic CIRO tools continue unchanged.")
-        print("Optional narration skipped; core CIRO tools and ADK structure remain Google-first.")
+    else:
+        print(gemini["text"])
+
+    groq = _groq_narration(summary, gemini["status"])
+    if groq["status"] == "success":
+        print("Groq fallback narration used only after Gemini was unavailable; core CIRO tools and ADK structure remain Google-first.")
+        print(groq["text"])
         return
 
-    print(gemini["text"])
+    print(groq["text"])
     print("Core CIRO tools and ADK structure unchanged.")
 
 

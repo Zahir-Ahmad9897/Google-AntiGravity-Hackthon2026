@@ -1,78 +1,38 @@
-# CIRO Field Officer App — Expo Run Guide
+# CIRO Mobile App
 
-Expo React Native mobile app for the CIRO field-officer demo. This app uses Expo SDK 54, the existing CIRO backend when `EXPO_PUBLIC_CIRO_API_URL` is set, and local mock data when the backend is unavailable.
+A React Native (Expo) mobile application for the Crisis Intelligence & Response Orchestrator (CIRO).
 
-## 1. Install Dependencies
+## Prerequisites
+- Node.js 20+
+- Expo CLI
+- Android Studio (for emulator) or Xcode (for iOS Simulator)
+- Python 3.10+ (for FastAPI backend)
 
-From `D:\Antigravity_Hackthon\mobile`:
+## Setup
+1. Open terminal in `d:\Antigravity_Hackthon\mobile\ciro_mobile`
+2. Run `npm install` (dependencies are already installed during bootstrap)
 
-```powershell
-npm install
-npx expo install react-dom react-native-web @expo/metro-runtime
-```
+## Running the App
+- **Android Emulator**: `npx expo run:android` or start the emulator and run `npm start`, then press `a`.
+- **iOS Simulator**: `npx expo run:ios` (Requires macOS)
+- **Expo Go**: `npx expo start` and scan the QR code.
 
-Optional backend URL for LAN demos:
+## Connecting to Backend
+The app communicates with the CIRO FastAPI backend.
+1. Start backend: `cd d:\Antigravity_Hackthon` -> `uvicorn main:app --port 8000`
+2. Open the mobile app.
+3. If on Android emulator, the default URL `http://10.0.2.2:8000` is used.
+4. If running on a physical device, go to **Settings** in the app and change the URL to your computer's local IP (e.g., `http://192.168.1.10:8000`).
 
-```powershell
-$env:EXPO_PUBLIC_CIRO_API_URL="http://YOUR_LAPTOP_LAN_IP:8082"
-```
+## Folder Structure
+- `src/config/`: Theme and App Configurations.
+- `src/services/`: API Service (Axios calls to FastAPI).
+- `src/store/`: Zustand state management for scenarios and pipeline.
+- `src/screens/`: React Navigation screen components.
+- `src/components/`: Reusable UI widgets and custom animated components.
+- `src/navigation/`: AppNavigator and ResultsTabs configurations.
 
-## 2. Run on Web
-
-```powershell
-npm run web
-```
-
-Expo prints the local browser URL in the terminal, usually `http://localhost:8081` for SDK 54.
-
-## 3. Run on Android with Expo Go Tunnel
-
-```powershell
-npm run start:tunnel
-```
-
-Scan the new QR code with Expo Go on Android. Do not reuse old `exp://` or `192.168.x.x` links from a previous Metro session.
-
-## 4. Run on LAN
-
-```powershell
-npm run start:lan
-```
-
-Use this when the Android phone and laptop are on the same Wi-Fi network. Expo will print a fresh `exp://LOCAL-IP:PORT` URL and QR code.
-
-## 5. Clear Metro Cache
-
-```powershell
-npm run start:clear
-npm run web:clear
-```
-
-## 6. Troubleshooting
-
-- Update Expo Go from the Play Store.
-- Confirm the phone and laptop are on the same Wi-Fi network for LAN mode.
-- Disable mobile data while testing LAN mode so the phone stays on Wi-Fi.
-- Allow Node.js through Windows Firewall on private networks.
-- Use tunnel mode if LAN fails due to firewall, VPN, or router client isolation.
-- If tunnel mode reports an ngrok connection error, use LAN mode and check ngrok service/network access.
-- Do not use old Expo links; restart Metro and scan the newest QR code.
-- If web dependencies are missing, rerun `npx expo install react-dom react-native-web @expo/metro-runtime`.
-- If Expo reports version mismatches, run `npx expo install --fix`.
-- If Expo Go reports an SDK mismatch, update Expo Go and confirm this project is still on Expo SDK 54.
-
-## 7. Demo Flow
-
-1. Grant permission for contextual emergency signal analysis.
-2. Select a crisis scenario.
-3. Run the iterative CIRO pipeline.
-4. View the decision trace.
-5. Approve or reject a simulated action.
-6. View artifacts and the final report.
-
-## Useful Checks
-
-```powershell
-npx expo-doctor
-npm run typecheck
-```
+## Assumptions
+- Uses Google Fonts (Inter) via Expo.
+- All actions are strictly simulated. No external mapping libraries (Google Maps) are used; the maps are drawn entirely in React Native SVG with Reanimated.
+- Backend must be running for scenarios to load and pipeline to execute.

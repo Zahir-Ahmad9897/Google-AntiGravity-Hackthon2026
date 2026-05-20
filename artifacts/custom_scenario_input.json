@@ -1,6 +1,6 @@
 {
   "scenario_id": "custom_permission_input",
-  "title": "Custom approved crisis signal - Peshawar Ring Road",
+  "title": "Custom approved crisis signal - Peshawr Ring Road",
   "description": "User-approved custom crisis content routed through the existing CIRO iterative pipeline.",
   "steps": [
     {
@@ -8,26 +8,26 @@
       "update_note": "Approved custom report received; CIRO begins verification.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawar Ring Road",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i1-approved-1",
-            "text": "Peshawar Ring Road block hai ambulance ko alternate route chahiye",
-            "platform": "public_post",
-            "timestamp": "2026-05-19T16:49:55.864471Z",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:20:22.570253Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i1-weather",
-          "district": "Peshawar Ring Road",
+          "district": "Peshawr Ring Road",
           "rainfall_mm_per_hour": 4.8,
           "alert_active": true,
           "alert_type": "custom_weather_context",
           "alert_level": 2,
-          "timestamp": "2026-05-19T16:49:55.864471Z"
+          "timestamp": "2026-05-20T16:20:22.570253Z"
         },
         "traffic": [
           {
@@ -36,7 +36,7 @@
             "speed_kmh": 11.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-19T16:49:55.864471Z"
+            "timestamp": "2026-05-20T16:20:22.570253Z"
           }
         ],
         "expected_escalation": false,
@@ -52,26 +52,26 @@
       "update_note": "Custom signal correlated with weather and traffic simulation.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawar Ring Road",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i2-approved-1",
-            "text": "Peshawar Ring Road block hai ambulance ko alternate route chahiye",
-            "platform": "public_post",
-            "timestamp": "2026-05-19T16:53:55.864471Z",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:24:22.570253Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i2-weather",
-          "district": "Peshawar Ring Road",
+          "district": "Peshawr Ring Road",
           "rainfall_mm_per_hour": 8.8,
           "alert_active": true,
           "alert_type": "custom_weather_context",
           "alert_level": 3,
-          "timestamp": "2026-05-19T16:53:55.864471Z"
+          "timestamp": "2026-05-20T16:24:22.570253Z"
         },
         "traffic": [
           {
@@ -80,7 +80,7 @@
             "speed_kmh": 3.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-19T16:53:55.864471Z"
+            "timestamp": "2026-05-20T16:24:22.570253Z"
           }
         ],
         "expected_escalation": true,
@@ -96,26 +96,26 @@
       "update_note": "Simulation applies route update and evaluates remaining risk.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawar Ring Road",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i3-approved-1",
-            "text": "Peshawar Ring Road block hai ambulance ko alternate route chahiye",
-            "platform": "public_post",
-            "timestamp": "2026-05-19T16:56:55.864471Z",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:27:22.570253Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i3-weather",
-          "district": "Peshawar Ring Road",
+          "district": "Peshawr Ring Road",
           "rainfall_mm_per_hour": 6.2,
           "alert_active": true,
           "alert_type": "custom_weather_context",
           "alert_level": 3,
-          "timestamp": "2026-05-19T16:56:55.864471Z"
+          "timestamp": "2026-05-20T16:27:22.570253Z"
         },
         "traffic": [
           {
@@ -124,7 +124,7 @@
             "speed_kmh": 13.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-19T16:56:55.864471Z"
+            "timestamp": "2026-05-20T16:27:22.570253Z"
           }
         ],
         "expected_escalation": true,

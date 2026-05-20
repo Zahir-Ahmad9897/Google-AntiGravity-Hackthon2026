@@ -65,16 +65,32 @@ dmypy.json
 # Logs and runtime output
 *.log
 logs/
-antigravity_logs/
-CIRO_Antigravity_Trace_Logs.zip
+!logs/
 uvicorn*.log
 adk_web*.log
 *.pid
 *.pid.lock
 
-# Frontend dependency/build output, if the dashboard grows later
+# Curated judge submission logs/traces are allowed.
+!logs/.gitkeep
+!logs/submission/
+!logs/submission/**
+!antigravity_logs/
+!antigravity_logs/**
+!CIRO_Antigravity_Trace_Logs.zip
+
+# Frontend dependency/build output
 node_modules/
 mobile/node_modules/
+mobile/ciro_mobile/node_modules/
+mobile/ciro_mobile/.expo/
+mobile/ciro_mobile/.expo-shared/
+mobile/ciro_mobile/.metro-cache/
+mobile/ciro_mobile/web-build/
+mobile/ciro_mobile/dist/
+mobile/ciro_mobile/build/
+mobile/ciro_mobile/android/
+mobile/ciro_mobile/ios/
 .vite/
 .next/
 .nuxt/
@@ -119,6 +135,11 @@ temp/
 artifacts/tmp/
 artifacts/*.tmp
 artifacts/*.log
+artifacts/*.png
+artifacts/*.jpg
+artifacts/*.jpeg
+artifacts/*.webp
+!artifacts/README.md
 
 # Internal build strategy files (not for submission)
 prompt.txt

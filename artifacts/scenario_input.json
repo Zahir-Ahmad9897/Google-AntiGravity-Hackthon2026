@@ -1,161 +1,137 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "title": "Islamabad G-10 urban flooding",
-  "description": "Flooding signals grow from one public report into verified weather and traffic disruption.",
+  "scenario_id": "custom_permission_input",
+  "title": "Custom approved crisis signal - Peshawr Ring Road",
+  "description": "User-approved custom crisis content routed through the existing CIRO iterative pipeline.",
   "steps": [
     {
       "iteration_number": 1,
-      "update_note": "Initial public report; weather below alert threshold; traffic still moving.",
+      "update_note": "Approved custom report received; CIRO begins verification.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "Initial G-10 flooding detection.",
+        "scenario_id": "custom_permission_input",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
-            "post_id": "g10-i1-public-1",
-            "text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
-            "platform": "simulated_social",
-            "timestamp": "2026-05-19T01:06:00.280495Z",
+            "post_id": "custom-i1-approved-1",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:20:22.570253Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_1"
+            "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
-          "report_id": "g10-i1-weather",
-          "district": "Islamabad",
+          "report_id": "custom-i1-weather",
+          "district": "Peshawr Ring Road",
           "rainfall_mm_per_hour": 4.8,
-          "alert_active": false,
-          "alert_type": "rain_watch",
-          "alert_level": 1,
-          "timestamp": "2026-05-19T01:08:00.280495Z"
+          "alert_active": true,
+          "alert_type": "custom_weather_context",
+          "alert_level": 2,
+          "timestamp": "2026-05-20T16:20:22.570253Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i1-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
-            "speed_kmh": 14.0,
-            "normal_speed_kmh": 38.0,
-            "congestion_level": 3,
-            "timestamp": "2026-05-19T01:09:00.280495Z"
-          },
-          {
-            "report_id": "g10-i1-traffic-2",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 18.0,
-            "normal_speed_kmh": 35.0,
-            "congestion_level": 2,
-            "timestamp": "2026-05-19T01:09:00.280495Z"
+            "report_id": "custom-i1-traffic",
+            "road_name": "Ring Road",
+            "speed_kmh": 11.0,
+            "normal_speed_kmh": 40.0,
+            "congestion_level": 4,
+            "timestamp": "2026-05-20T16:20:22.570253Z"
           }
         ],
         "expected_escalation": false,
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the visible G-10 public report for this demo run."
+        "User explicitly approved this pasted content for emergency signal analysis."
       ],
       "permission_granted": true
     },
     {
       "iteration_number": 2,
-      "update_note": "Rainfall alert activates and roads become blocked.",
+      "update_note": "Custom signal correlated with weather and traffic simulation.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "Verified G-10 flooding escalation.",
+        "scenario_id": "custom_permission_input",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
-            "post_id": "g10-i2-public-1",
-            "text": "bhai G10 mein pani aa gaya bohot zyada, gariyan phase gayi hain Margalla road avoid karo",
-            "platform": "simulated_social",
-            "timestamp": "2026-05-19T01:12:00.280495Z",
+            "post_id": "custom-i2-approved-1",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:24:22.570253Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_2"
+            "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
-          "report_id": "g10-i2-weather",
-          "district": "Islamabad",
-          "rainfall_mm_per_hour": 9.1,
+          "report_id": "custom-i2-weather",
+          "district": "Peshawr Ring Road",
+          "rainfall_mm_per_hour": 8.8,
           "alert_active": true,
-          "alert_type": "flood_alert",
+          "alert_type": "custom_weather_context",
           "alert_level": 3,
-          "timestamp": "2026-05-19T01:13:00.280495Z"
+          "timestamp": "2026-05-20T16:24:22.570253Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i2-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
-            "speed_kmh": 0.0,
-            "normal_speed_kmh": 38.0,
-            "congestion_level": 5,
-            "timestamp": "2026-05-19T01:14:00.280495Z"
-          },
-          {
-            "report_id": "g10-i2-traffic-2",
-            "road_name": "Margalla Road sector crossing",
+            "report_id": "custom-i2-traffic",
+            "road_name": "Ring Road",
             "speed_kmh": 3.0,
-            "normal_speed_kmh": 35.0,
+            "normal_speed_kmh": 40.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-19T01:14:00.280495Z"
+            "timestamp": "2026-05-20T16:24:22.570253Z"
           }
         ],
         "expected_escalation": true,
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the updated G-10 public report for this demo run."
+        "User explicitly approved this pasted content for emergency signal analysis."
       ],
       "permission_granted": true
     },
     {
       "iteration_number": 3,
-      "update_note": "One corridor improves, but water shifts toward the Margalla crossing.",
+      "update_note": "Simulation applies route update and evaluates remaining risk.",
       "scenario": {
-        "scenario_id": "g10_urban_flooding",
-        "title": "Islamabad G-10 urban flooding",
-        "description": "G-10 flood response re-planning.",
+        "scenario_id": "custom_permission_input",
+        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
-            "post_id": "g10-i3-public-1",
-            "text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
-            "platform": "simulated_social",
-            "timestamp": "2026-05-19T01:16:00.280495Z",
+            "post_id": "custom-i3-approved-1",
+            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
+            "platform": "test",
+            "timestamp": "2026-05-20T16:27:22.570253Z",
             "language": "mixed",
-            "reporter_hash": "g10_user_3"
+            "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
-          "report_id": "g10-i3-weather",
-          "district": "Islamabad",
+          "report_id": "custom-i3-weather",
+          "district": "Peshawr Ring Road",
           "rainfall_mm_per_hour": 6.2,
           "alert_active": true,
-          "alert_type": "flood_alert",
-          "alert_level": 2,
-          "timestamp": "2026-05-19T01:16:00.280495Z"
+          "alert_type": "custom_weather_context",
+          "alert_level": 3,
+          "timestamp": "2026-05-20T16:27:22.570253Z"
         },
         "traffic": [
           {
-            "report_id": "g10-i3-traffic-1",
-            "road_name": "Khayaban-e-Iqbal",
-            "speed_kmh": 12.0,
-            "normal_speed_kmh": 38.0,
-            "congestion_level": 3,
-            "timestamp": "2026-05-19T01:17:00.280495Z"
-          },
-          {
-            "report_id": "g10-i3-traffic-2",
-            "road_name": "Margalla Road sector crossing",
-            "speed_kmh": 4.0,
-            "normal_speed_kmh": 35.0,
+            "report_id": "custom-i3-traffic",
+            "road_name": "Ring Road",
+            "speed_kmh": 13.0,
+            "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-19T01:17:00.280495Z"
+            "timestamp": "2026-05-20T16:27:22.570253Z"
           }
         ],
         "expected_escalation": true,
         "expected_confidence_max": null
       },
       "approved_context": [
-        "User approved reading the latest G-10 public report for this demo run."
+        "User explicitly approved this pasted content for emergency signal analysis."
       ],
       "permission_granted": true
     }

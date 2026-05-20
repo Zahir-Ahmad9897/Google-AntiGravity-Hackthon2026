@@ -192,6 +192,96 @@ def api_run_custom_iterative_pipeline(request: CustomPipelineRunRequest) -> dict
     return result.model_dump(mode="json")
 
 
+@app.get("/api/scenario/{scenario_id}/meta")
+async def get_scenario_meta(scenario_id: str):
+    meta = {
+      "g10_urban_flooding": {
+        "scenario_id": "g10_urban_flooding",
+        "display_name": "G-10 Urban Flooding",
+        "location": "Islamabad, G-10 Sector",
+        "crisis_type": "Urban Flooding",
+        "description": "Flash flooding in G-10 sector with vehicles stranded and roads blocked.",
+        "map_layout_id": "g10_urban_flooding",
+        "map_layout": "g10_grid",
+        "weather": {
+          "condition": "Heavy Rain", "temperature_c": 24,
+          "rainfall_mm_hr": 48, "wind_kmh": 32, "is_crisis_factor": True,
+          "temp": "24°C", "wind": "32 km/h", "rainfall": "48.0 mm/hr",
+          "rainfallMmHr": 48, "windKmh": 32, "temperatureC": 24,
+          "isCrisisFactor": True,
+          "status": "⚠ CONTRIBUTING TO CRISIS"
+        },
+        "before_state": {
+          "roads_blocked": 3, "vehicles_stranded": 40, "units_deployed": 0, "users_alerted": 0,
+          "blocked": 3, "stranded": 40, "units": 0, "alerted": 0, "level": "HIGH",
+          "roadsBlocked": 3, "vehiclesStranded": 40, "unitsDeployed": 0, "usersAlerted": 0
+        },
+        "after_state": {
+          "roads_cleared": 2, "vehicles_rerouted": 35, "units_en_route": 2, "users_alerted": 1240,
+          "cleared": 2, "rerouted": 35, "units": 2, "alerted": 1240, "level": "MEDIUM",
+          "roadsCleared": 2, "vehiclesRerouted": 35, "unitsEnRoute": 2, "usersAlerted": 1240
+        }
+      },
+      "peshawar_ring_road_blast": {
+        "scenario_id": "peshawar_ring_road_blast",
+        "display_name": "Peshawar Ring Road Blast",
+        "location": "Peshawar, Ring Road",
+        "crisis_type": "Road Blast & Blockage",
+        "description": "Explosion on Ring Road — full closure, emergency response active.",
+        "map_layout_id": "peshawar_ring_road_blast",
+        "map_layout": "peshawar_ring",
+        "weather": {
+          "condition": "Partly Cloudy", "temperature_c": 31,
+          "rainfall_mm_hr": 0, "wind_kmh": 18, "is_crisis_factor": False,
+          "temp": "31°C", "wind": "18 km/h", "rainfall": "0.0 mm/hr",
+          "rainfallMmHr": 0, "windKmh": 18, "temperatureC": 31,
+          "isCrisisFactor": False,
+          "status": "✓ NORMAL CONDITIONS"
+        },
+        "before_state": {
+          "roads_blocked": 1, "vehicles_stranded": 25, "units_deployed": 0, "users_alerted": 0,
+          "blocked": 1, "stranded": 25, "units": 0, "alerted": 0, "level": "HIGH",
+          "roadsBlocked": 1, "vehiclesStranded": 25, "unitsDeployed": 0, "usersAlerted": 0
+        },
+        "after_state": {
+          "roads_cleared": 1, "vehicles_rerouted": 20, "units_en_route": 4, "users_alerted": 890,
+          "cleared": 1, "rerouted": 20, "units": 4, "alerted": 890, "level": "LOW",
+          "roadsCleared": 1, "vehiclesRerouted": 20, "unitsEnRoute": 4, "usersAlerted": 890
+        }
+      },
+      "ambulance_rain_congestion": {
+        "scenario_id": "ambulance_rain_congestion",
+        "display_name": "Ambulance Rain Congestion",
+        "location": "Islamabad, City Center",
+        "crisis_type": "Emergency Vehicle Blocked",
+        "description": "Ambulance stuck in rain-induced congestion — priority corridor needed.",
+        "map_layout_id": "ambulance_rain_congestion",
+        "map_layout": "city_intersection",
+        "weather": {
+          "condition": "Thunderstorm", "temperature_c": 21,
+          "rainfall_mm_hr": 62, "wind_kmh": 45, "is_crisis_factor": True,
+          "temp": "21°C", "wind": "45 km/h", "rainfall": "62.0 mm/hr",
+          "rainfallMmHr": 62, "windKmh": 45, "temperatureC": 21,
+          "isCrisisFactor": True,
+          "status": "⚠ CONTRIBUTING TO CRISIS"
+        },
+        "before_state": {
+          "roads_blocked": 2, "vehicles_stranded": 60, "units_deployed": 1, "users_alerted": 0,
+          "blocked": 2, "stranded": 60, "units": 1, "alerted": 0, "level": "HIGH",
+          "roadsBlocked": 2, "vehiclesStranded": 60, "unitsDeployed": 1, "usersAlerted": 0
+        },
+        "after_state": {
+          "roads_cleared": 1, "vehicles_rerouted": 50, "units_en_route": 1, "users_alerted": 540,
+          "cleared": 1, "rerouted": 50, "units": 1, "alerted": 540, "level": "MEDIUM",
+          "roadsCleared": 1, "vehiclesRerouted": 50, "unitsEnRoute": 1, "usersAlerted": 540
+        }
+      }
+    }
+    if scenario_id not in meta:
+        raise HTTPException(status_code=404, detail="Scenario not found")
+    return meta[scenario_id]
+
+
 @app.get("/api/artifacts")
 def api_artifacts() -> list[dict]:
     return list_artifacts()

@@ -393,9 +393,10 @@ def _scenario_map_config_from_input(
 ) -> dict[str, str]:
     incident_location = scenario.weather.district or scenario.title
     blocked_route = scenario.traffic[0].road_name if scenario.traffic else incident_location
+    location_hint = f"{incident_location} {scenario_name}".lower()
     origin = (
         "Peshawar Ring Road Simulation Depot"
-        if "peshawar" in incident_location.lower() or "peshawar" in scenario_name.lower()
+        if "peshawar" in location_hint or "peshawr" in location_hint or "peshaw" in location_hint
         else "G-6 Markaz Emergency Centre, Islamabad"
     )
     return {
@@ -676,7 +677,7 @@ def _fallback_point(location: str) -> dict[str, Any]:
     for key, point in FALLBACK_POINTS.items():
         if key in normalized or normalized in key:
             return point
-    if "peshawar" in normalized:
+    if "peshawar" in normalized or "peshawr" in normalized or "peshaw" in normalized:
         return FALLBACK_POINTS["peshawar ring road"]
     return FALLBACK_POINTS["islamabad"]
 

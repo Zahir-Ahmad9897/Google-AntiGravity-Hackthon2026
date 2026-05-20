@@ -1,25 +1,25 @@
 {
-  "scenario_id": "g10_urban_flooding",
-  "scenario_name": "Islamabad G-10 urban flooding",
-  "generated_at": "2026-05-19T16:58:11.739511+00:00",
+  "scenario_id": "custom_permission_input",
+  "scenario_name": "Custom approved crisis signal - Peshawr Ring Road",
+  "generated_at": "2026-05-20T16:28:46.753523+00:00",
   "simulation_only": true,
   "weather_intelligence": {
-    "location": "G-10 Islamabad",
-    "resolved_location": "G-10 Islamabad",
-    "lat": 33.6767,
-    "lng": 73.0149,
-    "condition": "flood_alert",
-    "condition_type": "flood_alert",
+    "location": "Peshawr Ring Road",
+    "resolved_location": "Peshawr Ring Road",
+    "lat": 33.6844,
+    "lng": 73.0479,
+    "condition": "custom_weather_context",
+    "condition_type": "custom_weather_context",
     "temperature": "unavailable",
     "temperature_celsius": null,
     "precipitation": "6.2 mm / 80%",
     "precipitation_mm": 6.2,
     "precipitation_probability_percent": 80.0,
     "rainfall_mm_per_hour": 6.2,
-    "risk_level": "medium",
+    "risk_level": "high",
     "confidence": 0.66,
     "source": "mock_fallback",
     "fallback_used": true,
-    "fallback_reason": "GOOGLE_MAPS_API_KEY is missing."
+    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com method google.maps.weather.v1.Weather.LookupCurrentConditions are blocked.\",\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@t"
   }
 }

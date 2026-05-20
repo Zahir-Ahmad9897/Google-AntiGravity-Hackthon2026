@@ -1,14 +1,14 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - Peshawar Ring Road",
+  "scenario_name": "Custom approved crisis signal - Peshawr Ring Road",
   "simulation_only": true,
   "privacy_status": "user_approved_input_only",
   "mini_assistant_signal": {
     "is_crisis_related": true,
     "crisis_type": "road_blockage",
-    "location": "Peshawar Ring Road",
+    "location": "Peshawr Ring Road",
     "urgency": "critical",
-    "confidence": 0.77,
+    "confidence": 0.92,
     "language_detected": "mixed",
     "entities": {
       "roads": [
@@ -19,13 +19,15 @@
       ],
       "hazards": [
         "road block",
-        "block hai"
+        "block hai",
+        "traffic",
+        "jam"
       ],
       "time_mentions": []
     },
-    "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai.",
+    "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai, traffic, jam.",
     "privacy_status": "user_approved_input_only",
-    "source": "Public post"
+    "source": "test"
   },
   "iterations": [
     {
