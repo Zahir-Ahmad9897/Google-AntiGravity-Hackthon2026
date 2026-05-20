@@ -95,7 +95,7 @@ flowchart TD
     A["User opens mobile app or web dashboard"] --> B["Enter custom report or select demo scenario"]
     B --> C{"Permission granted for user-provided text?"}
     C -->|No| D["Stop analysis and show permission required"]
-    C -->|Yes| E["FastAPI orchestrator"]
+    C -->|Yes| E["Google ADK orchestrator"]
 
     E --> F["Multi-source input builder"]
     F --> G["Weather signal"]
