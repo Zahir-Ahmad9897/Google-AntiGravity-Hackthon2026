@@ -18,6 +18,7 @@ LOCATION_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bg[-\s]?11\b", re.IGNORECASE), "G-11"),
     (re.compile(r"\bfaizabad\b", re.IGNORECASE), "Faizabad intersection"),
     (re.compile(r"\blehtrar\b", re.IGNORECASE), "Lehtrar Road"),
+    (re.compile(r"\bsadd?ar\s+baz(?:a|aa)r\b|\bsadd?ar\b", re.IGNORECASE), "Sadar Bazar Peshawar"),
     (re.compile(r"\bring road\b", re.IGNORECASE), "Peshawar Ring Road"),
     (re.compile(r"\bpeshawar\b", re.IGNORECASE), "Peshawar Ring Road"),
     (re.compile(r"\buniversity road\b", re.IGNORECASE), "University Road diversion"),

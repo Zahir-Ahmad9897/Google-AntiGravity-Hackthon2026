@@ -1,26 +1,23 @@
 {
   "is_crisis_related": true,
-  "crisis_type": "road_blockage",
-  "location": "Peshawr Ring Road",
-  "urgency": "critical",
-  "confidence": 0.92,
+  "crisis_type": "urban_flooding",
+  "location": "islamabad g-10 markaz",
+  "urgency": "low",
+  "confidence": 0.65,
   "language_detected": "mixed",
   "entities": {
     "roads": [
-      "Ring Road"
+      "g-10 markaz"
     ],
     "areas": [
-      "Ring Road"
+      "g-10 markaz"
     ],
     "hazards": [
-      "road block",
-      "block hai",
-      "traffic",
-      "jam"
+      "pani"
     ],
     "time_mentions": []
   },
-  "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai, traffic, jam.",
+  "reasoning_summary": "Detected urban_flooding indicators from approved text using terms: pani.",
   "privacy_status": "user_approved_input_only",
-  "source": "test"
+  "source": "Dashboard manual report"
 }

@@ -54,8 +54,8 @@ def run_execution_simulator(
             state_changes.append(
                 SimulationStateChange(
                     metric=f"traffic_speed_{action.target}",
-                    before=f"{before_speed}km/h",
-                    after=f"{after_speed}km/h",
+                    before=_format_speed_value(before_speed),
+                    after=_format_speed_value(after_speed),
                     unit="km/h",
                 )
             )
@@ -138,3 +138,11 @@ def _speed_change_for_target(scenario: ScenarioInput, target: str) -> tuple[str,
         return str(round(before, 1)), str(round(after, 1))
 
     return "normal", "normal"
+
+
+def _format_speed_value(value: str) -> str:
+    try:
+        float(value)
+    except ValueError:
+        return value
+    return f"{value} km/h"

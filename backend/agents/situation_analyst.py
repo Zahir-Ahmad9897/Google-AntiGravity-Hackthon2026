@@ -24,6 +24,7 @@ POPULATION_DENSITY = {
     "Khayaban-e-Iqbal": 7600,
     "Margalla Road sector crossing": 7000,
     "Peshawar Ring Road": 6800,
+    "Sadar Bazar Peshawar": 11800,
     "University Road diversion": 7200,
     "Srinagar Highway G-10 underpass": 8100,
     "Islamabad": 5400,

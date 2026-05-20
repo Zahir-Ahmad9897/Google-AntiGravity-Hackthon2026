@@ -1,4 +1,4 @@
-# Rescue Action Plan: Custom approved crisis signal - Peshawr Ring Road
+# Rescue Action Plan: Custom approved crisis signal - islamabad g-10 markaz
 
 Approval status: **approved_for_simulation**
 
@@ -9,27 +9,27 @@ All actions below are simulated. No public alert, route API, or emergency author
 - Confidence: 0.9
 - Risk score: 0.86
 - Action plan:
-  - dispatch_emergency -> Peshawar Ring Road: Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.
-  - send_alert -> Peshawar Ring Road: Send public alert for Urban flooding detected in Peshawar Ring Road.
-  - reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road.
-  - open_shelter -> H-9 Livestock Ground: Prepare intake capacity at H-9 Livestock Ground.
+  - dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.
+  - send_alert -> G-10: Send public alert for Urban flooding detected in G-10.
+  - reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.
+  - open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre.
 
 ## Iteration 2
 - Crisis level: crisis
 - Confidence: 0.9
-- Risk score: 0.86
+- Risk score: 0.9
 - Action plan:
-  - dispatch_emergency -> Peshawar Ring Road: Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.
-  - send_alert -> Peshawar Ring Road: Send public alert for Urban flooding detected in Peshawar Ring Road.
-  - reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road.
-  - open_shelter -> H-9 Livestock Ground: Prepare intake capacity at H-9 Livestock Ground.
+  - dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.
+  - send_alert -> G-10: Send public alert for Urban flooding detected in G-10.
+  - reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.
+  - open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre.
 
 ## Iteration 3
 - Crisis level: crisis
 - Confidence: 0.9
 - Risk score: 0.86
 - Action plan:
-  - dispatch_emergency -> Peshawar Ring Road: Dispatch response unit from Peshawar Ring Road Simulation Depot to Peshawar Ring Road.
-  - send_alert -> Peshawar Ring Road: Send public alert for Urban flooding detected in Peshawar Ring Road.
-  - reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road.
-  - open_shelter -> H-9 Livestock Ground: Prepare intake capacity at H-9 Livestock Ground.
+  - dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.
+  - send_alert -> G-10: Send public alert for Urban flooding detected in G-10.
+  - reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.
+  - open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre.

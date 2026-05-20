@@ -8,10 +8,20 @@ let appConfig = null;
 let googleMapsPromise = null;
 let realMap = null;
 let realMapObjects = [];
+let leafletMap = null;
+let leafletPoiLayer = null;
+let poiFetchTimer = null;
 
 const els = {
+  appMain: document.getElementById('appMain'),
+  stageEyebrow: document.getElementById('stageEyebrow'),
+  stageTitle: document.getElementById('stageTitle'),
+  stageDescription: document.getElementById('stageDescription'),
   clock: document.getElementById('liveClock'),
   grid: document.getElementById('scenarioGrid'),
+  resultTabs: document.getElementById('resultTabs'),
+  showActionsView: document.getElementById('showActionsView'),
+  showMapView: document.getElementById('showMapView'),
   progressBox: document.getElementById('runProgressBox'),
   progressBar: document.getElementById('runProgressBar'),
   progressLabel: document.getElementById('runProgressLabel'),
@@ -36,6 +46,7 @@ const els = {
   wwCond: document.getElementById('wwCond'),
   wwWind: document.getElementById('wwWind'),
   wwRain: document.getElementById('wwRain'),
+  wwSource: document.getElementById('wwSource'),
   wwTag: document.getElementById('wwTag'),
   execLog: document.getElementById('execLog'),
   beforeCol: document.getElementById('beforeCol'),
@@ -70,10 +81,71 @@ function init() {
     event.preventDefault();
     runCustomReport();
   });
+  els.showActionsView.addEventListener('click', () => setStage('actions'));
+  els.showMapView.addEventListener('click', () => setStage('map'));
   
+  setStage('input');
   initAgentList();
   loadAppConfig();
   loadScenarios();
+}
+
+function setStage(stage) {
+  els.appMain.dataset.stage = stage;
+  const activeStep = { input: 'step1', pipeline: 'step2', actions: 'step3', map: 'step4' }[stage] || 'step1';
+  const stageCopy = {
+    input: {
+      eyebrow: 'Step 1',
+      title: 'Input a crisis scenario',
+      description: 'Start with one approved citizen report. CIRO will move through the agent pipeline, action plan, then map and weather intelligence.'
+    },
+    pipeline: {
+      eyebrow: 'Step 2',
+      title: 'Agents are checking the signal',
+      description: 'The pipeline verifies public signal, weather, traffic, route context, response plan, and simulated execution in sequence.'
+    },
+    actions: {
+      eyebrow: 'Step 3',
+      title: 'Review response actions',
+      description: 'Use this page for the decision summary, simulated action log, and before/after operational impact.'
+    },
+    map: {
+      eyebrow: 'Step 4',
+      title: 'Inspect map and weather',
+      description: 'Use this page only when route, blockage, rainfall, or field conditions matter for the response.'
+    }
+  }[stage];
+
+  if (stageCopy) {
+    els.stageEyebrow.textContent = stageCopy.eyebrow;
+    els.stageTitle.textContent = stageCopy.title;
+    els.stageDescription.textContent = stageCopy.description;
+  }
+
+  document.querySelectorAll('.step').forEach(step => step.classList.toggle('active', step.id === activeStep));
+
+  const resultsReady = stage === 'actions' || stage === 'map';
+  els.resultTabs.style.display = resultsReady ? 'flex' : 'none';
+  els.showActionsView.classList.toggle('active', stage === 'actions');
+  els.showMapView.classList.toggle('active', stage === 'map');
+
+  window.scrollTo({ top: 0, behavior: stage === 'input' ? 'auto' : 'smooth' });
+
+  if (stage === 'map') {
+    setTimeout(() => leafletMap?.invalidateSize(), 80);
+    setTimeout(() => leafletMap?.invalidateSize(), 450);
+    setTimeout(handleMapErrorFallback, 1200);
+    setTimeout(handleMapErrorFallback, 2600);
+    setTimeout(handleMapErrorFallback, 5000);
+  }
+}
+
+function handleMapErrorFallback() {
+  if (!els.realMap.classList.contains('active')) return;
+  if (!els.realMap.querySelector('.gm-err-container, .gm-err-content, .gm-err-title')) return;
+  const layoutId = currentScenarioMeta?.map_layout_id || currentScenarioMeta?.map_layout || 'peshawar_ring_road_blast';
+  console.warn('Google Maps displayed an error surface; switching to tactical map fallback.');
+  drawSvgMap(layoutId, 'after');
 }
 
 function initAgentList() {
@@ -95,9 +167,6 @@ async function loadAppConfig() {
   try {
     const res = await fetch(`${API_BASE}/config`);
     appConfig = await res.json();
-    if (appConfig.google_maps_public_browser_key) {
-      loadGoogleMaps();
-    }
   } catch (err) {
     console.warn('App config unavailable; map will use SVG fallback.', err);
   }
@@ -147,6 +216,43 @@ async function fetchMapPayload() {
   }
 }
 
+function applyWeatherIntelligence(payload) {
+  const weather = payload?.weather_intelligence;
+  if (!weather || !currentScenarioMeta?.weather) return;
+  const rainfall = Number(weather.rainfall_mm_per_hour ?? weather.precipitation_mm ?? 0);
+  const defaults = getLocalWeatherDefaults(weather.location || currentScenarioMeta.location || '');
+  currentScenarioMeta.weather.condition = weather.condition || currentScenarioMeta.weather.condition;
+  currentScenarioMeta.weather.temp = weather.temperature || currentScenarioMeta.weather.temp;
+  if (!currentScenarioMeta.weather.temp || currentScenarioMeta.weather.temp === 'unavailable') {
+    currentScenarioMeta.weather.temp = defaults.temp;
+  }
+  if (/^(none|mock_weather|no weather alert)$/i.test(String(currentScenarioMeta.weather.condition || ''))) {
+    currentScenarioMeta.weather.condition = defaults.condition;
+  }
+  if (!currentScenarioMeta.weather.wind || currentScenarioMeta.weather.wind === 'simulated') {
+    currentScenarioMeta.weather.wind = defaults.wind;
+  }
+  currentScenarioMeta.weather.rainfall = `${rainfall.toFixed(1)} mm/hr`;
+  currentScenarioMeta.weather.rainfallMmHr = rainfall;
+  currentScenarioMeta.weather.isCrisisFactor = ['high', 'medium'].includes(String(weather.risk_level || '').toLowerCase());
+  currentScenarioMeta.weather.status = currentScenarioMeta.weather.isCrisisFactor
+    ? 'CONTRIBUTING TO CRISIS'
+    : 'NORMAL CONDITIONS';
+  currentScenarioMeta.weather.source = weather.fallback_used ? 'simulated weather fallback' : weather.source;
+  renderWidgetsBefore();
+}
+
+function getLocalWeatherDefaults(location) {
+  const text = String(location).toLowerCase();
+  if (text.includes('peshawar')) {
+    return { temp: '31°C', condition: 'Partly Cloudy', wind: '18 km/h' };
+  }
+  if (text.includes('g-10') || text.includes('islamabad')) {
+    return { temp: '24°C', condition: 'Cloudy', wind: '22 km/h' };
+  }
+  return { temp: '27°C', condition: 'Weather watch', wind: '16 km/h' };
+}
+
 // 3. SCENARIOS & METADATA
 async function loadScenarios() {
   try {
@@ -193,19 +299,27 @@ async function fetchScenarioMeta(id) {
   }
 }
 
-function buildCustomMeta(location, severity) {
+function buildCustomMeta(location, severity, text = '') {
   const high = severity.toLowerCase() === 'critical' || severity.toLowerCase() === 'high';
-  const rainfall = high ? 8.8 : severity.toLowerCase() === 'medium' ? 4.8 : 1.5;
+  const lowered = `${text} ${location}`.toLowerCase();
+  const isWeatherIncident = /(flood|pani|paani|rain|overflow|nullah|barish|baarish)/.test(lowered);
+  const isBlastIncident = /(blast|explosion|dhamaka|accident|crash|collision)/.test(lowered);
+  const rainfall = isWeatherIncident ? (high ? 8.8 : severity.toLowerCase() === 'medium' ? 4.8 : 1.5) : 0;
+  const layoutId = isBlastIncident || lowered.includes('peshawar')
+    ? 'peshawar_ring_road_blast'
+    : isWeatherIncident
+      ? 'g10_urban_flooding'
+      : 'ambulance_rain_congestion';
   return {
     scenario_id: 'custom_permission_input',
     display_name: `Custom report - ${location}`,
     location,
-    crisis_type: 'User reported crisis',
+    crisis_type: isBlastIncident ? 'Blast / road blockage' : 'User reported crisis',
     description: 'User-approved manual report routed through CIRO.',
-    map_layout_id: 'custom_permission_input',
-    map_layout: 'g10_grid',
+    map_layout_id: layoutId,
+    map_layout: layoutId,
     weather: {
-      condition: high ? 'Heavy Rain' : 'Rain Watch',
+      condition: isWeatherIncident ? (high ? 'Heavy Rain' : 'Rain Watch') : 'No weather alert',
       temp: 'unavailable',
       wind: 'simulated',
       rainfall: `${rainfall.toFixed(1)} mm/hr`,
@@ -213,7 +327,7 @@ function buildCustomMeta(location, severity) {
       windKmh: 0,
       temperatureC: 0,
       isCrisisFactor: rainfall >= 5,
-      status: rainfall >= 5 ? 'CONTRIBUTING TO CRISIS' : 'WATCHING CONDITIONS'
+      status: rainfall >= 5 ? 'CONTRIBUTING TO CRISIS' : 'NORMAL CONDITIONS'
     },
     before_state: {
       blocked: high ? 2 : 1,
@@ -241,16 +355,26 @@ function buildCustomMetaFromResult(result, fallbackLocation, severity) {
   const weather = weatherOutput?.output?.weather_signal;
   const traffic = trafficOutput?.output?.traffic_signals?.[0];
   const analysis = reasoningOutput?.output?.analysis;
+  const crisisType = String(analysis?.crisis_type || '').toLowerCase();
+  const locationText = `${analysis?.location || fallbackLocation}`.toLowerCase();
 
   meta.display_name = result.scenario_name || meta.display_name;
   meta.location = analysis?.location || weather?.district || fallbackLocation;
   meta.crisis_type = analysis?.detected_situation || meta.crisis_type;
+  if (crisisType.includes('accident') || crisisType.includes('blockage') || locationText.includes('peshawar')) {
+    meta.map_layout_id = 'peshawar_ring_road_blast';
+  } else if (crisisType.includes('flood')) {
+    meta.map_layout_id = 'g10_urban_flooding';
+  }
   if (weather) {
-    meta.weather.condition = weather.alert_type || 'simulated_weather';
+    const rainfall = Number(weather.rainfall_mm_per_hour || 0);
+    meta.weather.condition = weather.alert_active || rainfall > 0
+      ? (weather.alert_type || 'simulated_weather')
+      : 'No weather alert';
     meta.weather.rainfall = `${Number(weather.rainfall_mm_per_hour || 0).toFixed(1)} mm/hr`;
-    meta.weather.rainfallMmHr = Number(weather.rainfall_mm_per_hour || 0);
+    meta.weather.rainfallMmHr = rainfall;
     meta.weather.isCrisisFactor = Boolean(weather.alert_active);
-    meta.weather.status = weather.alert_active ? 'CONTRIBUTING TO CRISIS' : 'WATCHING CONDITIONS';
+    meta.weather.status = weather.alert_active ? 'CONTRIBUTING TO CRISIS' : 'NORMAL CONDITIONS';
   }
   if (traffic) {
     meta.before_state.blocked = traffic.speed_kmh <= 5 || traffic.congestion_level >= 5 ? 1 : 0;
@@ -266,8 +390,17 @@ function findAgentOutput(trace, agentName) {
   return trace?.agent_outputs?.find(output => output.agent_name === agentName);
 }
 
+function getWeatherBadge(weather) {
+  const condition = String(weather?.condition || '').toLowerCase();
+  if (condition.includes('rain') || condition.includes('flood')) return 'RAIN';
+  if (condition.includes('alert') && !condition.includes('no weather')) return 'ALERT';
+  if (weather?.isCrisisFactor) return 'RISK';
+  return 'OK';
+}
+
 // 4. RUN PIPELINE
 function prepareRunUi() {
+  setStage('pipeline');
   document.querySelectorAll('.scenario-card').forEach(c => c.classList.add('disabled'));
   els.manualForm.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
   els.manualError.textContent = '';
@@ -280,8 +413,6 @@ function prepareRunUi() {
   els.bottomGrid.style.display = 'grid';
   els.crisisSummary.style.display = 'none';
   els.iterTracker.style.display = 'flex';
-  document.getElementById('step1').classList.remove('active');
-  document.getElementById('step2').classList.add('active');
 
   initAgentList(); // Reset agent visualizer
 }
@@ -308,6 +439,7 @@ async function runScenario(id) {
     if (!res.ok) throw new Error('Pipeline failed');
     currentPipelineResult = await res.json();
     await fetchMapPayload();
+    applyWeatherIntelligence(currentMapPayload);
     els.progressBar.style.width = '60%';
     
     // Simulate pipeline animation
@@ -339,7 +471,7 @@ async function runCustomReport() {
   }
 
   prepareRunUi();
-  currentScenarioMeta = buildCustomMeta(location, severity);
+  currentScenarioMeta = buildCustomMeta(location, severity, text);
   renderWidgetsBefore();
 
   try {
@@ -360,6 +492,7 @@ async function runCustomReport() {
     currentPipelineResult = payload;
     await fetchMapPayload();
     currentScenarioMeta = buildCustomMetaFromResult(payload, location, severity);
+    applyWeatherIntelligence(currentMapPayload);
     renderWidgetsBefore();
     els.progressBar.style.width = '60%';
     await animatePipeline();
@@ -415,12 +548,11 @@ async function animatePipeline() {
 function finishPipeline(finalIter) {
   els.progressBox.style.display = 'none';
   els.progressLabel.style.display = 'none';
-  document.getElementById('step2').classList.remove('active');
-  document.getElementById('step3').classList.add('active');
   unlockRunUi();
   
   renderCrisisSummary(finalIter);
   renderWidgetsAfter(finalIter);
+  setStage('actions');
 }
 
 // 6. CRISIS SUMMARY
@@ -453,11 +585,12 @@ function renderWidgetsBefore() {
   const m = currentScenarioMeta;
   
   // Weather
-  els.wwIcon.textContent = m.weather.condition.split(' ')[0];
+  els.wwIcon.textContent = getWeatherBadge(m.weather);
   els.wwCond.textContent = m.weather.condition;
   els.wwTemp.textContent = m.weather.temp;
   els.wwWind.textContent = m.weather.wind;
   els.wwRain.textContent = m.weather.rainfall;
+  els.wwSource.textContent = m.weather.source || 'scenario signal';
   els.wwTag.style.display = 'block';
   els.wwTag.textContent = m.weather.status;
   els.wwTag.style.background = m.weather.status.includes('NORMAL') ? 'rgba(0,204,102,0.2)' : 'rgba(255,68,68,0.2)';
@@ -522,7 +655,7 @@ async function renderWidgetsAfter(trace) {
     const line = document.createElement('div');
     line.className = 'log-line';
     const time = new Date(Date.now() + i*1000).toLocaleTimeString('en-US', {hour12:false});
-    line.innerHTML = `<span class="log-time">${time}</span> <span class="log-icon check">[✓]</span> ${actions[i]}`;
+    line.innerHTML = `<span class="log-time">${time}</span> <span class="log-icon check">[OK]</span> ${actions[i]}`;
     els.execLog.appendChild(line);
     els.execLog.scrollTop = els.execLog.scrollHeight;
     await sleep(300); // Stagger log
@@ -537,19 +670,349 @@ function formatMetric(metric) {
     .replace(/\b\w/g, char => char.toUpperCase());
 }
 
-// 8. MAP DRAWING (Real Google Map with SVG fallback)
+// 8. MAP DRAWING (Actual map tiles with tactical SVG fallback)
 function drawMap(layoutId, state) {
   if (state === 'after' && currentMapPayload) {
-    renderRealMap(currentMapPayload).catch((err) => {
-      console.warn('Real map unavailable; falling back to SVG.', err);
-      drawSvgMap(layoutId, state);
-    });
+    renderActualTileMap(currentMapPayload, layoutId, state);
     return;
   }
   drawSvgMap(layoutId, state);
 }
 
-async function renderRealMap(payload) {
+function renderActualTileMap(payload, layoutId, state) {
+  if (window.L) {
+    renderLeafletMap(payload, layoutId, state);
+    return;
+  }
+
+  if (!payload?.center?.lat || !payload?.center?.lng) {
+    drawSvgMap(layoutId, state);
+    return;
+  }
+
+  els.realMap.classList.add('active');
+  els.mapSourceBadge.textContent = 'Actual map + simulated route';
+  clearRealMapObjects();
+
+  const bounds = collectMapBounds(payload);
+  const zoom = chooseOsmZoom(bounds);
+  const container = els.realMap.getBoundingClientRect();
+  const width = Math.max(640, Math.round(container.width || 800));
+  const height = Math.max(320, Math.round(container.height || 410));
+  const center = getBoundsCenter(bounds) || payload.center;
+  const centerPx = latLngToWorldPixel(center, zoom);
+  const topLeft = { x: centerPx.x - width / 2, y: centerPx.y - height / 2 };
+  const tileMinX = Math.floor(topLeft.x / 256) - 1;
+  const tileMaxX = Math.floor((topLeft.x + width) / 256) + 1;
+  const tileMinY = Math.floor(topLeft.y / 256) - 1;
+  const tileMaxY = Math.floor((topLeft.y + height) / 256) + 1;
+  const maxTile = 2 ** zoom;
+  const tiles = [];
+
+  for (let x = tileMinX; x <= tileMaxX; x++) {
+    for (let y = tileMinY; y <= tileMaxY; y++) {
+      if (y < 0 || y >= maxTile) continue;
+      const wrappedX = ((x % maxTile) + maxTile) % maxTile;
+      tiles.push(`
+        <img class="osm-tile"
+          src="https://tile.openstreetmap.org/${zoom}/${wrappedX}/${y}.png"
+          alt=""
+          style="left:${Math.round(x * 256 - topLeft.x)}px; top:${Math.round(y * 256 - topLeft.y)}px;"
+        >
+      `);
+    }
+  }
+
+  const routePath = (route) => (route?.polyline || [])
+    .map((point) => projectToViewport(point, zoom, topLeft))
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`)
+    .join(' ');
+  const blockedPath = routePath(payload.blocked_route);
+  const alternatePath = routePath(payload.alternate_route);
+  const crisisPoint = payload.markers?.crisis?.position ? projectToViewport(payload.markers.crisis.position, zoom, topLeft) : null;
+  const rescuePoint = payload.markers?.rescue?.position ? projectToViewport(payload.markers.rescue.position, zoom, topLeft) : null;
+  const weatherPoint = payload.markers?.weather?.position ? projectToViewport(payload.markers.weather.position, zoom, topLeft) : null;
+
+  els.realMap.innerHTML = `
+    <div class="osm-map" style="width:${width}px;height:${height}px">
+      ${tiles.join('')}
+      <svg class="osm-route-layer" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        ${blockedPath ? `<path class="osm-route blocked" d="${blockedPath}" />` : ''}
+        ${alternatePath ? `<path class="osm-route rerouted" d="${alternatePath}" />` : ''}
+        ${crisisPoint ? `<g class="osm-marker crisis" transform="translate(${crisisPoint.x},${crisisPoint.y})"><circle r="12"/><text y="4">!</text></g>` : ''}
+        ${rescuePoint ? `<g class="osm-marker rescue" transform="translate(${rescuePoint.x},${rescuePoint.y})"><circle r="10"/><text y="4">R</text></g>` : ''}
+        ${weatherPoint ? `<g class="osm-marker weather" transform="translate(${weatherPoint.x},${weatherPoint.y})"><circle r="9"/><text y="3">W</text></g>` : ''}
+      </svg>
+      <div class="osm-route-card">
+        <strong>${escapeHtml(payload.route_intelligence?.alternate_route || 'Recommended alternate')}</strong>
+        <span>${escapeHtml(payload.route_intelligence?.estimated_travel_time || 'route ready')} · ${escapeHtml(payload.route_intelligence?.distance || 'distance simulated')}</span>
+      </div>
+      <div class="osm-attribution">© OpenStreetMap contributors · CIRO simulated overlay</div>
+    </div>
+  `;
+}
+
+function renderLeafletMap(payload, layoutId, state) {
+  if (!payload?.center?.lat || !payload?.center?.lng) {
+    drawSvgMap(layoutId, state);
+    return;
+  }
+
+  els.realMap.classList.add('active');
+  els.mapSourceBadge.textContent = 'Interactive map + simulated route';
+  clearRealMapObjects();
+
+  els.realMap.innerHTML = `
+    <div id="leafletCiroMap" class="leaflet-map"></div>
+    <form class="map-search" id="mapSearchForm">
+      <input id="mapSearchInput" type="search" placeholder="Search place, road, shop..." autocomplete="off">
+      <button type="submit">Search</button>
+      <div class="map-search-results" id="mapSearchResults"></div>
+    </form>
+    <div class="map-hint">Click map for place details. Zoom in to discover shops and POIs.</div>
+  `;
+
+  const L = window.L;
+  const center = toLatLng(payload.center);
+  leafletMap = L.map('leafletCiroMap', {
+    center: [center.lat, center.lng],
+    zoom: 14,
+    zoomControl: true,
+    scrollWheelZoom: true,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors',
+  }).addTo(leafletMap);
+
+  const bounds = [];
+  const addRoute = (route, color, label, dashArray) => {
+    const points = (route?.polyline || []).map((point) => [Number(point.lat), Number(point.lng)]);
+    if (!points.length) return;
+    points.forEach((point) => bounds.push(point));
+    L.polyline(points, {
+      color,
+      weight: 7,
+      opacity: 0.9,
+      dashArray,
+      lineCap: 'round',
+      lineJoin: 'round',
+    }).addTo(leafletMap).bindPopup(`<strong>${escapeHtml(label)}</strong><br>${escapeHtml(route.label || '')}`);
+  };
+
+  addRoute(payload.blocked_route, '#ff5d5d', 'Blocked/original route', '10 8');
+  addRoute(payload.alternate_route, '#42d392', 'Recommended emergency alternate', null);
+
+  const markerConfig = {
+    crisis: { color: '#ff5d5d', text: '!', label: 'Crisis point' },
+    rescue: { color: '#42d392', text: 'R', label: 'Rescue unit' },
+    weather: { color: '#23c7bd', text: 'W', label: 'Weather signal' },
+  };
+
+  Object.entries(payload.markers || {}).forEach(([type, marker]) => {
+    if (!marker?.position) return;
+    const point = toLatLng(marker.position);
+    bounds.push([point.lat, point.lng]);
+    const config = markerConfig[type] || { color: '#ffc857', text: '?', label: type };
+    L.marker([point.lat, point.lng], { icon: createLeafletIcon(config.color, config.text) })
+      .addTo(leafletMap)
+      .bindPopup(`<strong>${escapeHtml(marker.label || config.label)}</strong><br>${escapeHtml(marker.severity || marker.condition || marker.status || '')}`);
+  });
+
+  if (bounds.length) {
+    leafletMap.fitBounds(bounds, { padding: [42, 42], maxZoom: 15 });
+  }
+  setTimeout(() => leafletMap?.invalidateSize(), 120);
+  setTimeout(() => leafletMap?.invalidateSize(), 700);
+
+  leafletPoiLayer = L.layerGroup().addTo(leafletMap);
+  leafletMap.on('click', (event) => showClickedPlace(event.latlng));
+  leafletMap.on('zoomend moveend', scheduleNearbyPoiLoad);
+  setupMapSearch();
+  scheduleNearbyPoiLoad();
+}
+
+function createLeafletIcon(color, text) {
+  return window.L.divIcon({
+    className: 'ciro-leaflet-marker',
+    html: `<span style="background:${color}">${escapeHtml(text)}</span>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+  });
+}
+
+function setupMapSearch() {
+  const form = document.getElementById('mapSearchForm');
+  const input = document.getElementById('mapSearchInput');
+  const results = document.getElementById('mapSearchResults');
+  if (!form || !input || !results || !leafletMap) return;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = input.value.trim();
+    if (!query) return;
+    results.textContent = 'Searching...';
+    try {
+      const items = await searchPlaces(query);
+      if (!items.length) {
+        results.textContent = 'No places found nearby.';
+        return;
+      }
+      results.innerHTML = items.slice(0, 4).map((item, index) => `
+        <button type="button" data-index="${index}">
+          <strong>${escapeHtml(item.name || item.display_name.split(',')[0])}</strong>
+          <span>${escapeHtml(item.display_name)}</span>
+        </button>
+      `).join('');
+      results.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const item = items[Number(button.dataset.index)];
+          const lat = Number(item.lat);
+          const lng = Number(item.lon);
+          leafletMap.setView([lat, lng], Math.max(17, leafletMap.getZoom()));
+          window.L.marker([lat, lng], { icon: createLeafletIcon('#ffc857', 'S') })
+            .addTo(leafletMap)
+            .bindPopup(`<strong>${escapeHtml(item.name || 'Search result')}</strong><br>${escapeHtml(item.display_name)}`)
+            .openPopup();
+          results.innerHTML = '';
+        });
+      });
+    } catch (error) {
+      console.warn('Place search failed', error);
+      results.textContent = 'Search temporarily unavailable.';
+    }
+  });
+}
+
+async function searchPlaces(query) {
+  const center = leafletMap?.getCenter();
+  const fullQuery = center ? `${query} near ${center.lat.toFixed(4)},${center.lng.toFixed(4)}` : query;
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=pk&q=${encodeURIComponent(fullQuery)}`;
+  const response = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!response.ok) throw new Error(`Nominatim HTTP ${response.status}`);
+  return response.json();
+}
+
+async function showClickedPlace(latlng) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18&addressdetails=1`;
+    const response = await fetch(url, { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`Reverse geocode HTTP ${response.status}`);
+    const place = await response.json();
+    window.L.popup()
+      .setLatLng(latlng)
+      .setContent(`<strong>${escapeHtml(place.name || place.display_name?.split(',')[0] || 'Selected point')}</strong><br>${escapeHtml(place.display_name || `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`)}`)
+      .openOn(leafletMap);
+  } catch (error) {
+    window.L.popup()
+      .setLatLng(latlng)
+      .setContent(`<strong>Selected point</strong><br>${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`)
+      .openOn(leafletMap);
+  }
+}
+
+function scheduleNearbyPoiLoad() {
+  clearTimeout(poiFetchTimer);
+  poiFetchTimer = setTimeout(loadNearbyPois, 550);
+}
+
+async function loadNearbyPois() {
+  if (!leafletMap || !leafletPoiLayer) return;
+  leafletPoiLayer.clearLayers();
+  if (leafletMap.getZoom() < 16) return;
+
+  const bounds = leafletMap.getBounds();
+  const south = bounds.getSouth().toFixed(5);
+  const west = bounds.getWest().toFixed(5);
+  const north = bounds.getNorth().toFixed(5);
+  const east = bounds.getEast().toFixed(5);
+  const query = `
+    [out:json][timeout:8];
+    (
+      node["shop"](${south},${west},${north},${east});
+      node["amenity"](${south},${west},${north},${east});
+    );
+    out center 30;
+  `;
+  try {
+    const response = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: `data=${encodeURIComponent(query)}`,
+    });
+    if (!response.ok) throw new Error(`Overpass HTTP ${response.status}`);
+    const payload = await response.json();
+    (payload.elements || []).slice(0, 30).forEach((item) => {
+      if (!item.lat || !item.lon || !item.tags?.name) return;
+      window.L.circleMarker([item.lat, item.lon], {
+        radius: 4,
+        color: '#10110f',
+        fillColor: '#ffc857',
+        fillOpacity: 0.94,
+        weight: 1,
+      }).addTo(leafletPoiLayer).bindTooltip(item.tags.name, {
+        direction: 'top',
+        offset: [0, -4],
+        opacity: 0.95,
+      }).bindPopup(`<strong>${escapeHtml(item.tags.name)}</strong><br>${escapeHtml(item.tags.shop || item.tags.amenity || 'local place')}`);
+    });
+  } catch (error) {
+    console.warn('Nearby POI lookup failed', error);
+  }
+}
+
+function collectMapBounds(payload) {
+  const points = [];
+  [payload.center, payload.markers?.crisis?.position, payload.markers?.rescue?.position, payload.markers?.weather?.position]
+    .filter(Boolean)
+    .forEach((point) => points.push(toLatLng(point)));
+  [payload.blocked_route, payload.alternate_route].forEach((route) => {
+    (route?.polyline || []).forEach((point) => points.push(toLatLng(point)));
+  });
+  if (!points.length) return null;
+  return points.reduce((bounds, point) => ({
+    minLat: Math.min(bounds.minLat, point.lat),
+    maxLat: Math.max(bounds.maxLat, point.lat),
+    minLng: Math.min(bounds.minLng, point.lng),
+    maxLng: Math.max(bounds.maxLng, point.lng),
+  }), { minLat: points[0].lat, maxLat: points[0].lat, minLng: points[0].lng, maxLng: points[0].lng });
+}
+
+function getBoundsCenter(bounds) {
+  if (!bounds) return null;
+  return { lat: (bounds.minLat + bounds.maxLat) / 2, lng: (bounds.minLng + bounds.maxLng) / 2 };
+}
+
+function chooseOsmZoom(bounds) {
+  if (!bounds) return 13;
+  const span = Math.max(
+    Math.max(0.002, Math.abs(bounds.maxLat - bounds.minLat)),
+    Math.max(0.002, Math.abs(bounds.maxLng - bounds.minLng))
+  );
+  if (span > 0.22) return 11;
+  if (span > 0.1) return 12;
+  if (span > 0.045) return 13;
+  if (span > 0.018) return 14;
+  return 15;
+}
+
+function latLngToWorldPixel(point, zoom) {
+  const sinLat = Math.sin((Number(point.lat) * Math.PI) / 180);
+  const scale = 256 * 2 ** zoom;
+  return {
+    x: ((Number(point.lng) + 180) / 360) * scale,
+    y: (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale,
+  };
+}
+
+function projectToViewport(point, zoom, topLeft) {
+  const world = latLngToWorldPixel(point, zoom);
+  return { x: world.x - topLeft.x, y: world.y - topLeft.y };
+}
+
+async function renderRealMap(payload, layoutId, state) {
   await loadGoogleMaps();
   const maps = window.google.maps;
   if (!payload?.center?.lat || !payload?.center?.lng) {
@@ -603,6 +1066,26 @@ async function renderRealMap(payload) {
   }
 
   setTimeout(() => maps.event.trigger(realMap, 'resize'), 100);
+  const fallbackIfMapFailed = () => {
+    const mapText = els.realMap.textContent || '';
+    const hasGoogleError = Boolean(els.realMap.querySelector('.gm-err-container, .gm-err-content, .gm-err-title'));
+    if (hasGoogleError || /oops|went wrong|didn't load google maps/i.test(mapText)) {
+      console.warn('Google Maps rendered an auth/error surface; using SVG fallback.');
+      drawSvgMap(layoutId, state);
+      return true;
+    }
+    return false;
+  };
+  setTimeout(fallbackIfMapFailed, 900);
+  setTimeout(fallbackIfMapFailed, 1800);
+  setTimeout(fallbackIfMapFailed, 3200);
+  let mapHealthChecks = 0;
+  const mapHealthInterval = setInterval(() => {
+    mapHealthChecks += 1;
+    if (fallbackIfMapFailed() || mapHealthChecks >= 16) {
+      clearInterval(mapHealthInterval);
+    }
+  }, 500);
 }
 
 function showSvgMap(label = 'Mock map') {
@@ -612,6 +1095,12 @@ function showSvgMap(label = 'Mock map') {
 }
 
 function clearRealMapObjects() {
+  if (leafletMap) {
+    leafletMap.remove();
+    leafletMap = null;
+    leafletPoiLayer = null;
+  }
+  clearTimeout(poiFetchTimer);
   realMapObjects.forEach((object) => object.setMap(null));
   realMapObjects = [];
 }

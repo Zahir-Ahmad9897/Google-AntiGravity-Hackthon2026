@@ -1,21 +1,21 @@
 [
   {
-    "timestamp": "2026-05-20T16:28:27.108274+00:00",
+    "timestamp": "2026-05-20T19:47:13.048517+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "Peshawr Ring Road"
+      "location": "islamabad g-10 markaz"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "Islamabad, Pakistan",
-      "lat": 33.6844,
-      "lng": 73.0479,
+      "formatted_address": "G-10, Islamabad, Pakistan",
+      "lat": 33.6767,
+      "lng": 73.0149,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:29.085838+00:00",
+    "timestamp": "2026-05-20T19:47:13.850908+00:00",
     "api_name": "Geocoding API",
     "input": {
       "location": "G-6 Markaz Emergency Centre, Islamabad"
@@ -30,37 +30,37 @@
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:32.722832+00:00",
+    "timestamp": "2026-05-20T19:47:14.520963+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "Peshawr Ring Road"
+      "location": "islamabad g-10 markaz"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "Islamabad, Pakistan",
-      "lat": 33.6844,
-      "lng": 73.0479,
+      "formatted_address": "G-10, Islamabad, Pakistan",
+      "lat": 33.6767,
+      "lng": 73.0149,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:38.904415+00:00",
+    "timestamp": "2026-05-20T19:47:17.102371+00:00",
     "api_name": "Weather API",
     "input": {
-      "location": "Peshawr Ring Road"
+      "location": "islamabad g-10 markaz"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "condition": "custom_weather_context",
-      "rainfall_mm_per_hour": 6.2,
+      "condition": "heavy_rain_alert",
+      "rainfall_mm_per_hour": 8.0,
       "risk_level": "high",
-      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com meth"
+      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 4729662"
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:42.340638+00:00",
+    "timestamp": "2026-05-20T19:47:17.785713+00:00",
     "api_name": "Geocoding API",
     "input": {
       "location": "G-6 Markaz Emergency Centre, Islamabad"
@@ -75,33 +75,33 @@
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:43.767524+00:00",
+    "timestamp": "2026-05-20T19:47:18.820360+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "Peshawr Ring Road"
+      "location": "islamabad g-10 markaz"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "Islamabad, Pakistan",
-      "lat": 33.6844,
-      "lng": 73.0479,
+      "formatted_address": "G-10, Islamabad, Pakistan",
+      "lat": 33.6767,
+      "lng": 73.0149,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T16:28:46.751828+00:00",
+    "timestamp": "2026-05-20T19:47:20.716063+00:00",
     "api_name": "Routes API",
     "input": {
       "origin": "G-6 Markaz, Islamabad, Pakistan",
-      "destination": "Islamabad, Pakistan",
-      "blocked_route": "Ring Road"
+      "destination": "G-10, Islamabad, Pakistan",
+      "blocked_route": "g-10 markaz"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "normal_distance_m": 4422,
-      "alternate_distance_m": 7168,
+      "normal_distance_m": 7091,
+      "alternate_distance_m": 7714,
       "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API routes.googleapis.com metho"
     }
   }

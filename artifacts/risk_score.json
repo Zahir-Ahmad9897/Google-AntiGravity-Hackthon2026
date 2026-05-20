@@ -1,6 +1,6 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - Peshawr Ring Road",
+  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
   "iteration_scores": [
     {
       "iteration_number": 1,
@@ -10,7 +10,7 @@
     },
     {
       "iteration_number": 2,
-      "risk_score": 0.86,
+      "risk_score": 0.9,
       "confidence_score": 0.9,
       "crisis_level": "crisis"
     },

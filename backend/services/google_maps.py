@@ -42,6 +42,8 @@ FALLBACK_POINTS: dict[str, dict[str, Any]] = {
     "srinagar highway g-10 underpass": {"lat": 33.6841, "lng": 73.0176, "formatted_address": "Srinagar Highway G-10 underpass, Islamabad, Pakistan"},
     "peshawar ring road": {"lat": 34.0062, "lng": 71.5608, "formatted_address": "Peshawar Ring Road, Peshawar, Pakistan"},
     "peshawar ring road simulation depot": {"lat": 34.0149, "lng": 71.5785, "formatted_address": "Peshawar Ring Road simulation depot, Peshawar, Pakistan"},
+    "sadar bazar peshawar": {"lat": 34.0081, "lng": 71.5739, "formatted_address": "Sadar Bazar, Peshawar, Pakistan"},
+    "saddar bazar peshawar": {"lat": 34.0081, "lng": 71.5739, "formatted_address": "Saddar Bazar, Peshawar, Pakistan"},
     "university road diversion": {"lat": 34.0003, "lng": 71.5003, "formatted_address": "University Road, Peshawar, Pakistan"},
 }
 

@@ -1,6 +1,6 @@
 {
   "scenario_id": "custom_permission_input",
-  "title": "Custom approved crisis signal - Peshawr Ring Road",
+  "title": "Custom approved crisis signal - islamabad g-10 markaz",
   "description": "User-approved custom crisis content routed through the existing CIRO iterative pipeline.",
   "steps": [
     {
@@ -8,35 +8,35 @@
       "update_note": "Approved custom report received; CIRO begins verification.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "title": "Custom approved crisis signal - islamabad g-10 markaz",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i1-approved-1",
-            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
-            "platform": "test",
-            "timestamp": "2026-05-20T16:20:22.570253Z",
+            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "platform": "dashboard_manual_report",
+            "timestamp": "2026-05-20T19:39:11.435710Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i1-weather",
-          "district": "Peshawr Ring Road",
-          "rainfall_mm_per_hour": 4.8,
+          "district": "islamabad g-10 markaz",
+          "rainfall_mm_per_hour": 6.3,
           "alert_active": true,
-          "alert_type": "custom_weather_context",
-          "alert_level": 2,
-          "timestamp": "2026-05-20T16:20:22.570253Z"
+          "alert_type": "heavy_rain_alert",
+          "alert_level": 3,
+          "timestamp": "2026-05-20T19:39:11.435710Z"
         },
         "traffic": [
           {
             "report_id": "custom-i1-traffic",
-            "road_name": "Ring Road",
-            "speed_kmh": 11.0,
+            "road_name": "g-10 markaz",
+            "speed_kmh": 8.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T16:20:22.570253Z"
+            "timestamp": "2026-05-20T19:39:11.435710Z"
           }
         ],
         "expected_escalation": false,
@@ -52,35 +52,35 @@
       "update_note": "Custom signal correlated with weather and traffic simulation.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "title": "Custom approved crisis signal - islamabad g-10 markaz",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i2-approved-1",
-            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
-            "platform": "test",
-            "timestamp": "2026-05-20T16:24:22.570253Z",
+            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "platform": "dashboard_manual_report",
+            "timestamp": "2026-05-20T19:43:11.435710Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i2-weather",
-          "district": "Peshawr Ring Road",
-          "rainfall_mm_per_hour": 8.8,
+          "district": "islamabad g-10 markaz",
+          "rainfall_mm_per_hour": 11.5,
           "alert_active": true,
-          "alert_type": "custom_weather_context",
-          "alert_level": 3,
-          "timestamp": "2026-05-20T16:24:22.570253Z"
+          "alert_type": "heavy_rain_alert",
+          "alert_level": 4,
+          "timestamp": "2026-05-20T19:43:11.435710Z"
         },
         "traffic": [
           {
             "report_id": "custom-i2-traffic",
-            "road_name": "Ring Road",
-            "speed_kmh": 3.0,
+            "road_name": "g-10 markaz",
+            "speed_kmh": 0.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-20T16:24:22.570253Z"
+            "timestamp": "2026-05-20T19:43:11.435710Z"
           }
         ],
         "expected_escalation": true,
@@ -96,35 +96,35 @@
       "update_note": "Simulation applies route update and evaluates remaining risk.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - Peshawr Ring Road",
+        "title": "Custom approved crisis signal - islamabad g-10 markaz",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i3-approved-1",
-            "text": "Peshawr Ring Road pe road block hai, traffic jam aur ambulance phansi hui hai",
-            "platform": "test",
-            "timestamp": "2026-05-20T16:27:22.570253Z",
+            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "platform": "dashboard_manual_report",
+            "timestamp": "2026-05-20T19:46:11.435710Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i3-weather",
-          "district": "Peshawr Ring Road",
-          "rainfall_mm_per_hour": 6.2,
+          "district": "islamabad g-10 markaz",
+          "rainfall_mm_per_hour": 8.0,
           "alert_active": true,
-          "alert_type": "custom_weather_context",
-          "alert_level": 3,
-          "timestamp": "2026-05-20T16:27:22.570253Z"
+          "alert_type": "heavy_rain_alert",
+          "alert_level": 4,
+          "timestamp": "2026-05-20T19:46:11.435710Z"
         },
         "traffic": [
           {
             "report_id": "custom-i3-traffic",
-            "road_name": "Ring Road",
-            "speed_kmh": 13.0,
+            "road_name": "g-10 markaz",
+            "speed_kmh": 10.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T16:27:22.570253Z"
+            "timestamp": "2026-05-20T19:46:11.435710Z"
           }
         ],
         "expected_escalation": true,

@@ -7,7 +7,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <title>CIRO Dashboard</title>
   <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="/dashboard/styles.css">
+  <link rel="stylesheet" href="/dashboard/styles.css?v=20260520-ui6">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -27,34 +28,48 @@
     </div>
   </header>
 
-  <main>
+  <main id="appMain" data-stage="input">
     <!-- STEP 2: SCENARIO SELECTOR -->
-    <div class="progress-stepper">
-      <div class="step active" id="step1"><div class="step-num">1</div> Select Scenario</div>
-      <div class="step" id="step2"><div class="step-num">2</div> AI Agents Running</div>
-      <div class="step" id="step3"><div class="step-num">3</div> View Results</div>
+    <div class="progress-stepper" aria-label="CIRO workflow">
+      <div class="step active" id="step1"><div class="step-num">1</div> Input Scenario</div>
+      <div class="step" id="step2"><div class="step-num">2</div> Pipeline</div>
+      <div class="step" id="step3"><div class="step-num">3</div> Actions</div>
+      <div class="step" id="step4"><div class="step-num">4</div> Map / Weather</div>
+    </div>
+
+    <section class="stage-context" aria-live="polite">
+      <div>
+        <div class="eyebrow" id="stageEyebrow">Step 1</div>
+        <h2 id="stageTitle">Input a crisis scenario</h2>
+      </div>
+      <p id="stageDescription">Start with one approved citizen report. CIRO will move through the agent pipeline, action plan, then map and weather intelligence.</p>
+    </section>
+
+    <div class="view-switcher" id="resultTabs" aria-label="Result views">
+      <button type="button" class="view-tab active" id="showActionsView">Action plan</button>
+      <button type="button" class="view-tab" id="showMapView">Map and weather</button>
     </div>
 
     <section class="manual-report-panel" aria-labelledby="manualReportTitle">
       <div class="manual-copy">
         <div class="eyebrow">Live input</div>
-        <h2 id="manualReportTitle">Run CIRO from a citizen report</h2>
-        <p>Paste noisy English or Roman Urdu text, then CIRO will verify weather, traffic, route updates, alerts, tickets, and impact.</p>
+        <h2 id="manualReportTitle">Enter one crisis scenario</h2>
+        <p>Paste English or Roman Urdu report text. CIRO verifies the signal, then separates the output into action and field-intelligence screens.</p>
       </div>
       <form class="manual-form" id="manualReportForm">
         <label for="manualText">Report text</label>
-        <textarea id="manualText" rows="3" placeholder="G-10 mein pani bhar gaya hai, gaariyan phans gayi hain"></textarea>
+        <textarea id="manualText" rows="3" placeholder="peshawar sadar bazar may blast howa hai"></textarea>
         <div class="manual-row">
           <div>
             <label for="manualLocation">Location</label>
-            <input id="manualLocation" type="text" value="G-10 Islamabad">
+            <input id="manualLocation" type="text" value="sadar bazar peshawar">
           </div>
           <div>
             <label for="manualSeverity">Severity</label>
             <select id="manualSeverity">
+              <option value="Critical">Critical</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
-              <option value="Critical">Critical</option>
               <option value="Low">Low</option>
             </select>
           </div>
@@ -67,6 +82,11 @@
         <div class="manual-error" id="manualError" role="alert"></div>
       </form>
     </section>
+
+    <div class="section-heading input-only">
+      <span>Or run a prepared demo</span>
+      <strong>3 scenarios</strong>
+    </div>
 
     <div class="scenario-grid" id="scenarioGrid">
       <!-- Injected by JS -->
@@ -148,6 +168,7 @@
             <div class="weather-details">
               <div class="weather-row"><span>Wind Speed</span><span id="wwWind">--</span></div>
               <div class="weather-row"><span>Rainfall</span><span id="wwRain">--</span></div>
+              <div class="weather-row"><span>Source</span><span id="wwSource">--</span></div>
             </div>
             <div class="weather-tag" id="wwTag" style="display:none;"></div>
           </div>
@@ -156,7 +177,7 @@
         <div class="bottom-grid" id="bottomGrid">
           <!-- STEP 7: EXECUTION LOG -->
           <div class="log-panel">
-            <div class="log-header">Action Execution Log</div>
+            <div class="log-header">Simulated Action Log</div>
             <div class="log-content" id="execLog">
               <div class="log-line">Waiting for scenario execution...</div>
             </div>
@@ -183,6 +204,7 @@
     </div>
   </main>
 
-  <script src="/dashboard/app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/dashboard/app.js?v=20260520-ui6"></script>
 </body>
 </html>

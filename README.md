@@ -85,52 +85,52 @@ The system supports:
 - Any user-entered crisis report with location and severity.
 - Noisy English and Roman Urdu input.
 - Real Google Maps rendering when `GOOGLE_MAPS_API_KEY` is available.
-- Mock fallback routes and weather if Google APIs fail.
+- Interactive OpenStreetMap-based UI fallback plus mock route/weather data if Google APIs fail.
 - Agent trace logs and artifacts for judging.
 
 ## Workflow Diagram
 
 ```mermaid
 flowchart TD
-    A[User opens Web Dashboard or Mobile App] --> B[Enter custom report or select demo scenario]
-    B --> C{Permission granted for user-provided text?}
-    C -- No --> D[Stop analysis and show permission required]
-    C -- Yes --> E[FastAPI Orchestrator]
+    A["User opens mobile app or web dashboard"] --> B["Enter custom report or select demo scenario"]
+    B --> C{"Permission granted for user-provided text?"}
+    C -->|No| D["Stop analysis and show permission required"]
+    C -->|Yes| E["FastAPI orchestrator"]
 
-    E --> F[Multi-source input builder]
-    F --> G[Weather signal]
-    F --> H[Traffic signal]
-    F --> I[Public/user-approved report]
-    F --> J[Map/geocode/route context]
+    E --> F["Multi-source input builder"]
+    F --> G["Weather signal"]
+    F --> H["Traffic signal"]
+    F --> I["User-approved public report"]
+    F --> J["Map, geocode, and route context"]
 
-    G --> K[CIRO Commander Agent]
+    G --> K["CIRO Commander Agent"]
     H --> K
     I --> K
     J --> K
 
-    K --> L[Weather Risk Agent]
-    L --> M[Traffic Analysis Agent]
-    M --> N[Social/Public Signal Agent]
-    N --> O{Verification Agent: enough correlated signals?}
+    K --> L["Weather Risk Agent"]
+    L --> M["Traffic Analysis Agent"]
+    M --> N["Social and Public Signal Agent"]
+    N --> O{"Enough correlated signals?"}
 
-    O -- No --> P[Monitor only and save trace]
-    O -- Yes --> Q[Crisis Reasoning Agent]
-    Q --> R{Crisis severity high enough?}
+    O -->|No| P["Monitor only and save trace"]
+    O -->|Yes| Q["Crisis Reasoning Agent"]
+    Q --> R{"Crisis severity high enough?"}
 
-    R -- No --> P
-    R -- Yes --> S[Rescue Planning Agent]
-    S --> T[Action Execution Agent - simulation only]
-    T --> U[Evaluation/Replanning Agent]
+    R -->|No| P
+    R -->|Yes| S["Rescue Planning Agent"]
+    S --> T["Action Execution Agent - simulation only"]
+    T --> U["Evaluation and Replanning Agent"]
 
-    U --> V{Need another iteration?}
-    V -- Yes --> K
-    V -- No --> W[Final crisis report and artifacts]
+    U --> V{"Need another iteration?"}
+    V -->|Yes| K
+    V -->|No| W["Final crisis report and artifacts"]
 
-    T --> X[Mock/real map reroute shown in UI]
-    T --> Y[Simulated public alert]
-    T --> Z[Simulated emergency ticket]
-    U --> AA[Before vs after impact panel]
-    W --> AB[Dashboard, mobile result screens, logs]
+    T --> X["Real or fallback map reroute in UI"]
+    T --> Y["Simulated public alert"]
+    T --> Z["Simulated emergency ticket"]
+    U --> AA["Before and after impact panel"]
+    W --> AB["Mobile result screens, dashboard, and logs"]
 ```
 
 ## What CIRO Shows In The Demo
@@ -150,8 +150,10 @@ flowchart TD
    - send simulated alert
    - create simulated ticket
 6. UI shows:
+   - mobile-first results screen for the mandatory app deliverable
    - real Google map when available
-   - fallback tactical SVG map if unavailable
+   - interactive OpenStreetMap UI fallback when browser Google Maps is unavailable
+   - tactical SVG fallback if external map tiles are unavailable
    - red blocked/original route
    - green alternate route
    - weather condition
@@ -171,13 +173,13 @@ flowchart TD
 | Action simulation | Execution Agent simulates map update, alert, ticket, and state changes. |
 | Outcome visualization | Dashboard/mobile summary, real or fallback map, logs, before/after metrics, artifacts. |
 | Agentic workflow | Google ADK root agent plus deterministic 9-agent CIRO loop. |
-| Mobile app | Expo React Native app under `mobile/ciro_mobile`. |
-| Web app | FastAPI-served PWA dashboard under `dashboard/`. |
+| Mobile app | Mandatory Expo React Native app under `mobile/ciro_mobile`. |
+| Web app | Optional FastAPI-served companion PWA dashboard under `dashboard/`. |
 
 ## Architecture
 
 ```text
-Web Dashboard / Mobile App
+Mobile App / Optional Web Dashboard
         |
         v
 FastAPI API Gateway - main.py
@@ -271,8 +273,10 @@ Usage:
 
 - `GOOGLE_API_KEY`: Gemini / Google ADK narration and tool orchestration demo.
 - `GOOGLE_MAPS_API_KEY`: Maps JavaScript, geocoding, weather, and routes.
-- `GROQ_API_KEY`: optional fallback narration only if Gemini fails.
+- `GROQ_API_KEY`: optional fallback narration only if Gemini fails, quota is exhausted, or narration should continue without blocking the deterministic crisis pipeline.
 - `CIRO_GROQ_MODEL`: optional Groq model name.
+
+> Groq fallback note: CIRO's core crisis detection, planning, simulation, artifacts, and UI do not depend on Groq. Groq is only used as a backup language-model narration path when Gemini is unavailable.
 
 Do not commit `.env`.
 
@@ -292,7 +296,18 @@ Recommended key security:
 - Restrict server key by API and environment.
 - Use separate keys for local demo and deployed app if possible.
 
-If Google Maps or Weather APIs fail, CIRO stays functional using mock fallback geometry and weather.
+If Google Maps or Weather APIs fail, CIRO stays functional using OpenStreetMap UI tiles where available plus mock fallback geometry and weather.
+
+## Future Roadmap
+
+The current prototype is simulation-only and reads only user-entered or demo-approved emergency text. In a future production direction, CIRO can add a permission-based background mini-agent series that works like a safe background signal collector:
+
+- A user or authorized organization explicitly grants permission for selected public or owned sources.
+- Mini background agents fetch crisis-relevant data from approved platforms such as Facebook, Instagram, X/Twitter, Telegram, and other public/community channels.
+- The preprocessing layer extracts post text, Roman Urdu/English keywords, images, voice notes, and audio from video when permission and platform policy allow it.
+- The system deduplicates signals, removes unrelated/private content, scores confidence, and passes only emergency-relevant evidence into the CIRO pipeline.
+- CIRO can then recommend or simulate specific actions such as notifying rescue teams, ambulance services, fire brigade units, public alert channels, traffic rerouting, shelter preparation, and map updates.
+- All future integrations must preserve consent, platform terms, audit logs, and human approval before any real-world notification or dispatch.
 
 ## API Endpoints
 
@@ -406,8 +421,8 @@ python adk_ciro\run_adk_demo.py
 - README is current.
 - `artifacts/` traces are zipped for Antigravity trace/log submission.
 - `.env` and real API keys are not committed.
-- Web dashboard runs.
-- Mobile app runs.
+- Mobile app runs as the mandatory deliverable.
+- Web dashboard runs as an optional companion demo.
 - Custom Peshawar scenario works.
 - Map reroute, weather, action log, ticket, and impact are visible.
 - All shared links open in incognito/private browser.

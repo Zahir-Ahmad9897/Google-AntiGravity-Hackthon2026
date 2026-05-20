@@ -107,6 +107,7 @@ def build_custom_iterative_scenario(
     road = _primary_road(signal, location)
     rainfall = _rainfall(normalized_severity, signal["crisis_type"])
     alert_level = _alert_level(normalized_severity)
+    weather_alert_level = alert_level if rainfall > 0 else 0
     speed = _speed(normalized_severity)
     congestion = _congestion(normalized_severity)
     expected_escalation = normalized_severity in {"high", "critical"}
@@ -120,7 +121,7 @@ def build_custom_iterative_scenario(
             location,
             road,
             max(0.0, rainfall * 0.55),
-            max(0, alert_level - 1),
+            max(0, weather_alert_level - 1),
             max(speed + 8.0, 8.0),
             max(1, congestion - 1),
             expected_escalation=False,
@@ -134,7 +135,7 @@ def build_custom_iterative_scenario(
             location,
             road,
             rainfall,
-            alert_level,
+            weather_alert_level,
             speed,
             congestion,
             expected_escalation=expected_escalation,
@@ -148,7 +149,7 @@ def build_custom_iterative_scenario(
             location,
             road,
             max(0.0, rainfall * 0.7),
-            alert_level,
+            weather_alert_level,
             min(max(speed + 10.0, 4.0), 28.0),
             max(1, congestion - 1),
             expected_escalation=expected_escalation,
@@ -196,8 +197,8 @@ def _custom_step(
             report_id=f"custom-i{iteration_number}-weather",
             district=location,
             rainfall_mm_per_hour=round(rainfall, 1),
-            alert_active=alert_level >= 2,
-            alert_type="custom_weather_context",
+            alert_active=alert_level >= 2 and rainfall > 0,
+            alert_type=_custom_weather_alert_type(rainfall, alert_level),
             alert_level=alert_level,
             timestamp=timestamp,
         ),
@@ -312,9 +313,17 @@ def _primary_road(signal: dict[str, Any], location: str) -> str:
 
 
 def _rainfall(severity: str, crisis_type: str) -> float:
-    if crisis_type not in {"urban_flooding", "road_blockage"}:
+    if crisis_type != "urban_flooding":
         return 0.0
     return {"low": 1.5, "medium": 4.8, "high": 8.8, "critical": 11.5}[severity]
+
+
+def _custom_weather_alert_type(rainfall: float, alert_level: int) -> str:
+    if rainfall <= 0 or alert_level <= 0:
+        return "none"
+    if rainfall >= 8 or alert_level >= 3:
+        return "heavy_rain_alert"
+    return "rain_watch"
 
 
 def _alert_level(severity: str) -> int:

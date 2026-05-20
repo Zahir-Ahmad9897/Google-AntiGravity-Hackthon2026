@@ -1,25 +1,25 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - Peshawr Ring Road",
-  "generated_at": "2026-05-20T16:28:46.753523+00:00",
+  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
+  "generated_at": "2026-05-20T19:47:20.719801+00:00",
   "simulation_only": true,
   "weather_intelligence": {
-    "location": "Peshawr Ring Road",
-    "resolved_location": "Peshawr Ring Road",
-    "lat": 33.6844,
-    "lng": 73.0479,
-    "condition": "custom_weather_context",
-    "condition_type": "custom_weather_context",
+    "location": "islamabad g-10 markaz",
+    "resolved_location": "islamabad g-10 markaz",
+    "lat": 33.6767,
+    "lng": 73.0149,
+    "condition": "heavy_rain_alert",
+    "condition_type": "heavy_rain_alert",
     "temperature": "unavailable",
     "temperature_celsius": null,
-    "precipitation": "6.2 mm / 80%",
-    "precipitation_mm": 6.2,
+    "precipitation": "8 mm / 80%",
+    "precipitation_mm": 8.0,
     "precipitation_probability_percent": 80.0,
-    "rainfall_mm_per_hour": 6.2,
+    "rainfall_mm_per_hour": 8.0,
     "risk_level": "high",
     "confidence": 0.66,
     "source": "mock_fallback",
     "fallback_used": true,
-    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com method google.maps.weather.v1.Weather.LookupCurrentConditions are blocked.\",\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@t"
+    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 472966256967 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/weather.googleapis.com/overview?project=472"
   }
 }

@@ -1,28 +1,28 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - Peshawr Ring Road",
-  "generated_at": "2026-05-20T16:28:46.753523+00:00",
+  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
+  "generated_at": "2026-05-20T19:47:20.719801+00:00",
   "simulation_only": true,
   "center": {
-    "lat": 33.6844,
-    "lng": 73.0479
+    "lat": 33.6767,
+    "lng": 73.0149
   },
   "markers": {
     "crisis": {
-      "label": "Custom approved crisis signal - Peshawr Ring Road",
+      "label": "Custom approved crisis signal - islamabad g-10 markaz",
       "position": {
-        "lat": 33.6844,
-        "lng": 73.0479
+        "lat": 33.6767,
+        "lng": 73.0149
       },
       "severity": "high"
     },
     "weather": {
       "label": "Weather risk: high",
       "position": {
-        "lat": 33.6884,
-        "lng": 73.0449
+        "lat": 33.6807,
+        "lng": 73.0119
       },
-      "condition": "custom_weather_context"
+      "condition": "heavy_rain_alert"
     },
     "rescue": {
       "label": "Simulated rescue unit",
@@ -34,12 +34,12 @@
     }
   },
   "blocked_route": {
-    "label": "Ring Road",
+    "label": "g-10 markaz",
     "route_type": "blocked",
-    "distance_meters": 4422,
-    "distance_text": "4.4 km",
-    "duration_seconds": 454,
-    "duration_text": "8 min",
+    "distance_meters": 7091,
+    "distance_text": "7.1 km",
+    "duration_seconds": 729,
+    "duration_text": "12 min",
     "encoded_polyline": "",
     "polyline": [
       {
@@ -47,8 +47,8 @@
         "lng": 73.0731
       },
       {
-        "lat": 33.6844,
-        "lng": 73.0479
+        "lat": 33.6767,
+        "lng": 73.0149
       }
     ],
     "source": "mock_fallback"
@@ -56,10 +56,10 @@
   "alternate_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 7168,
-    "distance_text": "7.2 km",
-    "duration_seconds": 737,
-    "duration_text": "12 min",
+    "distance_meters": 7714,
+    "distance_text": "7.7 km",
+    "duration_seconds": 793,
+    "duration_text": "13 min",
     "encoded_polyline": "",
     "polyline": [
       {
@@ -67,16 +67,16 @@
         "lng": 73.0731
       },
       {
-        "lat": 33.72437,
-        "lng": 73.04828
+        "lat": 33.721675,
+        "lng": 73.07273
       },
       {
-        "lat": 33.71254,
-        "lng": 73.03946
+        "lat": 33.70715,
+        "lng": 73.05236
       },
       {
-        "lat": 33.6844,
-        "lng": 73.0479
+        "lat": 33.6767,
+        "lng": 73.0149
       }
     ],
     "source": "mock_fallback"
@@ -84,10 +84,10 @@
   "dispatch_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 7168,
-    "distance_text": "7.2 km",
-    "duration_seconds": 737,
-    "duration_text": "12 min",
+    "distance_meters": 7714,
+    "distance_text": "7.7 km",
+    "duration_seconds": 793,
+    "duration_text": "13 min",
     "encoded_polyline": "",
     "polyline": [
       {
@@ -95,51 +95,51 @@
         "lng": 73.0731
       },
       {
-        "lat": 33.72437,
-        "lng": 73.04828
+        "lat": 33.721675,
+        "lng": 73.07273
       },
       {
-        "lat": 33.71254,
-        "lng": 73.03946
+        "lat": 33.70715,
+        "lng": 73.05236
       },
       {
-        "lat": 33.6844,
-        "lng": 73.0479
+        "lat": 33.6767,
+        "lng": 73.0149
       }
     ],
     "source": "mock_fallback"
   },
   "route_intelligence": {
     "origin": "G-6 Markaz Emergency Centre, Islamabad",
-    "destination": "Peshawr Ring Road",
-    "blocked_route": "Ring Road",
+    "destination": "islamabad g-10 markaz",
+    "blocked_route": "g-10 markaz",
     "alternate_route": "Recommended emergency alternate route",
     "original_route_status": "blocked",
     "alternate_route_status": "alternate",
-    "estimated_travel_time": "12 min",
-    "distance": "7.2 km",
-    "rerouting_reason": "Custom scenario reroutes around Ring Road while preserving simulation-only safety.",
+    "estimated_travel_time": "13 min",
+    "distance": "7.7 km",
+    "rerouting_reason": "Custom scenario reroutes around g-10 markaz while preserving simulation-only safety.",
     "source": "mock_fallback",
     "fallback_used": true
   },
   "weather_intelligence": {
-    "location": "Peshawr Ring Road",
-    "resolved_location": "Peshawr Ring Road",
-    "lat": 33.6844,
-    "lng": 73.0479,
-    "condition": "custom_weather_context",
-    "condition_type": "custom_weather_context",
+    "location": "islamabad g-10 markaz",
+    "resolved_location": "islamabad g-10 markaz",
+    "lat": 33.6767,
+    "lng": 73.0149,
+    "condition": "heavy_rain_alert",
+    "condition_type": "heavy_rain_alert",
     "temperature": "unavailable",
     "temperature_celsius": null,
-    "precipitation": "6.2 mm / 80%",
-    "precipitation_mm": 6.2,
+    "precipitation": "8 mm / 80%",
+    "precipitation_mm": 8.0,
     "precipitation_probability_percent": 80.0,
-    "rainfall_mm_per_hour": 6.2,
+    "rainfall_mm_per_hour": 8.0,
     "risk_level": "high",
     "confidence": 0.66,
     "source": "mock_fallback",
     "fallback_used": true,
-    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com method google.maps.weather.v1.Weather.LookupCurrentConditions are blocked.\",\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@t"
+    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 472966256967 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/weather.googleapis.com/overview?project=472"
   },
   "map_behavior": {
     "before_response": "Show crisis marker, weather marker, and blocked route in red.",

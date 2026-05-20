@@ -4,10 +4,15 @@ import MapCanvasWidget from '../components/MapCanvasWidget';
 import { theme } from '../config/theme';
 
 export default function MapScreen({ route }: any) {
-  const { scenarioId, showAfter = true } = route.params;
+  const { result, scenarioId, showAfter = true } = route.params;
+  const finalIteration = result?.iterations?.[result.iterations.length - 1];
+  const locationHint = [
+    result?.scenario_name,
+    finalIteration?.concise_reasoning_summary,
+  ].filter(Boolean).join(' ');
   return (
     <View style={styles.container}>
-      <MapCanvasWidget scenarioId={scenarioId} showAfter={showAfter} />
+      <MapCanvasWidget scenarioId={scenarioId} showAfter={showAfter} locationHint={locationHint} />
     </View>
   );
 }
