@@ -1,0 +1,12 @@
+.git
+.adk
+.tools
+.venv
+__pycache__
+*.pyc
+.env
+logs
+mobile/ciro_mobile/node_modules
+mobile/ciro_mobile/.expo
+mobile/node_modules
+archive

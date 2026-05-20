@@ -801,8 +801,8 @@ function renderLeafletMap(payload, layoutId, state) {
     }).addTo(leafletMap).bindPopup(`<strong>${escapeHtml(label)}</strong><br>${escapeHtml(route.label || '')}`);
   };
 
-  addRoute(payload.blocked_route, '#ff5d5d', 'Blocked/original route', '10 8');
-  addRoute(payload.alternate_route, '#42d392', 'Recommended emergency alternate', null);
+  addRoute(payload.blocked_route, '#42d392', 'Normal/original route', null);
+  addRoute(payload.alternate_route, '#ff5d5d', 'Recommended emergency reroute', '10 8');
 
   const markerConfig = {
     crisis: { color: '#ff5d5d', text: '!', label: 'Crisis point' },
@@ -1043,8 +1043,8 @@ async function renderRealMap(payload, layoutId, state) {
   });
 
   clearRealMapObjects();
-  addRealRoute(payload.blocked_route, '#ff4444', 7, 'Blocked / original route');
-  addRealRoute(payload.alternate_route, '#00cc66', 7, 'Recommended alternate route');
+  addRealRoute(payload.blocked_route, '#00cc66', 7, 'Normal / original route');
+  addRealRoute(payload.alternate_route, '#ff4444', 7, 'Recommended emergency reroute');
   addRealMarkers(payload.markers || {});
 
   const bounds = new maps.LatLngBounds();

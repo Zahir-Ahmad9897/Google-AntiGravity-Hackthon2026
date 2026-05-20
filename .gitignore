@@ -23,7 +23,6 @@ token.json
 venv/
 env/
 ENV/
-myvenv/
 __pypackages__/
 
 # Python cache, test, and build output

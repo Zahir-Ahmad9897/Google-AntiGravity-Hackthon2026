@@ -198,9 +198,9 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
       )}
 
       <View style={styles.legend}>
-        <Text style={styles.legendText}>🔴 Blocked</Text>
+        <Text style={styles.legendText}>🟢 Normal</Text>
         <Text style={styles.legendText}>🟠 Congested</Text>
-        <Text style={styles.legendText}>🟢 Rerouted</Text>
+        <Text style={styles.legendText}>🔴 Rerouted</Text>
         <Text style={styles.legendText}>🔵 Flooded</Text>
         <Text style={styles.legendText}>🚑 Unit</Text>
       </View>
@@ -264,14 +264,14 @@ function G10GridMap({ after, progress }: { after: boolean; progress: SharedValue
           <Line x1={130} y1={200} x2={330} y2={200} stroke={theme.colors.danger} strokeWidth={8} />
           <Line x1={130} y1={260} x2={280} y2={260} stroke={theme.colors.danger} strokeWidth={8} />
           <Line x1={280} y1={130} x2={280} y2={290} stroke={theme.colors.warning} strokeWidth={8} />
-          <Line x1={380} y1={0} x2={380} y2={MAP_SIZE} stroke={theme.colors.success} strokeWidth={8} />
-          <Line x1={0} y1={140} x2={MAP_SIZE} y2={140} stroke={theme.colors.success} strokeWidth={8} />
+          <Line x1={380} y1={0} x2={380} y2={MAP_SIZE} stroke={theme.colors.danger} strokeWidth={8} />
+          <Line x1={0} y1={140} x2={MAP_SIZE} y2={140} stroke={theme.colors.danger} strokeWidth={8} />
           <EmergencyCircle progress={progress} xRange={[380, 380]} yRange={[440, 255]} />
         </>
       ) : (
         <>
-          <Line x1={0} y1={200} x2={MAP_SIZE} y2={200} stroke={theme.colors.textMuted} strokeWidth={6} />
-          <Line x1={0} y1={260} x2={MAP_SIZE} y2={260} stroke={theme.colors.textMuted} strokeWidth={6} />
+          <Line x1={0} y1={200} x2={MAP_SIZE} y2={200} stroke={theme.colors.success} strokeWidth={6} />
+          <Line x1={0} y1={260} x2={MAP_SIZE} y2={260} stroke={theme.colors.success} strokeWidth={6} />
         </>
       )}
     </BaseMap>
@@ -284,12 +284,12 @@ function PeshawarRingMap({ after, progress }: { after: boolean; progress: Shared
       <Path
         d="M 50 405 Q 250 40 450 405"
         fill="none"
-        stroke={theme.colors.textMuted}
+        stroke={theme.colors.success}
         strokeWidth={14}
         strokeLinecap="round"
       />
-      <Line x1={150} y1={330} x2={350} y2={330} stroke={theme.colors.textMuted} strokeWidth={4} />
-      <Line x1={205} y1={250} x2={295} y2={250} stroke={theme.colors.textMuted} strokeWidth={4} />
+      <Line x1={150} y1={330} x2={350} y2={330} stroke={theme.colors.success} strokeWidth={4} />
+      <Line x1={205} y1={250} x2={295} y2={250} stroke={theme.colors.success} strokeWidth={4} />
       <SvgText x={80} y={420} fill={theme.colors.textSecondary} fontSize={12}>Ring Road</SvgText>
       <SvgText x={180} y={344} fill={theme.colors.textSecondary} fontSize={10}>Inner city diversion</SvgText>
       <Polygon
@@ -308,7 +308,7 @@ function PeshawarRingMap({ after, progress }: { after: boolean; progress: Shared
           <Path
             d="M 135 310 Q 250 382 365 310"
             fill="none"
-            stroke={theme.colors.success}
+            stroke={theme.colors.danger}
             strokeWidth={8}
             strokeLinecap="round"
             strokeDasharray="8 4"
@@ -323,15 +323,15 @@ function PeshawarRingMap({ after, progress }: { after: boolean; progress: Shared
 function CityIntersectionMap({ after, progress }: { after: boolean; progress: SharedValue<number> }) {
   return (
     <BaseMap>
-      <Line x1={0} y1={250} x2={MAP_SIZE} y2={250} stroke={theme.colors.textMuted} strokeWidth={18} />
-      <Line x1={250} y1={0} x2={250} y2={MAP_SIZE} stroke={theme.colors.textMuted} strokeWidth={18} />
+      <Line x1={0} y1={250} x2={MAP_SIZE} y2={250} stroke={theme.colors.success} strokeWidth={18} />
+      <Line x1={250} y1={0} x2={250} y2={MAP_SIZE} stroke={theme.colors.success} strokeWidth={18} />
       <SvgText x={18} y={235} fill={theme.colors.textSecondary} fontSize={12}>Main Blvd</SvgText>
       <SvgText x={263} y={36} fill={theme.colors.textSecondary} fontSize={12}>Cross St</SvgText>
       <Circle cx={250} cy={250} r={72} fill={theme.opacity.congestionZone} />
       {after && (
         <>
           <Line x1={100} y1={250} x2={255} y2={250} stroke={theme.colors.danger} strokeWidth={18} />
-          <Line x1={0} y1={154} x2={MAP_SIZE} y2={154} stroke={theme.colors.success} strokeWidth={8} />
+          <Line x1={0} y1={154} x2={MAP_SIZE} y2={154} stroke={theme.colors.danger} strokeWidth={8} />
           <PriorityCorridor />
           <AmbulanceText progress={progress} />
         </>
