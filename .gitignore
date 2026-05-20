@@ -1,5 +1,6 @@
 # Secrets and local environment
 .env
+.env.local
 .env.*
 !.env.example
 .envrc
@@ -9,6 +10,8 @@
 *.p12
 *.pfx
 service-account*.json
+*credentials*.json
+*secret*.json
 google-credentials*.json
 application_default_credentials.json
 credentials.json
@@ -50,6 +53,7 @@ dmypy.json
 
 # Local ADK / Antigravity runtime state
 .adk/
+.tools/
 *.session
 *.sqlite
 *.sqlite3
@@ -61,6 +65,8 @@ dmypy.json
 # Logs and runtime output
 *.log
 logs/
+antigravity_logs/
+CIRO_Antigravity_Trace_Logs.zip
 uvicorn*.log
 adk_web*.log
 *.pid
@@ -68,10 +74,16 @@ adk_web*.log
 
 # Frontend dependency/build output, if the dashboard grows later
 node_modules/
+mobile/node_modules/
 .vite/
 .next/
 .nuxt/
 .svelte-kit/
+mobile/.expo/
+mobile/.expo-shared/
+mobile/.metro-cache/
+mobile/android/
+mobile/ios/
 coverage/
 playwright-report/
 test-results/
@@ -115,10 +127,5 @@ Task_From_google.txt
 archive/
 scrach_prompt.txt
 documentation.txt
-antigravity-usage.md
 future_production_input_layer.md
 scratch_prompt.txt
-
-# Remove all md files except README.md
-*.md
-!README.md

@@ -18,6 +18,7 @@ from backend.iterative_schemas import (
     AgentStepOutput,
     AgentToolCallRecord,
     HumanApprovalRecord,
+    IterativeScenarioDefinition,
     IterationTrace,
     IterativePipelineResult,
     RiskScoreRecord,
@@ -36,8 +37,14 @@ ITERATION_TRACE_FILES = {
 
 
 def run_iterative_pipeline_by_id(scenario_id: str) -> IterativePipelineResult:
-    scenario_definition = get_iterative_scenario(scenario_id)
-    approval = _approval_record(scenario_id)
+    return run_iterative_pipeline(get_iterative_scenario(scenario_id))
+
+
+def run_iterative_pipeline(
+    scenario_definition: IterativeScenarioDefinition,
+    custom_signal: dict[str, Any] | None = None,
+) -> IterativePipelineResult:
+    approval = _approval_record(scenario_definition.scenario_id)
     traces: List[IterationTrace] = []
     tool_calls: List[AgentToolCallRecord] = []
     artifact_files: List[str] = []
@@ -143,6 +150,26 @@ def run_iterative_pipeline_by_id(scenario_id: str) -> IterativePipelineResult:
     artifact_files.append("artifacts\\google_api_trace.json")
 
     final_trace = traces[-1]
+    if custom_signal is not None:
+        artifact_files.append(save_artifact("mini_assistant_signal.json", custom_signal))
+        artifact_files.append(save_artifact("custom_scenario_input.json", scenario_definition))
+        artifact_files.append(
+            save_artifact(
+                "custom_iteration_trace.json",
+                {
+                    "scenario_id": scenario_definition.scenario_id,
+                    "scenario_name": scenario_definition.title,
+                    "simulation_only": True,
+                    "privacy_status": "user_approved_input_only",
+                    "mini_assistant_signal": custom_signal,
+                    "iterations": [_custom_trace_summary(trace) for trace in traces],
+                    "final_crisis_level": final_trace.crisis_level,
+                    "final_confidence_score": final_trace.confidence_score,
+                    "artifact_note": "Custom run reused the existing CIRO iterative orchestration.",
+                },
+            )
+        )
+
     return IterativePipelineResult(
         scenario_id=scenario_definition.scenario_id,
         scenario_name=scenario_definition.title,
@@ -162,6 +189,20 @@ def run_iterative_pipeline_by_id(scenario_id: str) -> IterativePipelineResult:
         ),
         latest_artifact="final_crisis_report.md",
     )
+
+
+def _custom_trace_summary(trace: IterationTrace) -> dict[str, Any]:
+    return {
+        "iteration_number": trace.iteration_number,
+        "crisis_level": trace.crisis_level,
+        "confidence_score": trace.confidence_score,
+        "risk_score": trace.risk_score,
+        "concise_reasoning_summary": trace.concise_reasoning_summary,
+        "action_plan": trace.action_plan,
+        "simulated_actions": trace.simulated_actions,
+        "evaluation_result": trace.evaluation_result,
+        "next_step": trace.next_step,
+    }
 
 
 def _google_map_payload(scenario_id: str, scenario_name: str, scenario: Any) -> dict[str, Any]:

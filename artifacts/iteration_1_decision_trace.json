@@ -46,7 +46,7 @@
           "alert_active": false,
           "alert_type": "rain_watch",
           "alert_level": 1,
-          "timestamp": "2026-05-19T02:40:36.222799+00:00"
+          "timestamp": "2026-05-19T01:08:00.280495+00:00"
         },
         "severity": "low",
         "flood_or_storm_detected": false
@@ -69,7 +69,7 @@
             "speed_kmh": 14.0,
             "normal_speed_kmh": 38.0,
             "congestion_level": 3,
-            "timestamp": "2026-05-19T02:41:36.222799+00:00"
+            "timestamp": "2026-05-19T01:09:00.280495+00:00"
           },
           {
             "location": "Islamabad G-10 urban flooding",
@@ -78,7 +78,7 @@
             "speed_kmh": 18.0,
             "normal_speed_kmh": 35.0,
             "congestion_level": 2,
-            "timestamp": "2026-05-19T02:41:36.222799+00:00"
+            "timestamp": "2026-05-19T01:09:00.280495+00:00"
           }
         ],
         "blocked_roads": [],
@@ -111,7 +111,7 @@
             "post_id": "g10-i1-public-1",
             "text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
             "language": "mixed",
-            "timestamp": "2026-05-19T02:38:36.222799+00:00"
+            "timestamp": "2026-05-19T01:06:00.280495+00:00"
           }
         ],
         "ignored_unrelated_or_private_count": 0,
@@ -138,7 +138,7 @@
               "crisis_type": "urban_flooding",
               "urgency_score": 3,
               "confidence_hint": 0.7,
-              "timestamp": "2026-05-19T02:38:36.222799Z",
+              "timestamp": "2026-05-19T01:06:00.280495Z",
               "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
               "evidence": [
                 "pani"
@@ -176,7 +176,7 @@
                   "crisis_type": "urban_flooding",
                   "urgency_score": 3,
                   "confidence_hint": 0.7,
-                  "timestamp": "2026-05-19T02:38:36.222799Z",
+                  "timestamp": "2026-05-19T01:06:00.280495Z",
                   "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
                   "evidence": [
                     "pani"
@@ -223,7 +223,7 @@
                 "crisis_type": "urban_flooding",
                 "urgency_score": 3,
                 "confidence_hint": 0.7,
-                "timestamp": "2026-05-19T02:38:36.222799Z",
+                "timestamp": "2026-05-19T01:06:00.280495Z",
                 "raw_text": "G-10 mein pani jama ho raha hai underpass slow hai, log careful rahen",
                 "evidence": [
                   "pani"

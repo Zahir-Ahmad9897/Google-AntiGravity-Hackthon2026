@@ -1,0 +1,24 @@
+{
+  "is_crisis_related": true,
+  "crisis_type": "road_blockage",
+  "location": "Peshawar Ring Road",
+  "urgency": "critical",
+  "confidence": 0.77,
+  "language_detected": "mixed",
+  "entities": {
+    "roads": [
+      "Ring Road"
+    ],
+    "areas": [
+      "Ring Road"
+    ],
+    "hazards": [
+      "road block",
+      "block hai"
+    ],
+    "time_mentions": []
+  },
+  "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai.",
+  "privacy_status": "user_approved_input_only",
+  "source": "Public post"
+}

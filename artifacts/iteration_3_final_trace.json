@@ -46,7 +46,7 @@
           "alert_active": true,
           "alert_type": "flood_alert",
           "alert_level": 2,
-          "timestamp": "2026-05-19T02:48:36.222799+00:00"
+          "timestamp": "2026-05-19T01:16:00.280495+00:00"
         },
         "severity": "medium",
         "flood_or_storm_detected": true
@@ -69,7 +69,7 @@
             "speed_kmh": 12.0,
             "normal_speed_kmh": 38.0,
             "congestion_level": 3,
-            "timestamp": "2026-05-19T02:49:36.222799+00:00"
+            "timestamp": "2026-05-19T01:17:00.280495+00:00"
           },
           {
             "location": "Islamabad G-10 urban flooding",
@@ -78,7 +78,7 @@
             "speed_kmh": 4.0,
             "normal_speed_kmh": 35.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-19T02:49:36.222799+00:00"
+            "timestamp": "2026-05-19T01:17:00.280495+00:00"
           }
         ],
         "blocked_roads": [
@@ -113,7 +113,7 @@
             "post_id": "g10-i3-public-1",
             "text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
             "language": "mixed",
-            "timestamp": "2026-05-19T02:48:36.222799+00:00"
+            "timestamp": "2026-05-19T01:16:00.280495+00:00"
           }
         ],
         "ignored_unrelated_or_private_count": 0,
@@ -140,7 +140,7 @@
               "crisis_type": "urban_flooding",
               "urgency_score": 3,
               "confidence_hint": 0.7,
-              "timestamp": "2026-05-19T02:48:36.222799Z",
+              "timestamp": "2026-05-19T01:16:00.280495Z",
               "raw_text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
               "evidence": [
                 "pani"
@@ -158,7 +158,7 @@
               "crisis_type": "urban_flooding",
               "urgency_score": 2,
               "confidence_hint": 0.8,
-              "timestamp": "2026-05-19T02:48:36.222799Z",
+              "timestamp": "2026-05-19T01:16:00.280495Z",
               "raw_text": "flood_alert: rainfall 6.2mm/hr, alert_active=True",
               "evidence": [
                 "rainfall_mm_per_hour=6.2",
@@ -178,7 +178,7 @@
               "crisis_type": "road_blockage",
               "urgency_score": 4,
               "confidence_hint": 0.75,
-              "timestamp": "2026-05-19T02:49:36.222799Z",
+              "timestamp": "2026-05-19T01:17:00.280495Z",
               "raw_text": "Margalla Road sector crossing: speed 4.0km/h, normal 35.0km/h",
               "evidence": [
                 "speed_kmh=4.0",
@@ -219,7 +219,7 @@
                   "crisis_type": "urban_flooding",
                   "urgency_score": 3,
                   "confidence_hint": 0.7,
-                  "timestamp": "2026-05-19T02:48:36.222799Z",
+                  "timestamp": "2026-05-19T01:16:00.280495Z",
                   "raw_text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
                   "evidence": [
                     "pani"
@@ -237,7 +237,7 @@
                   "crisis_type": "urban_flooding",
                   "urgency_score": 2,
                   "confidence_hint": 0.8,
-                  "timestamp": "2026-05-19T02:48:36.222799Z",
+                  "timestamp": "2026-05-19T01:16:00.280495Z",
                   "raw_text": "flood_alert: rainfall 6.2mm/hr, alert_active=True",
                   "evidence": [
                     "rainfall_mm_per_hour=6.2",
@@ -257,7 +257,7 @@
                   "crisis_type": "road_blockage",
                   "urgency_score": 4,
                   "confidence_hint": 0.75,
-                  "timestamp": "2026-05-19T02:49:36.222799Z",
+                  "timestamp": "2026-05-19T01:17:00.280495Z",
                   "raw_text": "Margalla Road sector crossing: speed 4.0km/h, normal 35.0km/h",
                   "evidence": [
                     "speed_kmh=4.0",
@@ -314,7 +314,7 @@
                 "crisis_type": "urban_flooding",
                 "urgency_score": 3,
                 "confidence_hint": 0.7,
-                "timestamp": "2026-05-19T02:48:36.222799Z",
+                "timestamp": "2026-05-19T01:16:00.280495Z",
                 "raw_text": "Khayaban thora clear hai lekin Margalla crossing pe pani abhi bhi zyada hai avoid karo",
                 "evidence": [
                   "pani"
@@ -332,7 +332,7 @@
                 "crisis_type": "urban_flooding",
                 "urgency_score": 2,
                 "confidence_hint": 0.8,
-                "timestamp": "2026-05-19T02:48:36.222799Z",
+                "timestamp": "2026-05-19T01:16:00.280495Z",
                 "raw_text": "flood_alert: rainfall 6.2mm/hr, alert_active=True",
                 "evidence": [
                   "rainfall_mm_per_hour=6.2",
@@ -352,7 +352,7 @@
                 "crisis_type": "road_blockage",
                 "urgency_score": 4,
                 "confidence_hint": 0.75,
-                "timestamp": "2026-05-19T02:49:36.222799Z",
+                "timestamp": "2026-05-19T01:17:00.280495Z",
                 "raw_text": "Margalla Road sector crossing: speed 4.0km/h, normal 35.0km/h",
                 "evidence": [
                   "speed_kmh=4.0",

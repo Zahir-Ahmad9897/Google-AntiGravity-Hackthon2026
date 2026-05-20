@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "CIRO Field Officer",
+    "slug": "ciro-field-officer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "ciro",
+    "android": {
+      "package": "com.ciro.fieldofficer",
+      "adaptiveIcon": {
+        "backgroundColor": "#0f172a"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ciro.fieldofficer"
+    },
+    "extra": {
+      "apiBaseUrl": "http://127.0.0.1:8080"
+    }
+  }
+}

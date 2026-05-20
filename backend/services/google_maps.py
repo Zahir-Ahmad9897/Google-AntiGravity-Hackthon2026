@@ -113,7 +113,7 @@ def geocode_location(location: str) -> dict[str, Any]:
             "lat": lat,
             "lng": lng,
             "formatted_address": first.get("formatted_address", clean_location),
-            "source": "Google Geocoding API",
+            "source": "google_geocoding_api",
             "fallback_used": False,
         }
         _append_google_trace(
@@ -152,6 +152,7 @@ def get_google_weather_signal(location: str, scenario: ScenarioInput | None = No
         payload = _request_json("GET", f"{WEATHER_URL}?{query}")
         condition = payload.get("weatherCondition", {})
         description = condition.get("description", {})
+        temperature = payload.get("temperature", {})
         precipitation = payload.get("precipitation", {})
         probability = precipitation.get("probability", {})
         qpf = precipitation.get("qpf", {})
@@ -166,12 +167,15 @@ def get_google_weather_signal(location: str, scenario: ScenarioInput | None = No
             "lng": geocode["lng"],
             "condition": description.get("text") or condition.get("type") or "Unknown",
             "condition_type": condition.get("type", "UNKNOWN"),
+            "temperature": _format_temperature(temperature),
+            "temperature_celsius": _temperature_celsius(temperature),
+            "precipitation": f"{qpf_quantity:g} mm / {probability_percent:g}%",
             "precipitation_mm": qpf_quantity,
             "precipitation_probability_percent": probability_percent,
             "rainfall_mm_per_hour": scenario.weather.rainfall_mm_per_hour if scenario else qpf_quantity,
             "risk_level": risk_level,
             "confidence": _weather_confidence(risk_level, source_is_google=True),
-            "source": "Google Weather API",
+            "source": "google_weather_api",
             "fallback_used": False,
             "scenario_context_used": scenario is not None,
         }
@@ -251,7 +255,7 @@ def get_google_route_data(
             )
 
         result = {
-            "source": "Google Routes API",
+            "source": "google_routes_api",
             "fallback_used": False,
             "origin": origin_point,
             "destination": destination_point,
@@ -287,7 +291,7 @@ def build_scenario_map_payload(
     scenario_name: str,
     scenario: ScenarioInput,
 ) -> dict[str, Any]:
-    config = SCENARIO_MAP_CONFIGS.get(scenario_id, SCENARIO_MAP_CONFIGS["g10_urban_flooding"])
+    config = SCENARIO_MAP_CONFIGS.get(scenario_id) or _scenario_map_config_from_input(scenario_id, scenario_name, scenario)
     incident = geocode_location(config["incident_location"])
     origin = geocode_location(config["origin"])
     weather = get_google_weather_signal(config["weather_location"], scenario)
@@ -330,8 +334,12 @@ def build_scenario_map_payload(
         "alternate_route": route["alternate_route"],
         "dispatch_route": route["alternate_route"],
         "route_intelligence": {
+            "origin": config["origin"],
+            "destination": config["destination"],
             "blocked_route": route["blocked_route"],
             "alternate_route": route["alternate_route"]["label"],
+            "original_route_status": route["normal_route"]["route_type"],
+            "alternate_route_status": route["alternate_route"]["route_type"],
             "estimated_travel_time": route["estimated_travel_time"],
             "distance": route["distance"],
             "rerouting_reason": route["rerouting_reason"],
@@ -343,6 +351,73 @@ def build_scenario_map_payload(
             "before_response": "Show crisis marker, weather marker, and blocked route in red.",
             "after_simulated_response": "Show rescue marker, alternate route in green, and dispatch path.",
         },
+    }
+
+
+def get_weather_update(location: str) -> dict[str, Any]:
+    weather = get_google_weather_signal(location)
+    return {
+        "location": weather["location"],
+        "condition": weather["condition"],
+        "precipitation": weather.get("precipitation")
+        or f"{weather.get('precipitation_mm', 0):g} mm / {weather.get('precipitation_probability_percent', 0):g}%",
+        "temperature": weather.get("temperature", "unavailable"),
+        "risk_level": weather["risk_level"],
+        "confidence": weather["confidence"],
+        "source": weather["source"],
+        "fallback_used": weather["fallback_used"],
+        "resolved_location": weather.get("resolved_location"),
+        "lat": weather.get("lat"),
+        "lng": weather.get("lng"),
+    }
+
+
+def get_route_update(origin: str, destination: str, blocked_area: str | None = None) -> dict[str, Any]:
+    route = get_google_route_data(origin, destination, blocked_area)
+    return {
+        "origin": origin,
+        "destination": destination,
+        "blocked_area": blocked_area or route["blocked_route"],
+        "original_route": _endpoint_route(route["normal_route"], "blocked" if blocked_area else "congested"),
+        "alternate_route": _endpoint_route(route["alternate_route"], "recommended"),
+        "rerouting_reason": route["rerouting_reason"],
+        "source": route["source"],
+        "fallback_used": route["fallback_used"],
+    }
+
+
+def _scenario_map_config_from_input(
+    scenario_id: str,
+    scenario_name: str,
+    scenario: ScenarioInput,
+) -> dict[str, str]:
+    incident_location = scenario.weather.district or scenario.title
+    blocked_route = scenario.traffic[0].road_name if scenario.traffic else incident_location
+    origin = (
+        "Peshawar Ring Road Simulation Depot"
+        if "peshawar" in incident_location.lower() or "peshawar" in scenario_name.lower()
+        else "G-6 Markaz Emergency Centre, Islamabad"
+    )
+    return {
+        "incident_location": incident_location,
+        "weather_location": incident_location,
+        "origin": origin,
+        "destination": incident_location,
+        "blocked_route": blocked_route,
+        "alternate_route_label": "Recommended emergency alternate route",
+        "crisis_label": scenario_name,
+        "rescue_label": "Simulated rescue unit",
+        "rerouting_reason": f"Custom scenario reroutes around {blocked_route} while preserving simulation-only safety.",
+    }
+
+
+def _endpoint_route(route: dict[str, Any], status: str) -> dict[str, Any]:
+    return {
+        "polyline": route.get("polyline", []),
+        "distance": route.get("distance_text", "unknown"),
+        "duration": route.get("duration_text", "unknown"),
+        "status": status,
+        "label": route.get("label", status),
     }
 
 
@@ -376,7 +451,7 @@ def _fallback_geocode(location: str, reason: str) -> dict[str, Any]:
         "lat": point["lat"],
         "lng": point["lng"],
         "formatted_address": point["formatted_address"],
-        "source": "mock_geocode",
+        "source": "mock_fallback",
         "fallback_used": True,
         "fallback_reason": reason,
     }
@@ -407,12 +482,15 @@ def _fallback_weather_signal(location: str, scenario: ScenarioInput | None, reas
         "lng": _fallback_point(location)["lng"],
         "condition": mock.get("alert_type") or "mock_weather",
         "condition_type": mock.get("alert_type") or "MOCK",
+        "temperature": "unavailable",
+        "temperature_celsius": None,
+        "precipitation": f"{rainfall:g} mm / {80.0 if mock.get('alert_active') else 20.0:g}%",
         "precipitation_mm": rainfall,
         "precipitation_probability_percent": 80.0 if mock.get("alert_active") else 20.0,
         "rainfall_mm_per_hour": rainfall,
         "risk_level": risk_level,
         "confidence": _weather_confidence(risk_level, source_is_google=False),
-        "source": "mock_weather",
+        "source": "mock_fallback",
         "fallback_used": True,
         "fallback_reason": reason,
     }
@@ -439,10 +517,10 @@ def _fallback_route_data(
 ) -> dict[str, Any]:
     normal_polyline = [_lat_lng(origin), _lat_lng(destination)]
     alternate_polyline = _alternate_polyline(origin, destination)
-    normal_route = _fallback_route(normal_polyline, blocked_route or "Blocked route", "blocked", source="mock_route")
-    alternate_route = _fallback_route(alternate_polyline, "Mock alternate route", "alternate", source="mock_route")
+    normal_route = _fallback_route(normal_polyline, blocked_route or "Blocked route", "blocked", source="mock_fallback")
+    alternate_route = _fallback_route(alternate_polyline, "Mock alternate route", "alternate", source="mock_fallback")
     result = {
-        "source": "mock_route",
+        "source": "mock_fallback",
         "fallback_used": True,
         "fallback_reason": reason,
         "origin": origin,
@@ -533,7 +611,7 @@ def _route_from_google(
         "duration_text": _duration_text(duration_seconds or _duration_from_distance(distance_meters)),
         "encoded_polyline": encoded,
         "polyline": polyline,
-        "source": "Google Routes API",
+        "source": "google_routes_api",
     }
 
 
@@ -672,6 +750,24 @@ def _float_or_zero(value: Any) -> float:
         return float(value)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _temperature_celsius(temperature: dict[str, Any]) -> float | None:
+    value = temperature.get("degrees")
+    if value is None:
+        value = temperature.get("value")
+    try:
+        return round(float(value), 1)
+    except (TypeError, ValueError):
+        return None
+
+
+def _format_temperature(temperature: dict[str, Any]) -> str:
+    degrees = _temperature_celsius(temperature)
+    if degrees is None:
+        return "unavailable"
+    unit = str(temperature.get("unit") or "C").replace("CELSIUS", "C")
+    return f"{degrees:g} {unit}"
 
 
 def _weather_risk_level(precipitation_mm: float, probability_percent: float, scenario: ScenarioInput | None) -> str:

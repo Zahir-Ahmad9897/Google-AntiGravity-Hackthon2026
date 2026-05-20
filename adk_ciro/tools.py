@@ -135,41 +135,38 @@ def read_ciro_artifact_tool(filename: str) -> dict[str, Any]:
 
 
 def collect_screen_signal_tool(scenario_id: str) -> dict[str, Any]:
-    """Simulate the Siri-like screen-reading signal collection layer."""
+    """Simulate permission-based crisis-signal collection from user-approved public context."""
 
     def _run() -> dict[str, Any]:
         scenario = _scenario(scenario_id)
-        screen_events: list[dict[str, Any]] = []
+        approved_events: list[dict[str, Any]] = []
         for post in scenario.social_posts:
-            screen_events.append(
+            approved_events.append(
                 {
                     "post_id": post.post_id,
-                    "dwell_time_seconds": 10,
-                    "source": "social_screen_read",
+                    "source": "user_approved_public_context",
                     "extracted_text": post.text,
                     "detected_language": post.language.value,
                     "content_type": "text_post",
-                    "bgc_decision": "REAL",
                     "timestamp": post.timestamp.isoformat(),
                     "privacy_note": (
-                        "Raw screen content is used only to extract crisis fields; CIRO stores "
-                        "an anonymized signal dictionary, not personal browsing behavior."
+                        "CIRO uses only public or user-approved crisis content for this demo; "
+                        "no background screen monitoring or social scraping is performed."
                     ),
                 }
             )
 
         return {
             "scenario_title": scenario.title,
-            "collector": "simulated_siri_like_screen_reader",
-            "activation_rule": "10 second dwell-time threshold",
-            "screen_events": screen_events,
+            "collector": "permission_based_public_context_input",
+            "activation_rule": "explicit user approval only",
+            "approved_events": approved_events,
             "weather_api_available": True,
             "traffic_api_available": True,
             "production_equivalent_schema": {
-                "source": "social_screen_read",
-                "dwell_time_seconds": 10,
-                "content_type": "text_post | video_speech | video_caption",
-                "bgc_decision": "REAL | ENTERTAINMENT",
+                "source": "user_approved_public_context",
+                "content_type": "text_post | user_report | news_snippet",
+                "permission_granted": True,
             },
         }
 

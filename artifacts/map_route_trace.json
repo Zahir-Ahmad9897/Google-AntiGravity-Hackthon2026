@@ -1,7 +1,7 @@
 {
   "scenario_id": "g10_urban_flooding",
   "scenario_name": "Islamabad G-10 urban flooding",
-  "generated_at": "2026-05-19T02:50:37.124427+00:00",
+  "generated_at": "2026-05-19T16:58:11.739511+00:00",
   "simulation_only": true,
   "center": {
     "lat": 33.6767,
@@ -51,7 +51,7 @@
         "lng": 73.0162
       }
     ],
-    "source": "mock_route"
+    "source": "mock_fallback"
   },
   "alternate_route": {
     "label": "Margalla Road alternate corridor",
@@ -79,7 +79,7 @@
         "lng": 73.0162
       }
     ],
-    "source": "mock_route"
+    "source": "mock_fallback"
   },
   "dispatch_route": {
     "label": "Margalla Road alternate corridor",
@@ -107,15 +107,19 @@
         "lng": 73.0162
       }
     ],
-    "source": "mock_route"
+    "source": "mock_fallback"
   },
   "route_intelligence": {
+    "origin": "G-6 Markaz Emergency Centre, Islamabad",
+    "destination": "G-10 Markaz Islamabad",
     "blocked_route": "Srinagar Highway G-10 underpass",
     "alternate_route": "Margalla Road alternate corridor",
+    "original_route_status": "blocked",
+    "alternate_route_status": "alternate",
     "estimated_travel_time": "13 min",
     "distance": "7.7 km",
     "rerouting_reason": "Floodwater and congestion around G-10 require avoiding the blocked underpass.",
-    "source": "mock_route",
+    "source": "mock_fallback",
     "fallback_used": true
   },
   "weather_intelligence": {
@@ -125,12 +129,15 @@
     "lng": 73.0149,
     "condition": "flood_alert",
     "condition_type": "flood_alert",
+    "temperature": "unavailable",
+    "temperature_celsius": null,
+    "precipitation": "6.2 mm / 80%",
     "precipitation_mm": 6.2,
     "precipitation_probability_percent": 80.0,
     "rainfall_mm_per_hour": 6.2,
     "risk_level": "medium",
     "confidence": 0.66,
-    "source": "mock_weather",
+    "source": "mock_fallback",
     "fallback_used": true,
     "fallback_reason": "GOOGLE_MAPS_API_KEY is missing."
   },

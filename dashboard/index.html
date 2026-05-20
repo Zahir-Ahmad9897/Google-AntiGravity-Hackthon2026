@@ -107,7 +107,7 @@
       text-transform: uppercase;
     }
 
-    select, textarea {
+    select, textarea, input[type="text"] {
       width: 100%;
       min-height: 42px;
       border: 1px solid var(--border);
@@ -332,6 +332,12 @@
 
     .checkbox input { width: 16px; height: 16px; }
 
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
     @media (max-width: 980px) {
       main { grid-template-columns: 1fr; }
       .sidebar { position: static; }
@@ -387,15 +393,39 @@
 
       <section class="panel stack">
         <div class="row">
-          <h2 style="margin-right:auto;">CIRO Mini Assistant</h2>
+          <h2 style="margin-right:auto;">CIRO Mini Assistant Permission-Based Crisis Signal</h2>
           <span class="badge ok">Permission Based</span>
         </div>
         <label class="checkbox">
           <input id="assistantConsent" type="checkbox">
-          Approve this text for emergency signal analysis
+          I confirm this is public or user-approved emergency-related content.
         </label>
-        <textarea id="assistantInput" placeholder="Paste visible public emergency context here"></textarea>
-        <button class="secondary" id="assistantBtn">Analyze Approved Text</button>
+        <textarea id="assistantInput" placeholder="Paste public crisis post/report here..."></textarea>
+        <div>
+          <label for="assistantSource">Source</label>
+          <select id="assistantSource">
+            <option>Public post</option>
+            <option>User report</option>
+            <option>WhatsApp forward</option>
+            <option>News snippet</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="assistantLocation">Location</label>
+          <input id="assistantLocation" type="text" placeholder="e.g. G-10 Islamabad">
+        </div>
+        <div>
+          <label for="assistantSeverity">Severity</label>
+          <select id="assistantSeverity">
+            <option>Medium</option>
+            <option>Low</option>
+            <option>High</option>
+            <option>Critical</option>
+          </select>
+        </div>
+        <button class="secondary" id="assistantBtn">Extract Crisis Signal</button>
+        <button id="customRunBtn" disabled>Run Custom CIRO Pipeline</button>
         <ul id="assistantOutput" class="list">
           <li class="small">No approved text analyzed yet.</li>
         </ul>
@@ -492,6 +522,14 @@
       </section>
 
       <section class="panel stack">
+        <h2>Outcome Visualization</h2>
+        <div id="outcomePanel" class="outcome-grid">
+          <div class="kv"><span>Before Response</span><strong>Awaiting run</strong></div>
+          <div class="kv"><span>After Simulation</span><strong>Awaiting run</strong></div>
+        </div>
+      </section>
+
+      <section class="panel stack">
         <div class="row">
           <h2 style="margin-right:auto;">Artifact Viewer</h2>
           <button class="secondary" id="refreshArtifactsBtn">Refresh Artifacts</button>
@@ -521,9 +559,18 @@
     const routePanel = document.getElementById('routePanel');
     const beforeMapBtn = document.getElementById('beforeMapBtn');
     const afterMapBtn = document.getElementById('afterMapBtn');
+    const assistantConsent = document.getElementById('assistantConsent');
+    const assistantInput = document.getElementById('assistantInput');
+    const assistantSource = document.getElementById('assistantSource');
+    const assistantLocation = document.getElementById('assistantLocation');
+    const assistantSeverity = document.getElementById('assistantSeverity');
+    const assistantOutput = document.getElementById('assistantOutput');
+    const customRunBtn = document.getElementById('customRunBtn');
+    const outcomePanel = document.getElementById('outcomePanel');
 
     let currentResult = null;
     let currentMapTrace = null;
+    let latestAssistantSignal = null;
     let selectedIteration = 0;
     let deferredInstallPrompt = null;
     let googleMap = null;
@@ -544,7 +591,7 @@
       try {
         const configResponse = await fetch('/api/config');
         const config = await configResponse.json();
-        const apiKey = config.google_maps_api_key || '';
+        const apiKey = config.google_maps_public_browser_key || '';
         if (!apiKey) {
           mapStatus.textContent = 'GOOGLE_MAPS_API_KEY is not configured; route and weather panels will use fallback artifacts.';
           return false;
@@ -706,7 +753,8 @@
       weatherPanel.innerHTML = `
         <div class="kv"><span>Location</span><strong>${escapeHtml(weather.location)}</strong></div>
         <div class="kv"><span>Condition</span><strong>${escapeHtml(weather.condition)}</strong></div>
-        <div class="kv"><span>Precipitation</span><strong>${escapeHtml(weather.precipitation_mm)} mm / ${escapeHtml(weather.precipitation_probability_percent)}%</strong></div>
+        <div class="kv"><span>Precipitation</span><strong>${escapeHtml(weather.precipitation || `${weather.precipitation_mm} mm / ${weather.precipitation_probability_percent}%`)}</strong></div>
+        <div class="kv"><span>Temperature</span><strong>${escapeHtml(weather.temperature || 'unavailable')}</strong></div>
         <div class="kv"><span>Rainfall Signal</span><strong>${escapeHtml(weather.rainfall_mm_per_hour)} mm/hr</strong></div>
         <div class="kv"><span>Risk</span><strong><span class="${riskBadgeClass(weather.risk_level)}">${escapeHtml(weather.risk_level)}</span></strong></div>
         <div class="kv"><span>Confidence</span><strong>${pct(weather.confidence)}</strong></div>
@@ -725,8 +773,12 @@
       badge.textContent = route.fallback_used ? 'Mock fallback' : 'Google Routes';
       badge.className = route.fallback_used ? 'badge warn' : 'badge ok';
       routePanel.innerHTML = `
+        <div class="kv"><span>Origin</span><strong>${escapeHtml(route.origin || 'Simulation depot')}</strong></div>
+        <div class="kv"><span>Destination</span><strong>${escapeHtml(route.destination || currentMapTrace?.scenario_name || 'Crisis area')}</strong></div>
         <div class="kv"><span>Blocked Route</span><strong>${escapeHtml(route.blocked_route)}</strong></div>
         <div class="kv"><span>Alternate</span><strong>${escapeHtml(route.alternate_route)}</strong></div>
+        <div class="kv"><span>Original Status</span><strong>${escapeHtml(route.original_route_status || 'blocked/congested')}</strong></div>
+        <div class="kv"><span>Alternate Status</span><strong>${escapeHtml(route.alternate_route_status || 'recommended')}</strong></div>
         <div class="kv"><span>ETA</span><strong>${escapeHtml(route.estimated_travel_time)}</strong></div>
         <div class="kv"><span>Distance</span><strong>${escapeHtml(route.distance)}</strong></div>
         <div class="kv"><span>Reason</span><strong>${escapeHtml(route.rerouting_reason)}</strong></div>
@@ -843,6 +895,23 @@
       document.getElementById('simActions').innerHTML = trace.simulated_actions.map((line) =>
         `<li>${escapeHtml(line)}</li>`
       ).join('');
+      renderOutcomePanel(trace);
+    }
+
+    function renderOutcomePanel(trace) {
+      const beforeLines = [
+        `Crisis level: ${trace.crisis_level}`,
+        `Risk score: ${pct(trace.risk_score)}`,
+        'Blocked route and weather risk reviewed before simulated response.'
+      ];
+      const afterLines = [
+        trace.evaluation_result,
+        trace.simulated_actions.length ? trace.simulated_actions.slice(0, 3).join(' | ') : 'No simulated action executed.'
+      ];
+      outcomePanel.innerHTML = `
+        <div class="kv"><span>Before Response</span><strong>${escapeHtml(beforeLines.join(' '))}</strong></div>
+        <div class="kv"><span>After Simulation</span><strong>${escapeHtml(afterLines.join(' '))}</strong></div>
+      `;
     }
 
     async function loadArtifacts(preferredFiles = null) {
@@ -864,34 +933,94 @@
       artifactContent.textContent = response.ok ? await response.text() : `Unable to read ${filename}`;
     }
 
-    function analyzeAssistantText() {
-      const consent = document.getElementById('assistantConsent').checked;
-      const text = document.getElementById('assistantInput').value.trim();
-      const output = document.getElementById('assistantOutput');
-      if (!consent) {
-        output.innerHTML = '<li>Permission required before contextual analysis.</li>';
+    async function analyzeAssistantText() {
+      latestAssistantSignal = null;
+      customRunBtn.disabled = true;
+      const payload = assistantPayload();
+      if (!payload.permission_granted) {
+        assistantOutput.innerHTML = '<li>Permission required before contextual analysis.</li>';
         return;
       }
-      if (!text) {
-        output.innerHTML = '<li>No approved text provided.</li>';
+      if (!payload.text) {
+        assistantOutput.innerHTML = '<li>No approved text provided.</li>';
         return;
       }
-      const terms = ['flood', 'pani', 'paani', 'rain', 'road', 'block', 'blast', 'ambulance', 'urgent', 'traffic', 'stuck', 'phans'];
-      const lower = text.toLowerCase();
-      const found = terms.filter((term) => lower.includes(term));
-      if (!found.length) {
-        output.innerHTML = '<li>No emergency-relevant signal found in the approved text.</li>';
+
+      try {
+        const response = await fetch('/api/mini-assistant/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(await response.text());
+        latestAssistantSignal = await response.json();
+        renderAssistantSignal(latestAssistantSignal);
+        customRunBtn.disabled = !latestAssistantSignal.is_crisis_related;
+      } catch (error) {
+        assistantOutput.innerHTML = `<li>Mini Assistant failed: ${escapeHtml(error.message)}</li>`;
+      }
+    }
+
+    function assistantPayload() {
+      return {
+        text: assistantInput.value.trim(),
+        source: assistantSource.value,
+        location: assistantLocation.value.trim(),
+        permission_granted: assistantConsent.checked
+      };
+    }
+
+    function renderAssistantSignal(signal) {
+      if (!signal.is_crisis_related) {
+        assistantOutput.innerHTML = '<li>No emergency signal detected.</li>';
         return;
       }
-      output.innerHTML = `
-        <li><strong>Emergency terms:</strong> ${escapeHtml([...new Set(found)].join(', '))}</li>
-        <li><strong>Signal:</strong> Authorized public context may require verification by the pipeline.</li>
+      assistantOutput.innerHTML = `
+        <li><strong>Type:</strong> ${escapeHtml(signal.crisis_type)} | <strong>Urgency:</strong> ${escapeHtml(signal.urgency)} | <strong>Confidence:</strong> ${pct(signal.confidence)}</li>
+        <li><strong>Location:</strong> ${escapeHtml(signal.location)} | <strong>Language:</strong> ${escapeHtml(signal.language_detected)}</li>
+        <li><strong>Entities:</strong> roads=${escapeHtml((signal.entities.roads || []).join(', ') || 'none')}; hazards=${escapeHtml((signal.entities.hazards || []).join(', ') || 'none')}</li>
+        <li><strong>Reason:</strong> ${escapeHtml(signal.reasoning_summary)}</li>
       `;
+    }
+
+    async function runCustomPipeline() {
+      const payload = {
+        ...assistantPayload(),
+        severity: assistantSeverity.value
+      };
+      if (!latestAssistantSignal?.is_crisis_related) {
+        assistantOutput.innerHTML = '<li>No emergency signal detected.</li>';
+        return;
+      }
+
+      customRunBtn.disabled = true;
+      customRunBtn.textContent = 'Running...';
+      runStatus.textContent = 'Custom approved CIRO pipeline running...';
+      try {
+        const response = await fetch('/api/iterative/run-custom', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(await response.text());
+        currentResult = await response.json();
+        selectedIteration = currentResult.iterations.length - 1;
+        renderResult();
+        await loadArtifacts(currentResult.artifact_files);
+        await loadScenarioIntelligence();
+        runStatus.textContent = 'Custom CIRO pipeline complete.';
+      } catch (error) {
+        runStatus.textContent = `Custom pipeline failed: ${error.message}`;
+      } finally {
+        customRunBtn.disabled = !latestAssistantSignal?.is_crisis_related;
+        customRunBtn.textContent = 'Run Custom CIRO Pipeline';
+      }
     }
 
     runBtn.addEventListener('click', runPipeline);
     document.getElementById('refreshArtifactsBtn').addEventListener('click', () => loadArtifacts());
     document.getElementById('assistantBtn').addEventListener('click', analyzeAssistantText);
+    customRunBtn.addEventListener('click', runCustomPipeline);
     beforeMapBtn.addEventListener('click', () => setMapMode('before'));
     afterMapBtn.addEventListener('click', () => setMapMode('after'));
     loadScenarios();

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ciro-dashboard-v4';
+const CACHE_NAME = 'ciro-dashboard-v5';
 
 const STATIC_CACHE_URLS = [
   '/',
