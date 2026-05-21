@@ -1,9 +1,8 @@
 export const BASE_URLS = {
   androidEmulator: 'http://10.0.2.2:8000',
-  iosSimulator: 'https://ciro-995225262970.asia-south1.run.app',
-  default: 'https://ciro-995225262970.asia-south1.run.app',
+  iosSimulator: 'http://34.57.175.11:8000',
+  default: 'http://34.57.175.11:8000',
 };
-
 export interface LocalScenarioMetadata {
   displayName: string;
   location: string;
