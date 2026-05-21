@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +12,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <!-- FEATURE 4: Particle network background canvas -->
   <canvas id="particleBg" aria-hidden="true"></canvas>
@@ -20,18 +22,20 @@
     <div class="logo-area">
       <div class="logo-icon">🛡️</div>
       <div class="logo-text">
-        <h1>CIRO</h1>
+        <h1>CIR</h1>
         <span>Crisis Intelligence & Response</span>
       </div>
     </div>
     <div class="header-right">
       <div id="liveClock">00:00:00</div>
       <!-- FEATURE 1: Voice narration toggle -->
-      <button class="header-btn" id="btnNarrate" title="Toggle voice narration" aria-label="Toggle voice narration">🔊 Narrate</button>
+      <button class="header-btn" id="btnNarrate" title="Toggle voice narration" aria-label="Toggle voice narration">🔊
+        Narrate</button>
       <!-- FEATURE 3: Mute sounds toggle -->
       <button class="header-btn" id="btnMute" title="Mute/unmute sounds" aria-label="Mute sounds">🔔</button>
       <!-- FEATURE 5: Download report -->
-      <button class="header-btn" id="btnDownload" title="Download crisis report as PDF" aria-label="Download report" style="display:none;">📄 Report</button>
+      <button class="header-btn" id="btnDownload" title="Download crisis report as PDF" aria-label="Download report"
+        style="display:none;">📄 Report</button>
       <!-- FEATURE 6: Keyboard shortcuts help -->
       <div class="shortcuts-wrap">
         <button class="header-btn" id="btnHelp" title="Keyboard shortcuts">?</button>
@@ -50,10 +54,18 @@
   <main id="appMain" data-stage="input">
     <!-- STEP 2: SCENARIO SELECTOR -->
     <div class="progress-stepper" aria-label="CIRO workflow">
-      <div class="step active" id="step1"><div class="step-num">1</div> Input Scenario</div>
-      <div class="step" id="step2"><div class="step-num">2</div> Pipeline</div>
-      <div class="step" id="step3"><div class="step-num">3</div> Actions</div>
-      <div class="step" id="step4"><div class="step-num">4</div> Map / Weather</div>
+      <div class="step active" id="step1">
+        <div class="step-num">1</div> Input Scenario
+      </div>
+      <div class="step" id="step2">
+        <div class="step-num">2</div> Pipeline
+      </div>
+      <div class="step" id="step3">
+        <div class="step-num">3</div> Actions
+      </div>
+      <div class="step" id="step4">
+        <div class="step-num">4</div> Map / Weather
+      </div>
     </div>
 
     <section class="stage-context" aria-live="polite">
@@ -61,7 +73,8 @@
         <div class="eyebrow" id="stageEyebrow">Step 1</div>
         <h2 id="stageTitle">Input a crisis scenario</h2>
       </div>
-      <p id="stageDescription">Start with one approved citizen report. CIRO will move through the agent pipeline, action plan, then map and weather intelligence.</p>
+      <p id="stageDescription">Start with one approved citizen report. CIRO will move through the agent pipeline, action
+        plan, then map and weather intelligence.</p>
     </section>
 
     <div class="view-switcher" id="resultTabs" aria-label="Result views">
@@ -73,7 +86,8 @@
       <div class="manual-copy">
         <div class="eyebrow">Live input</div>
         <h2 id="manualReportTitle">Enter one crisis scenario</h2>
-        <p>Paste English or Roman Urdu report text. CIRO verifies the signal, then separates the output into action and field-intelligence screens.</p>
+        <p>Paste English or Roman Urdu report text. CIRO verifies the signal, then separates the output into action and
+          field-intelligence screens.</p>
       </div>
       <form class="manual-form" id="manualReportForm">
         <label for="manualText">Report text</label>
@@ -130,9 +144,18 @@
           <!-- Injected by JS -->
         </div>
         <div class="iteration-tracker" id="iterTracker" style="display:none;">
-          <div class="iter-step" id="iter1"><div class="iter-label">Iteration 1</div><div class="iter-dot"></div></div>
-          <div class="iter-step" id="iter2"><div class="iter-label">Iteration 2</div><div class="iter-dot"></div></div>
-          <div class="iter-step" id="iter3"><div class="iter-label">Iteration 3</div><div class="iter-dot"></div></div>
+          <div class="iter-step" id="iter1">
+            <div class="iter-label">Iteration 1</div>
+            <div class="iter-dot"></div>
+          </div>
+          <div class="iter-step" id="iter2">
+            <div class="iter-label">Iteration 2</div>
+            <div class="iter-dot"></div>
+          </div>
+          <div class="iter-step" id="iter3">
+            <div class="iter-label">Iteration 3</div>
+            <div class="iter-dot"></div>
+          </div>
         </div>
       </aside>
 
@@ -146,10 +169,12 @@
             </div>
             <div class="level-badge" id="csBadge">LEVEL</div>
           </div>
-          
+
           <div class="confidence-meter">
             <div class="meter-label"><span>Confidence</span><span id="csConfVal">0%</span></div>
-            <div class="meter-bg"><div class="meter-fill" id="csConfFill"></div></div>
+            <div class="meter-bg">
+              <div class="meter-fill" id="csConfFill"></div>
+            </div>
           </div>
 
           <div class="reasoning-text" id="csReasoning">Reasoning...</div>
@@ -165,9 +190,15 @@
             <div class="map-header">
               <h3>Tactical Map</h3>
               <div class="map-legend">
-                <div class="legend-item"><div class="legend-color" style="background:var(--ok);"></div> Normal</div>
-                <div class="legend-item"><div class="legend-color" style="background:var(--danger);"></div> Blocked</div>
-                <div class="legend-item"><div class="legend-color" style="background:var(--danger);"></div> Rerouted</div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background:var(--ok);"></div> Normal
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background:var(--danger);"></div> Blocked
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background:var(--danger);"></div> Rerouted
+                </div>
               </div>
             </div>
             <div class="svg-map-container" id="svgMapBox">
@@ -232,4 +263,5 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/dashboard/app.js?v=20260520-ui6"></script>
 </body>
+
 </html>
