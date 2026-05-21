@@ -27,7 +27,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/ciro_vm_key
+          if [ -n "${{ secrets.VM_SSH_KEY_B64 }}" ]; then
+            printf '%s' "${{ secrets.VM_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/ciro_vm_key
+          else
+            printf '%s\n' "${{ secrets.VM_SSH_KEY }}" | tr -d '\r' > ~/.ssh/ciro_vm_key
+          fi
           chmod 600 ~/.ssh/ciro_vm_key
 
       - name: Trust VM host
