@@ -8,6 +8,17 @@ Status: Working hackathon prototype, simulation-only
 
 CIRO is not a real emergency dispatch system. It does not contact real emergency authorities, send real public alerts, scrape private data, or dispatch responders.
 
+## Live Submission Links
+
+| Deliverable | Link |
+|---|---|
+| Web app / dashboard | http://35.238.104.141:8000 |
+| Backend health check | http://35.238.104.141:8000/health |
+| Android APK | https://expo.dev/artifacts/eas/vk852VKKmXvQLgxKtsXLpC.apk |
+| APK build page | https://expo.dev/accounts/zahirahmad9897/projects/ciro_mobile/builds/ed848270-641d-41b0-bab4-a96755fe32e2 |
+
+For judges: install the Android APK on an Android phone, allow installation from unknown sources if prompted, and run a scenario from the CIRO mobile app. The APK is configured to call the deployed Google Cloud VM backend at `http://35.238.104.141:8000`.
+
 ## Quick Run Commands
 
 Run these commands from `D:\Antigravity_Hackthon`.
@@ -73,6 +84,12 @@ For a real phone on the same Wi-Fi, set the backend URL inside the mobile app se
 
 ```text
 http://192.168.1.10:8000
+```
+
+The submitted APK is already configured for the deployed Google Cloud VM backend:
+
+```text
+http://35.238.104.141:8000
 ```
 
 ## Executive Summary
@@ -406,6 +423,7 @@ python adk_ciro\run_adk_demo.py
 | Web app not opening | Check backend terminal and open `http://127.0.0.1:8000`. |
 | Port already in use | Use another port, for example `--port 8001`. |
 | Mobile cannot reach backend | Use laptop LAN IP in mobile settings, e.g. `http://192.168.1.10:8000`. |
+| Submitted APK cannot reach backend | Check `http://35.238.104.141:8000/health` and Google Cloud firewall rule `tcp:8000`. |
 | Android emulator cannot reach backend | Use `http://10.0.2.2:8000`. |
 | Real map not showing | Check `GOOGLE_MAPS_API_KEY`, Maps JavaScript API, and browser console. |
 | Google API quota fails | CIRO uses fallback map/weather/route simulation. |
@@ -414,7 +432,9 @@ python adk_ciro\run_adk_demo.py
 
 ## Final Submission Checklist
 
-- Mobile app link works.
+- Mobile APK link works: `https://expo.dev/artifacts/eas/vk852VKKmXvQLgxKtsXLpC.apk`.
+- Web app link works: `http://35.238.104.141:8000`.
+- Health check works: `http://35.238.104.141:8000/health`.
 - GitHub repo is accessible.
 - Demo video is 3-5 minutes.
 - Antigravity usage video is 2-3 minutes.
