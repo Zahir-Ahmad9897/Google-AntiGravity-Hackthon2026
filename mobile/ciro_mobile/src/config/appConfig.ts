@@ -1,7 +1,7 @@
 export const BASE_URLS = {
   androidEmulator: 'http://10.0.2.2:8000',
-  iosSimulator: 'http://34.57.175.11:8000',
-  default: 'http://34.57.175.11:8000',
+  iosSimulator: 'http://35.238.104.141:8000',
+  default: 'http://35.238.104.141:8000',
 };
 export interface LocalScenarioMetadata {
   displayName: string;
