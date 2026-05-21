@@ -10,7 +10,9 @@ import Animated, {
 import Svg, { Path } from 'react-native-svg';
 import { theme } from '../config/theme';
 
-ExpoSplashScreen.preventAutoHideAsync();
+ExpoSplashScreen.preventAutoHideAsync().catch(() => {
+  // Native splash may already be hidden in development or preview shells.
+});
 
 export default function SplashScreen({ navigation }: any) {
   const pulse = useSharedValue(0);
@@ -18,7 +20,7 @@ export default function SplashScreen({ navigation }: any) {
   useEffect(() => {
     pulse.value = withRepeat(withTiming(1, { duration: 1500 }), -1, false);
     const timer = setTimeout(() => {
-      ExpoSplashScreen.hideAsync();
+      ExpoSplashScreen.hideAsync().catch(() => undefined);
       navigation.replace('Home');
     }, 2500);
 

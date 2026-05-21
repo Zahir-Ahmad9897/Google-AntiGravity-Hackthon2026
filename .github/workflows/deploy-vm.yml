@@ -1,0 +1,57 @@
+name: Deploy CIRO Web VM
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "main.py"
+      - "requirements.txt"
+      - "backend/**"
+      - "adk_ciro/**"
+      - "dashboard/**"
+      - ".github/workflows/deploy-vm.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ciro-vm-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Pull latest code on Google VM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/ciro_vm_key
+          chmod 600 ~/.ssh/ciro_vm_key
+
+      - name: Trust VM host
+        run: |
+          ssh-keyscan -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy on VM
+        run: |
+          ssh -i ~/.ssh/ciro_vm_key "${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}" "VM_APP_DIR='${{ secrets.VM_APP_DIR }}' bash -s" << 'EOF'
+            set -e
+
+            cd "${VM_APP_DIR:-$HOME/Google-AntiGravity-Hackthon2026}"
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+
+            pkill -f "uvicorn main:app" || true
+            nohup .venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > ciro.log 2>&1 &
+
+            sleep 4
+            curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/
+          EOF

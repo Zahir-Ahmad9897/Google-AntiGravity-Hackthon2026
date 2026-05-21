@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,6 +10,7 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import ScenarioCard from '../components/ScenarioCard';
 import StepperWidget from '../components/StepperWidget';
+import TacticalBackground from '../components/TacticalBackground';
 import { theme } from '../config/theme';
 import { useScenarioStore } from '../store/scenarioStore';
 
@@ -19,6 +21,7 @@ export default function ScenarioSelectScreen({ navigation }: any) {
   const [severity, setSeverity] = useState<'Medium' | 'High' | 'Critical'>('High');
   const [permissionGranted, setPermissionGranted] = useState(true);
   const [manualError, setManualError] = useState('');
+  const [listening, setListening] = useState(false);
 
   useEffect(() => {
     loadScenarios();
@@ -54,12 +57,51 @@ export default function ScenarioSelectScreen({ navigation }: any) {
     });
   };
 
+  const handleVoiceInput = () => {
+    const SpeechRecognition = Platform.OS === 'web'
+      ? (globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition
+      : null;
+    if (!SpeechRecognition) {
+      setManualError('Voice input is available in supported browsers. Type the report on this device.');
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-PK';
+    recognition.interimResults = false;
+    recognition.onstart = () => {
+      setListening(true);
+      setManualError('');
+    };
+    recognition.onerror = () => {
+      setListening(false);
+      setManualError('Voice capture failed. Please try again or type the report.');
+    };
+    recognition.onend = () => setListening(false);
+    recognition.onresult = (event: any) => {
+      const transcript = event.results?.[0]?.[0]?.transcript;
+      if (transcript) setReportText(transcript);
+    };
+    recognition.start();
+  };
+
   return (
-    <View style={styles.container}>
+    <TacticalBackground>
       <StepperWidget activeStep={1} />
 
       <View style={styles.manualCard}>
-        <Text style={styles.manualTitle}>Run from user input</Text>
+        <View style={styles.manualHeader}>
+          <View>
+            <Text style={styles.manualEyebrow}>Scenario Input</Text>
+            <Text style={styles.manualTitle}>Run from citizen report</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.micButton, listening && styles.micButtonActive]}
+            onPress={handleVoiceInput}
+            accessibilityLabel="Voice input"
+          >
+            <Ionicons name={listening ? 'radio' : 'mic'} size={18} color={listening ? theme.colors.background : theme.colors.primary} />
+          </TouchableOpacity>
+        </View>
         <TextInput
           style={styles.reportInput}
           value={reportText}
@@ -98,6 +140,7 @@ export default function ScenarioSelectScreen({ navigation }: any) {
         </View>
         {manualError ? <Text style={styles.manualError}>{manualError}</Text> : null}
         <TouchableOpacity style={styles.manualButton} onPress={handleManualLaunch}>
+          <Ionicons name="pulse" size={16} color={theme.colors.background} />
           <Text style={styles.manualButtonText}>Run Agent Pipeline</Text>
         </TouchableOpacity>
       </View>
@@ -130,7 +173,7 @@ export default function ScenarioSelectScreen({ navigation }: any) {
           contentContainerStyle={styles.list}
         />
       )}
-    </View>
+    </TacticalBackground>
   );
 }
 
@@ -200,11 +243,37 @@ const styles = StyleSheet.create({
     padding: theme.spacing.s16,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.opacity.glass,
+    ...theme.shadows.card,
+  },
+  manualHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: theme.spacing.s12,
+    marginBottom: theme.spacing.s12,
+  },
+  manualEyebrow: {
+    marginBottom: theme.spacing.s4,
+    color: theme.colors.primary,
+    fontFamily: theme.typography.fontBold,
+    fontSize: 11,
+    textTransform: 'uppercase',
+  },
+  micButton: {
+    width: 42,
+    height: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderRadius: 21,
+    backgroundColor: theme.opacity.primaryPill,
+  },
+  micButtonActive: {
+    backgroundColor: theme.colors.primary,
   },
   manualTitle: {
-    marginBottom: theme.spacing.s12,
     color: theme.colors.textPrimary,
     fontFamily: theme.typography.fontBold,
     fontSize: 16,
@@ -281,6 +350,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   manualButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: theme.spacing.s8,
     alignItems: 'center',
     marginTop: theme.spacing.s12,
     padding: theme.spacing.s12,

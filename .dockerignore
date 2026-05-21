@@ -6,6 +6,10 @@ __pycache__
 *.pyc
 .env
 logs
+artifacts
+ciro-cloudrun-deploy.zip
+deploy_staging
+mobile
 mobile/ciro_mobile/node_modules
 mobile/ciro_mobile/.expo
 mobile/node_modules

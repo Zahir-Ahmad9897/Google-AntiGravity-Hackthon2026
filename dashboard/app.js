@@ -1214,3 +1214,283 @@ function drawSvgMap(layoutId, state) {
 
 // 9. STARTUP
 init();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 1: Real-time Voice Narration (Web Speech API)
+// Narrates each agent's output as it completes during the pipeline.
+// ═══════════════════════════════════════════════════════════════
+const ciroNarration = (() => {
+  let enabled = false;
+  const btn = document.getElementById('btnNarrate');
+  
+  btn.addEventListener('click', () => {
+    enabled = !enabled;
+    btn.classList.toggle('active', enabled);
+    btn.textContent = enabled ? '🔊 ON' : '🔊 Narrate';
+    if (!enabled) window.speechSynthesis?.cancel();
+  });
+
+  function speak(text) {
+    if (!enabled || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.1;
+    utter.pitch = 0.9;
+    utter.volume = 0.8;
+    // Prefer a calm English voice
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.name.includes('Google') && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en'));
+    if (preferred) utter.voice = preferred;
+    window.speechSynthesis.speak(utter);
+  }
+
+  // Pre-load voices
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  return { speak, isEnabled: () => enabled };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 3: Sound Effects (Web Audio API — no external files)
+// Generates tones programmatically using oscillators.
+// ═══════════════════════════════════════════════════════════════
+const ciroSounds = (() => {
+  let muted = false;
+  let ctx = null;
+  const btn = document.getElementById('btnMute');
+
+  btn.addEventListener('click', () => {
+    muted = !muted;
+    btn.textContent = muted ? '🔇' : '🔔';
+    btn.classList.toggle('active', muted);
+  });
+
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    return ctx;
+  }
+
+  function playTone(freq, duration, type = 'sine', gain = 0.15) {
+    if (muted) return;
+    try {
+      const c = getCtx();
+      const osc = c.createOscillator();
+      const g = c.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      g.gain.value = gain;
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+      osc.connect(g);
+      g.connect(c.destination);
+      osc.start(c.currentTime);
+      osc.stop(c.currentTime + duration);
+    } catch (e) { /* Audio not available */ }
+  }
+
+  return {
+    ping:    () => playTone(880, 0.15, 'sine', 0.1),      // Agent complete
+    alert:   () => { playTone(440, 0.3, 'square', 0.08); setTimeout(() => playTone(440, 0.3, 'square', 0.08), 350); }, // HIGH crisis
+    success: () => { playTone(523, 0.15, 'sine', 0.1); setTimeout(() => playTone(659, 0.15, 'sine', 0.1), 150); setTimeout(() => playTone(784, 0.25, 'sine', 0.1), 300); }, // Pipeline done
+    isMuted: () => muted
+  };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 2: Live Threat Timeline
+// Shows agent completions as timestamped nodes on a timeline.
+// ═══════════════════════════════════════════════════════════════
+const ciroTimeline = (() => {
+  const container = document.getElementById('threatTimeline');
+  const track = document.getElementById('timelineTrack');
+
+  function show() { container.style.display = 'block'; track.innerHTML = ''; }
+  function hide() { container.style.display = 'none'; }
+
+  function addNode(agentName, status) {
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    // Add connector if not first
+    if (track.children.length > 0) {
+      const conn = document.createElement('div');
+      conn.className = 'tl-connector' + (status === 'done' ? ' active' : '');
+      track.appendChild(conn);
+    }
+    const node = document.createElement('div');
+    node.className = `tl-node ${status}`;
+    node.innerHTML = `<div class="tl-dot"></div><div class="tl-name">${agentName}</div><div class="tl-time">${time}</div>`;
+    track.appendChild(node);
+    // Auto-scroll to latest
+    container.scrollLeft = container.scrollWidth;
+  }
+
+  function updateLast(status) {
+    const nodes = track.querySelectorAll('.tl-node');
+    const last = nodes[nodes.length - 1];
+    if (last) { last.className = `tl-node ${status}`; }
+    const conns = track.querySelectorAll('.tl-connector');
+    const lastConn = conns[conns.length - 1];
+    if (lastConn && status === 'done') lastConn.classList.add('active');
+  }
+
+  return { show, hide, addNode, updateLast };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 4: Particle Network Background (Canvas)
+// Subtle animated dots that drift and connect with lines.
+// ═══════════════════════════════════════════════════════════════
+(() => {
+  const canvas = document.getElementById('particleBg');
+  if (!canvas) return;
+  const c = canvas.getContext('2d');
+  const particles = [];
+  const PARTICLE_COUNT = 60;
+  const MAX_DIST = 120;
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: 1.5 + Math.random() * 1.5
+    });
+  }
+
+  function draw() {
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          c.strokeStyle = `rgba(0, 212, 255, ${1 - dist / MAX_DIST})`;
+          c.lineWidth = 0.5;
+          c.beginPath();
+          c.moveTo(particles[i].x, particles[i].y);
+          c.lineTo(particles[j].x, particles[j].y);
+          c.stroke();
+        }
+      }
+    }
+    // Draw particles
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      c.fillStyle = 'rgba(0, 212, 255, 0.6)';
+      c.beginPath();
+      c.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      c.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 5: Export Crisis Report as PDF (window.print)
+// ═══════════════════════════════════════════════════════════════
+(() => {
+  const btn = document.getElementById('btnDownload');
+  // Add print header to DOM (hidden by default, shown in @media print)
+  const printHeader = document.createElement('div');
+  printHeader.className = 'print-header';
+  printHeader.innerHTML = `<h1>🛡️ CIRO Crisis Report</h1><p>Generated: ${new Date().toLocaleString()}</p>`;
+  document.querySelector('main')?.prepend(printHeader);
+
+  btn.addEventListener('click', () => {
+    printHeader.querySelector('p').textContent = `Generated: ${new Date().toLocaleString()}`;
+    window.print();
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// FEATURE 6: Keyboard Shortcuts
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  // Don't trigger when typing in inputs
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+  const scenarioCards = document.querySelectorAll('.scenario-card .run-btn');
+  if (e.key === '1' && scenarioCards[0]) scenarioCards[0].click();
+  if (e.key === '2' && scenarioCards[1]) scenarioCards[1].click();
+  if (e.key === '3' && scenarioCards[2]) scenarioCards[2].click();
+  if (e.key.toLowerCase() === 'r') { location.reload(); }
+  if (e.key.toLowerCase() === 'm') { document.getElementById('btnMute')?.click(); }
+  if (e.key.toLowerCase() === 'n') { document.getElementById('btnNarrate')?.click(); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// HOOK: Integrate features into existing pipeline animation
+// Monkey-patch animatePipeline to add sounds, narration, timeline
+// ═══════════════════════════════════════════════════════════════
+const _originalAnimatePipeline = animatePipeline;
+animatePipeline = async function() {
+  const finalIter = currentPipelineResult.iterations[currentPipelineResult.iterations.length - 1];
+  const outputs = finalIter.agent_outputs || [];
+
+  // Show timeline and download button
+  ciroTimeline.show();
+  document.getElementById('btnDownload').style.display = 'inline-flex';
+
+  for (let i = 0; i < AGENT_PIPELINE.length; i++) {
+    const agent = AGENT_PIPELINE[i];
+    const node = document.getElementById(`node_${agent.id}`);
+    const status = document.getElementById(`status_${agent.id}`);
+    const summary = document.getElementById(`sum_${agent.id}`);
+
+    // Set to RUNNING
+    node.classList.add('active');
+    status.textContent = 'RUNNING';
+    ciroTimeline.addNode(agent.name, 'running');
+
+    await sleep(400);
+
+    // Set to DONE
+    node.classList.remove('active');
+    node.classList.add('done');
+    status.textContent = 'DONE';
+
+    const out = outputs.find(o => o.agent_name.toLowerCase().includes(agent.id.split('_')[0])) || outputs[i] || { summary: `Completed for ${agent.name}` };
+    summary.textContent = out.summary;
+
+    // Sound ping
+    ciroSounds.ping();
+
+    // Timeline update
+    ciroTimeline.updateLast('done');
+
+    // Narration
+    ciroNarration.speak(`${agent.name} reports: ${out.summary}`);
+
+    els.progressBar.style.width = `${60 + ((i+1)/AGENT_PIPELINE.length)*40}%`;
+  }
+
+  // Iterations
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById(`iter${i}`).classList.add('done');
+    await sleep(200);
+  }
+
+  // Final sounds
+  const level = (finalIter.crisis_level || '').toUpperCase();
+  if (level === 'HIGH' || level === 'CRISIS') {
+    ciroSounds.alert();
+    ciroNarration.speak(`Warning: Crisis level is ${level}. Escalation recommended.`);
+  } else {
+    ciroSounds.success();
+    ciroNarration.speak('Pipeline complete. Crisis response plan generated successfully.');
+  }
+
+  finishPipeline(finalIter);
+};

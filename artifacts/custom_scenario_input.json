@@ -1,6 +1,6 @@
 {
   "scenario_id": "custom_permission_input",
-  "title": "Custom approved crisis signal - islamabad g-10 markaz",
+  "title": "Custom approved crisis signal - sadar bazar peshawar",
   "description": "User-approved custom crisis content routed through the existing CIRO iterative pipeline.",
   "steps": [
     {
@@ -8,35 +8,35 @@
       "update_note": "Approved custom report received; CIRO begins verification.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - islamabad g-10 markaz",
+        "title": "Custom approved crisis signal - sadar bazar peshawar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i1-approved-1",
-            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "text": "peshawar sadar road block due to accident",
             "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T19:39:11.435710Z",
+            "timestamp": "2026-05-20T22:54:42.261495Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i1-weather",
-          "district": "islamabad g-10 markaz",
-          "rainfall_mm_per_hour": 6.3,
-          "alert_active": true,
-          "alert_type": "heavy_rain_alert",
-          "alert_level": 3,
-          "timestamp": "2026-05-20T19:39:11.435710Z"
+          "district": "sadar bazar peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
+          "timestamp": "2026-05-20T22:54:42.261495Z"
         },
         "traffic": [
           {
             "report_id": "custom-i1-traffic",
-            "road_name": "g-10 markaz",
+            "road_name": "sadar bazar peshawar",
             "speed_kmh": 8.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T19:39:11.435710Z"
+            "timestamp": "2026-05-20T22:54:42.261495Z"
           }
         ],
         "expected_escalation": false,
@@ -52,35 +52,35 @@
       "update_note": "Custom signal correlated with weather and traffic simulation.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - islamabad g-10 markaz",
+        "title": "Custom approved crisis signal - sadar bazar peshawar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i2-approved-1",
-            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "text": "peshawar sadar road block due to accident",
             "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T19:43:11.435710Z",
+            "timestamp": "2026-05-20T22:58:42.261495Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i2-weather",
-          "district": "islamabad g-10 markaz",
-          "rainfall_mm_per_hour": 11.5,
-          "alert_active": true,
-          "alert_type": "heavy_rain_alert",
-          "alert_level": 4,
-          "timestamp": "2026-05-20T19:43:11.435710Z"
+          "district": "sadar bazar peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
+          "timestamp": "2026-05-20T22:58:42.261495Z"
         },
         "traffic": [
           {
             "report_id": "custom-i2-traffic",
-            "road_name": "g-10 markaz",
+            "road_name": "sadar bazar peshawar",
             "speed_kmh": 0.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-20T19:43:11.435710Z"
+            "timestamp": "2026-05-20T22:58:42.261495Z"
           }
         ],
         "expected_escalation": true,
@@ -96,35 +96,35 @@
       "update_note": "Simulation applies route update and evaluates remaining risk.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - islamabad g-10 markaz",
+        "title": "Custom approved crisis signal - sadar bazar peshawar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i3-approved-1",
-            "text": "islamabad g-10 markaz may thofan aur bahoth zayada pani aya hai",
+            "text": "peshawar sadar road block due to accident",
             "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T19:46:11.435710Z",
+            "timestamp": "2026-05-20T23:01:42.261495Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i3-weather",
-          "district": "islamabad g-10 markaz",
-          "rainfall_mm_per_hour": 8.0,
-          "alert_active": true,
-          "alert_type": "heavy_rain_alert",
-          "alert_level": 4,
-          "timestamp": "2026-05-20T19:46:11.435710Z"
+          "district": "sadar bazar peshawar",
+          "rainfall_mm_per_hour": 0.0,
+          "alert_active": false,
+          "alert_type": "none",
+          "alert_level": 0,
+          "timestamp": "2026-05-20T23:01:42.261495Z"
         },
         "traffic": [
           {
             "report_id": "custom-i3-traffic",
-            "road_name": "g-10 markaz",
+            "road_name": "sadar bazar peshawar",
             "speed_kmh": 10.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T19:46:11.435710Z"
+            "timestamp": "2026-05-20T23:01:42.261495Z"
           }
         ],
         "expected_escalation": true,

@@ -1,107 +1,107 @@
 [
   {
-    "timestamp": "2026-05-20T19:47:13.048517+00:00",
+    "timestamp": "2026-05-20T23:02:46.529150+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "islamabad g-10 markaz"
+      "location": "sadar bazar peshawar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "G-10, Islamabad, Pakistan",
-      "lat": 33.6767,
-      "lng": 73.0149,
+      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
+      "lat": 34.0081,
+      "lng": 71.5739,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:13.850908+00:00",
+    "timestamp": "2026-05-20T23:02:47.361324+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "G-6 Markaz Emergency Centre, Islamabad"
+      "location": "Peshawar Ring Road Simulation Depot"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "G-6 Markaz, Islamabad, Pakistan",
-      "lat": 33.7182,
-      "lng": 73.0731,
+      "formatted_address": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
+      "lat": 34.0149,
+      "lng": 71.5785,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:14.520963+00:00",
+    "timestamp": "2026-05-20T23:02:50.074586+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "islamabad g-10 markaz"
+      "location": "sadar bazar peshawar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "G-10, Islamabad, Pakistan",
-      "lat": 33.6767,
-      "lng": 73.0149,
+      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
+      "lat": 34.0081,
+      "lng": 71.5739,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:17.102371+00:00",
+    "timestamp": "2026-05-20T23:02:53.029148+00:00",
     "api_name": "Weather API",
     "input": {
-      "location": "islamabad g-10 markaz"
+      "location": "sadar bazar peshawar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "condition": "heavy_rain_alert",
-      "rainfall_mm_per_hour": 8.0,
-      "risk_level": "high",
+      "condition": "none",
+      "rainfall_mm_per_hour": 0.0,
+      "risk_level": "low",
       "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 4729662"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:17.785713+00:00",
+    "timestamp": "2026-05-20T23:02:53.880617+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "G-6 Markaz Emergency Centre, Islamabad"
+      "location": "Peshawar Ring Road Simulation Depot"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "G-6 Markaz, Islamabad, Pakistan",
-      "lat": 33.7182,
-      "lng": 73.0731,
+      "formatted_address": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
+      "lat": 34.0149,
+      "lng": 71.5785,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:18.820360+00:00",
+    "timestamp": "2026-05-20T23:02:54.560113+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "islamabad g-10 markaz"
+      "location": "sadar bazar peshawar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "G-10, Islamabad, Pakistan",
-      "lat": 33.6767,
-      "lng": 73.0149,
+      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
+      "lat": 34.0081,
+      "lng": 71.5739,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T19:47:20.716063+00:00",
+    "timestamp": "2026-05-20T23:02:56.526013+00:00",
     "api_name": "Routes API",
     "input": {
-      "origin": "G-6 Markaz, Islamabad, Pakistan",
-      "destination": "G-10, Islamabad, Pakistan",
-      "blocked_route": "g-10 markaz"
+      "origin": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
+      "destination": "Sadar Bazar, Peshawar, Pakistan",
+      "blocked_route": "sadar bazar peshawar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "normal_distance_m": 7091,
-      "alternate_distance_m": 7714,
+      "normal_distance_m": 866,
+      "alternate_distance_m": 5284,
       "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API routes.googleapis.com metho"
     }
   }

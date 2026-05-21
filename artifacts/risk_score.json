@@ -1,26 +1,26 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
+  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
   "iteration_scores": [
     {
       "iteration_number": 1,
-      "risk_score": 0.86,
-      "confidence_score": 0.9,
+      "risk_score": 0.7,
+      "confidence_score": 0.7,
       "crisis_level": "crisis"
     },
     {
       "iteration_number": 2,
-      "risk_score": 0.9,
-      "confidence_score": 0.9,
+      "risk_score": 0.78,
+      "confidence_score": 0.7,
       "crisis_level": "crisis"
     },
     {
       "iteration_number": 3,
-      "risk_score": 0.86,
-      "confidence_score": 0.9,
+      "risk_score": 0.7,
+      "confidence_score": 0.7,
       "crisis_level": "crisis"
     }
   ],
-  "final_score": 0.86,
+  "final_score": 0.7,
   "final_crisis_level": "crisis"
 }

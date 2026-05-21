@@ -55,6 +55,10 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
   const [nearbyPlaces, setNearbyPlaces] = useState<string[]>([]);
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const savedX = useSharedValue(0);
+  const savedY = useSharedValue(0);
   const progress = useSharedValue(0);
 
   useEffect(() => setAfter(showAfter), [showAfter]);
@@ -71,8 +75,24 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
       scale.value = Math.min(2.4, Math.max(0.82, savedScale.value * event.scale));
     });
 
+  const pan = Gesture.Pan()
+    .onBegin(() => {
+      savedX.value = translateX.value;
+      savedY.value = translateY.value;
+    })
+    .onUpdate((event) => {
+      translateX.value = Math.max(-120, Math.min(120, savedX.value + event.translationX));
+      translateY.value = Math.max(-120, Math.min(120, savedY.value + event.translationY));
+    });
+
+  const mapGesture = Gesture.Simultaneous(pinch, pan);
+
   const mapStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+      { scale: scale.value },
+    ],
   }));
 
   const drops = useMemo(() => buildRainDrops(scenarioId), [scenarioId]);
@@ -127,7 +147,7 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
 
   return (
     <View style={styles.container}>
-      <GestureDetector gesture={pinch}>
+      <GestureDetector gesture={mapGesture}>
         <Animated.View style={[styles.mapFrame, mapStyle]}>
           <OsmTileLayer center={mapCenter} zoom={mapZoom} />
           {meta.mapLayout === 'g10_grid' && <G10GridMap after={after} progress={progress} />}
@@ -159,8 +179,10 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
         <Text numberOfLines={2} style={styles.placeLabel}>{placeLabel}</Text>
         {nearbyPlaces.length > 0 && (
           <View style={styles.nearbyList}>
-            {nearbyPlaces.slice(0, 3).map((place) => (
-              <Text key={place} numberOfLines={1} style={styles.nearbyItem}>{place}</Text>
+            {nearbyPlaces.slice(0, 4).map((place) => (
+              <TouchableOpacity key={place} onPress={() => setPlaceLabel(place)} style={styles.nearbyChip}>
+                <Text numberOfLines={1} style={styles.nearbyItem}>{place}</Text>
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -259,6 +281,7 @@ function G10GridMap({ after, progress }: { after: boolean; progress: SharedValue
         stroke={theme.colors.primary}
         strokeWidth={2}
       />
+      <Circle cx={230} cy={210} r={108} fill="none" stroke={theme.colors.danger} strokeWidth={2} strokeDasharray="6 6" />
       {after ? (
         <>
           <Line x1={130} y1={200} x2={330} y2={200} stroke={theme.colors.danger} strokeWidth={8} />
@@ -296,6 +319,7 @@ function PeshawarRingMap({ after, progress }: { after: boolean; progress: Shared
         points="250,132 262,160 292,166 266,181 272,212 250,192 228,212 234,181 208,166 238,160"
         fill={theme.colors.warning}
       />
+      <Circle cx={250} cy={176} r={82} fill={theme.opacity.dangerPill} stroke={theme.colors.danger} strokeWidth={2} strokeDasharray="7 5" />
       {after && (
         <>
           <Path
@@ -328,6 +352,7 @@ function CityIntersectionMap({ after, progress }: { after: boolean; progress: Sh
       <SvgText x={18} y={235} fill={theme.colors.textSecondary} fontSize={12}>Main Blvd</SvgText>
       <SvgText x={263} y={36} fill={theme.colors.textSecondary} fontSize={12}>Cross St</SvgText>
       <Circle cx={250} cy={250} r={72} fill={theme.opacity.congestionZone} />
+      <Circle cx={250} cy={250} r={118} fill="none" stroke={theme.colors.danger} strokeWidth={2} strokeDasharray="7 5" />
       {after && (
         <>
           <Line x1={100} y1={250} x2={255} y2={250} stroke={theme.colors.danger} strokeWidth={18} />
@@ -649,8 +674,19 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   nearbyList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: theme.spacing.s8,
     gap: theme.spacing.s4,
+  },
+  nearbyChip: {
+    maxWidth: '48%',
+    paddingHorizontal: theme.spacing.s8,
+    paddingVertical: theme.spacing.s4,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.opacity.primaryPill,
   },
   nearbyItem: {
     color: theme.colors.primary,

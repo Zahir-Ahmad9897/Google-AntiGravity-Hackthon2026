@@ -1,54 +1,54 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
-  "generated_at": "2026-05-20T19:47:20.719801+00:00",
+  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
+  "generated_at": "2026-05-20T23:02:56.528538+00:00",
   "simulation_only": true,
   "center": {
-    "lat": 33.6767,
-    "lng": 73.0149
+    "lat": 34.0081,
+    "lng": 71.5739
   },
   "markers": {
     "crisis": {
-      "label": "Custom approved crisis signal - islamabad g-10 markaz",
+      "label": "Custom approved crisis signal - sadar bazar peshawar",
       "position": {
-        "lat": 33.6767,
-        "lng": 73.0149
+        "lat": 34.0081,
+        "lng": 71.5739
       },
-      "severity": "high"
+      "severity": "low"
     },
     "weather": {
-      "label": "Weather risk: high",
+      "label": "Weather risk: low",
       "position": {
-        "lat": 33.6807,
-        "lng": 73.0119
+        "lat": 34.0121,
+        "lng": 71.5709
       },
-      "condition": "heavy_rain_alert"
+      "condition": "none"
     },
     "rescue": {
       "label": "Simulated rescue unit",
       "position": {
-        "lat": 33.7182,
-        "lng": 73.0731
+        "lat": 34.0149,
+        "lng": 71.5785
       },
       "status": "simulated_dispatch_ready"
     }
   },
   "blocked_route": {
-    "label": "g-10 markaz",
+    "label": "sadar bazar peshawar",
     "route_type": "blocked",
-    "distance_meters": 7091,
-    "distance_text": "7.1 km",
-    "duration_seconds": 729,
-    "duration_text": "12 min",
+    "distance_meters": 866,
+    "distance_text": "866 m",
+    "duration_seconds": 180,
+    "duration_text": "3 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 33.7182,
-        "lng": 73.0731
+        "lat": 34.0149,
+        "lng": 71.5785
       },
       {
-        "lat": 33.6767,
-        "lng": 73.0149
+        "lat": 34.0081,
+        "lng": 71.5739
       }
     ],
     "source": "mock_fallback"
@@ -56,27 +56,27 @@
   "alternate_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 7714,
-    "distance_text": "7.7 km",
-    "duration_seconds": 793,
-    "duration_text": "13 min",
+    "distance_meters": 5284,
+    "distance_text": "5.3 km",
+    "duration_seconds": 543,
+    "duration_text": "9 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 33.7182,
-        "lng": 73.0731
+        "lat": 34.0149,
+        "lng": 71.5785
       },
       {
-        "lat": 33.721675,
-        "lng": 73.07273
+        "lat": 34.03052,
+        "lng": 71.56089
       },
       {
-        "lat": 33.70715,
-        "lng": 73.05236
+        "lat": 34.02814,
+        "lng": 71.55928
       },
       {
-        "lat": 33.6767,
-        "lng": 73.0149
+        "lat": 34.0081,
+        "lng": 71.5739
       }
     ],
     "source": "mock_fallback"
@@ -84,59 +84,59 @@
   "dispatch_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 7714,
-    "distance_text": "7.7 km",
-    "duration_seconds": 793,
-    "duration_text": "13 min",
+    "distance_meters": 5284,
+    "distance_text": "5.3 km",
+    "duration_seconds": 543,
+    "duration_text": "9 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 33.7182,
-        "lng": 73.0731
+        "lat": 34.0149,
+        "lng": 71.5785
       },
       {
-        "lat": 33.721675,
-        "lng": 73.07273
+        "lat": 34.03052,
+        "lng": 71.56089
       },
       {
-        "lat": 33.70715,
-        "lng": 73.05236
+        "lat": 34.02814,
+        "lng": 71.55928
       },
       {
-        "lat": 33.6767,
-        "lng": 73.0149
+        "lat": 34.0081,
+        "lng": 71.5739
       }
     ],
     "source": "mock_fallback"
   },
   "route_intelligence": {
-    "origin": "G-6 Markaz Emergency Centre, Islamabad",
-    "destination": "islamabad g-10 markaz",
-    "blocked_route": "g-10 markaz",
+    "origin": "Peshawar Ring Road Simulation Depot",
+    "destination": "sadar bazar peshawar",
+    "blocked_route": "sadar bazar peshawar",
     "alternate_route": "Recommended emergency alternate route",
     "original_route_status": "blocked",
     "alternate_route_status": "alternate",
-    "estimated_travel_time": "13 min",
-    "distance": "7.7 km",
-    "rerouting_reason": "Custom scenario reroutes around g-10 markaz while preserving simulation-only safety.",
+    "estimated_travel_time": "9 min",
+    "distance": "5.3 km",
+    "rerouting_reason": "Custom scenario reroutes around sadar bazar peshawar while preserving simulation-only safety.",
     "source": "mock_fallback",
     "fallback_used": true
   },
   "weather_intelligence": {
-    "location": "islamabad g-10 markaz",
-    "resolved_location": "islamabad g-10 markaz",
-    "lat": 33.6767,
-    "lng": 73.0149,
-    "condition": "heavy_rain_alert",
-    "condition_type": "heavy_rain_alert",
+    "location": "sadar bazar peshawar",
+    "resolved_location": "sadar bazar peshawar",
+    "lat": 34.0081,
+    "lng": 71.5739,
+    "condition": "none",
+    "condition_type": "none",
     "temperature": "unavailable",
     "temperature_celsius": null,
-    "precipitation": "8 mm / 80%",
-    "precipitation_mm": 8.0,
-    "precipitation_probability_percent": 80.0,
-    "rainfall_mm_per_hour": 8.0,
-    "risk_level": "high",
-    "confidence": 0.66,
+    "precipitation": "0 mm / 20%",
+    "precipitation_mm": 0.0,
+    "precipitation_probability_percent": 20.0,
+    "rainfall_mm_per_hour": 0.0,
+    "risk_level": "low",
+    "confidence": 0.58,
     "source": "mock_fallback",
     "fallback_used": true,
     "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 472966256967 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/weather.googleapis.com/overview?project=472"

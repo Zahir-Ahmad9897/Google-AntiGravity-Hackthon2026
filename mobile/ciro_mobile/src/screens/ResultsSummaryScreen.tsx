@@ -3,6 +3,10 @@ import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import AgentNodeWidget from '../components/AgentNodeWidget';
 import BeforeAfterPanel from '../components/BeforeAfterPanel';
 import CrisisSummaryCard from '../components/CrisisSummaryCard';
+import DispatchUnitCards from '../components/DispatchUnitCards';
+import IntelligenceIndicators from '../components/IntelligenceIndicators';
+import LiveIncidentTimeline from '../components/LiveIncidentTimeline';
+import TacticalBackground from '../components/TacticalBackground';
 import WeatherWidget from '../components/WeatherWidget';
 import { AGENTS } from '../config/appConfig';
 import { theme } from '../config/theme';
@@ -20,8 +24,12 @@ export default function ResultsSummaryScreen({ route }: any) {
   })), [finalIteration.agent_outputs]);
 
   return (
+    <TacticalBackground>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <CrisisSummaryCard trace={finalIteration} scenarioId={scenarioId} />
+      <IntelligenceIndicators trace={finalIteration} />
+      <LiveIncidentTimeline trace={finalIteration} />
+      <DispatchUnitCards trace={finalIteration} />
       <WeatherWidget scenarioId={scenarioId} />
       <BeforeAfterPanel scenarioId={scenarioId} />
 
@@ -46,13 +54,14 @@ export default function ResultsSummaryScreen({ route }: any) {
         </View>
       </Modal>
     </ScrollView>
+    </TacticalBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.transparent,
   },
   content: {
     padding: theme.spacing.s16,

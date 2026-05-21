@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapCanvasWidget from '../components/MapCanvasWidget';
+import ToastRail from '../components/ToastRail';
 import { theme } from '../config/theme';
 
 export default function MapScreen({ route }: any) {
@@ -12,6 +13,7 @@ export default function MapScreen({ route }: any) {
   ].filter(Boolean).join(' ');
   return (
     <View style={styles.container}>
+      <ToastRail messages={['Interactive map ready', 'Nearby POIs load at high zoom', 'Weather and danger overlays active']} />
       <MapCanvasWidget scenarioId={scenarioId} showAfter={showAfter} locationHint={locationHint} />
     </View>
   );

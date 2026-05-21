@@ -1,28 +1,24 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - islamabad g-10 markaz",
+  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
   "simulation_only": true,
   "privacy_status": "user_approved_input_only",
   "mini_assistant_signal": {
     "is_crisis_related": true,
-    "crisis_type": "urban_flooding",
-    "location": "islamabad g-10 markaz",
+    "crisis_type": "road_blockage",
+    "location": "sadar bazar peshawar",
     "urgency": "low",
-    "confidence": 0.65,
-    "language_detected": "mixed",
+    "confidence": 0.47,
+    "language_detected": "english",
     "entities": {
-      "roads": [
-        "g-10 markaz"
-      ],
-      "areas": [
-        "g-10 markaz"
-      ],
+      "roads": [],
+      "areas": [],
       "hazards": [
-        "pani"
+        "road block"
       ],
       "time_mentions": []
     },
-    "reasoning_summary": "Detected urban_flooding indicators from approved text using terms: pani.",
+    "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block.",
     "privacy_status": "user_approved_input_only",
     "source": "Dashboard manual report"
   },
@@ -30,77 +26,71 @@
     {
       "iteration_number": 1,
       "crisis_level": "crisis",
-      "confidence_score": 0.9,
-      "risk_score": 0.86,
-      "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=0.9; severity=4/5; affected roads=g-10 markaz.",
+      "confidence_score": 0.7,
+      "risk_score": 0.7,
+      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=3/5; affected roads=sadar bazar peshawar.",
       "action_plan": [
-        "dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-        "send_alert -> G-10: Send public alert for Urban flooding detected in G-10.",
-        "reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.",
-        "open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre."
+        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
+        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
+        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Srinagar Highway G-10 underpass.",
-        "Simulated public alert sent for G-10.",
-        "Simulated ticket ticket-custom_permission_input assigned to G-6 Markaz Emergency Centre.",
+        "Mock map route updated away from Peshawar Ring Road.",
+        "Simulated public alert sent for Sadar Bazar Peshawar.",
+        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Srinagar Highway G-10 underpass: normalkm/h -> normalkm/h",
-        "shelter_status_G-10 Community Centre: standby -> prepared"
+        "traffic_speed_Peshawar Ring Road: normalkm/h -> normalkm/h"
       ],
-      "evaluation_result": "Initial detection baseline established. Simulated response for Urban flooding detected in G-10: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Initial detection baseline established. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Continue monitoring and run the next iteration with updated signals."
     },
     {
       "iteration_number": 2,
       "crisis_level": "crisis",
-      "confidence_score": 0.9,
-      "risk_score": 0.9,
-      "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=0.9; severity=4/5; affected roads=g-10 markaz.",
+      "confidence_score": 0.7,
+      "risk_score": 0.78,
+      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=4/5; affected roads=sadar bazar peshawar.",
       "action_plan": [
-        "dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-        "send_alert -> G-10: Send public alert for Urban flooding detected in G-10.",
-        "reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.",
-        "open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre."
+        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
+        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
+        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Srinagar Highway G-10 underpass.",
-        "Simulated public alert sent for G-10.",
-        "Simulated ticket ticket-custom_permission_input assigned to G-6 Markaz Emergency Centre.",
+        "Mock map route updated away from Peshawar Ring Road.",
+        "Simulated public alert sent for Sadar Bazar Peshawar.",
+        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Srinagar Highway G-10 underpass: 0.0km/h -> 16.0km/h",
-        "shelter_status_G-10 Community Centre: standby -> prepared"
+        "traffic_speed_Peshawar Ring Road: 0.0km/h -> 16.0km/h"
       ],
-      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Urban flooding detected in G-10: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Continue monitoring and run the next iteration with updated signals."
     },
     {
       "iteration_number": 3,
       "crisis_level": "crisis",
-      "confidence_score": 0.9,
-      "risk_score": 0.86,
-      "concise_reasoning_summary": "Urban flooding detected in G-10; confidence=0.9; severity=4/5; affected roads=g-10 markaz.",
+      "confidence_score": 0.7,
+      "risk_score": 0.7,
+      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=3/5; affected roads=sadar bazar peshawar.",
       "action_plan": [
-        "dispatch_emergency -> G-10: Dispatch response unit from G-6 Markaz Emergency Centre to G-10.",
-        "send_alert -> G-10: Send public alert for Urban flooding detected in G-10.",
-        "reroute_traffic -> Srinagar Highway G-10 underpass: Update mock map routing away from Srinagar Highway G-10 underpass.",
-        "open_shelter -> G-10 Community Centre: Prepare intake capacity at G-10 Community Centre."
+        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
+        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
+        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Srinagar Highway G-10 underpass.",
-        "Simulated public alert sent for G-10.",
-        "Simulated ticket ticket-custom_permission_input assigned to G-6 Markaz Emergency Centre.",
+        "Mock map route updated away from Peshawar Ring Road.",
+        "Simulated public alert sent for Sadar Bazar Peshawar.",
+        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Srinagar Highway G-10 underpass: normalkm/h -> normalkm/h",
-        "shelter_status_G-10 Community Centre: standby -> prepared"
+        "traffic_speed_Peshawar Ring Road: normalkm/h -> normalkm/h"
       ],
-      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Urban flooding detected in G-10: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Finalize crisis report and preserve artifacts for review."
     }
   ],
   "final_crisis_level": "crisis",
-  "final_confidence_score": 0.9,
+  "final_confidence_score": 0.7,
   "artifact_note": "Custom run reused the existing CIRO iterative orchestration."
 }

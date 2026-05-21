@@ -1,0 +1,15 @@
+node_modules
+.expo
+.expo-export-check
+.bundle-test
+inspect-output
+dist
+web-build
+npm-debug.log
+yarn-error.log
+eas-*.log
+eas-*.txt
+eas-current-log.bin
+*.apk
+*.aab
+coverage

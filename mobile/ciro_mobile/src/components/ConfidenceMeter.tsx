@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { theme } from '../config/theme';
+
+const TRACK_WIDTH = Math.max(0, Dimensions.get('window').width - theme.spacing.s32);
 
 export default function ConfidenceMeter({ score }: { score: number }) {
   const normalized = Math.max(0, Math.min(1, score));
@@ -13,7 +15,7 @@ export default function ConfidenceMeter({ score }: { score: number }) {
   }, [percent, width]);
 
   const fillStyle = useAnimatedStyle(() => ({
-    width: `${width.value}%`,
+    width: (TRACK_WIDTH * width.value) / 100,
   }));
 
   const fillColor = percent < 50
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   track: {
+    width: TRACK_WIDTH,
     height: 9,
     overflow: 'hidden',
     borderRadius: 5,

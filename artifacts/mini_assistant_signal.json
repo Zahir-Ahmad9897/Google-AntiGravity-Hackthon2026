@@ -1,23 +1,19 @@
 {
   "is_crisis_related": true,
-  "crisis_type": "urban_flooding",
-  "location": "islamabad g-10 markaz",
+  "crisis_type": "road_blockage",
+  "location": "sadar bazar peshawar",
   "urgency": "low",
-  "confidence": 0.65,
-  "language_detected": "mixed",
+  "confidence": 0.47,
+  "language_detected": "english",
   "entities": {
-    "roads": [
-      "g-10 markaz"
-    ],
-    "areas": [
-      "g-10 markaz"
-    ],
+    "roads": [],
+    "areas": [],
     "hazards": [
-      "pani"
+      "road block"
     ],
     "time_mentions": []
   },
-  "reasoning_summary": "Detected urban_flooding indicators from approved text using terms: pani.",
+  "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block.",
   "privacy_status": "user_approved_input_only",
   "source": "Dashboard manual report"
 }

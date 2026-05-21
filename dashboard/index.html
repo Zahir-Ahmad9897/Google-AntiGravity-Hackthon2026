@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- FEATURE 4: Particle network background canvas -->
+  <canvas id="particleBg" aria-hidden="true"></canvas>
 
   <!-- STEP 1: NAVBAR -->
   <header>
@@ -24,6 +26,23 @@
     </div>
     <div class="header-right">
       <div id="liveClock">00:00:00</div>
+      <!-- FEATURE 1: Voice narration toggle -->
+      <button class="header-btn" id="btnNarrate" title="Toggle voice narration" aria-label="Toggle voice narration">🔊 Narrate</button>
+      <!-- FEATURE 3: Mute sounds toggle -->
+      <button class="header-btn" id="btnMute" title="Mute/unmute sounds" aria-label="Mute sounds">🔔</button>
+      <!-- FEATURE 5: Download report -->
+      <button class="header-btn" id="btnDownload" title="Download crisis report as PDF" aria-label="Download report" style="display:none;">📄 Report</button>
+      <!-- FEATURE 6: Keyboard shortcuts help -->
+      <div class="shortcuts-wrap">
+        <button class="header-btn" id="btnHelp" title="Keyboard shortcuts">?</button>
+        <div class="shortcuts-tooltip" id="shortcutsTooltip">
+          <div class="shortcuts-title">Keyboard Shortcuts</div>
+          <div><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Launch scenario</div>
+          <div><kbd>R</kbd> Reset dashboard</div>
+          <div><kbd>M</kbd> Mute / unmute</div>
+          <div><kbd>N</kbd> Toggle narration</div>
+        </div>
+      </div>
       <div class="status-badge">SYSTEM ACTIVE</div>
     </div>
   </header>
@@ -90,6 +109,12 @@
 
     <div class="scenario-grid" id="scenarioGrid">
       <!-- Injected by JS -->
+    </div>
+
+    <!-- FEATURE 2: Live threat timeline -->
+    <div class="threat-timeline" id="threatTimeline" style="display:none;">
+      <div class="timeline-label">THREAT TIMELINE</div>
+      <div class="timeline-track" id="timelineTrack"></div>
     </div>
 
     <div class="progress-bar-container" id="runProgressBox">

@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AgentNodeWidget from '../components/AgentNodeWidget';
+import { Ionicons } from '@expo/vector-icons';
 import IterationTracker from '../components/IterationTracker';
+import LiveIncidentTimeline from '../components/LiveIncidentTimeline';
+import TacticalBackground from '../components/TacticalBackground';
 import TerminalLog from '../components/TerminalLog';
-import { AGENTS, SCENARIO_METADATA } from '../config/appConfig';
+import { SCENARIO_METADATA } from '../config/appConfig';
 import { theme } from '../config/theme';
 import { usePipelineStore } from '../store/pipelineStore';
 
@@ -19,6 +21,16 @@ const PIPELINE_LOGS = [
   'Rescue Planning Agent: generating response plan...',
   'Action Execution Agent: simulating dispatch + rerouting...',
   'Evaluation Agent: assessing impact + replanning...',
+];
+
+const PROCESSING_STAGES = [
+  'Parsing report',
+  'Extracting entities',
+  'Resolving location',
+  'Analyzing severity',
+  'Checking weather',
+  'Generating reroute',
+  'Preparing emergency response',
 ];
 
 const timestamp = () => new Date().toLocaleTimeString('en-US', { hour12: false });
@@ -43,7 +55,6 @@ export default function PipelineScreen({ route, navigation }: any) {
   const meta = SCENARIO_METADATA[scenarioId];
 
   const finalIteration = useMemo(() => result?.iterations[result.iterations.length - 1], [result]);
-  const outputs = finalIteration?.agent_outputs ?? [];
 
   useEffect(() => {
     reset();
@@ -82,12 +93,12 @@ export default function PipelineScreen({ route, navigation }: any) {
     animationStarted.current = true;
 
     const runAnimation = async () => {
-      for (let index = 0; index < AGENTS.length; index += 1) {
+      for (let index = 0; index < PROCESSING_STAGES.length; index += 1) {
         setAnimationStep(index);
         await new Promise((resolve) => setTimeout(resolve, 400));
       }
 
-      setAnimationStep(AGENTS.length);
+      setAnimationStep(PROCESSING_STAGES.length);
       updateIterationStatus(0, 'done');
       updateIterationStatus(1, 'done');
       updateIterationStatus(2, 'done');
@@ -108,40 +119,48 @@ export default function PipelineScreen({ route, navigation }: any) {
     }
   }, [addLogLine, error, status]);
 
-  const renderAgent = ({ item, index }: any) => {
-    const agentOutput = outputs[index];
-    const nodeStatus = status === 'success'
-      ? index < animationStep
-        ? 'done'
-        : index === animationStep
-          ? 'running'
-          : 'waiting'
-      : 'waiting';
-
-    return (
-      <AgentNodeWidget
-        agent={item}
-        status={nodeStatus}
-        summary={nodeStatus === 'done' ? agentOutput?.summary ?? '' : ''}
-        timestamp={nodeStatus === 'done' ? timestamp() : ''}
-      />
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
+      <TacticalBackground>
       <View style={styles.header}>
         <TouchableOpacity disabled style={styles.disabledBack} accessibilityLabel="Pipeline running">
-          <Text style={styles.disabledBackText}>X</Text>
+          <Ionicons name="lock-closed" size={14} color={theme.colors.textMuted} />
         </TouchableOpacity>
         <View style={styles.headerText}>
-          <Text style={styles.title}>{status === 'error' ? 'Pipeline Error' : 'Agent Pipeline Running...'}</Text>
+          <Text style={styles.title}>{status === 'error' ? 'Pipeline Error' : 'AI Pipeline Running'}</Text>
           <Text style={styles.subtitle}>{meta?.displayName ?? scenarioId}</Text>
         </View>
         <View style={styles.headerSpacer} />
       </View>
 
-      <IterationTracker />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+        <IterationTracker />
+        <View style={styles.stagePanel}>
+          <View style={styles.stageHeader}>
+            <Text style={styles.sectionTitle}>Sequential Agent Processing</Text>
+            <Text style={styles.stageCount}>{Math.min(animationStep + 1, PROCESSING_STAGES.length)}/{PROCESSING_STAGES.length}</Text>
+          </View>
+          {PROCESSING_STAGES.map((stage, index) => {
+            const current = index === animationStep && status !== 'error';
+            const done = index < animationStep || status === 'success';
+            return (
+              <Animated.View entering={FadeInDown.delay(index * 60).duration(240)} key={stage} style={styles.stageRow}>
+                <View style={[styles.stageIcon, done && styles.stageIconDone, current && styles.stageIconCurrent]}>
+                  <Ionicons
+                    name={done ? 'checkmark' : current ? 'pulse' : 'ellipse-outline'}
+                    size={14}
+                    color={done ? theme.colors.background : current ? theme.colors.primary : theme.colors.textMuted}
+                  />
+                </View>
+                <View style={styles.stageBody}>
+                  <Text style={[styles.stageText, current && styles.stageTextCurrent]}>{stage}</Text>
+                  <Text style={styles.stageMeta}>{done ? 'Completed' : current ? 'Processing signal...' : 'Queued'}</Text>
+                </View>
+              </Animated.View>
+            );
+          })}
+        </View>
+        <LiveIncidentTimeline trace={finalIteration} />
 
       {status === 'error' && (
         <View style={styles.errorCard}>
@@ -151,22 +170,17 @@ export default function PipelineScreen({ route, navigation }: any) {
           </TouchableOpacity>
         </View>
       )}
-
-      <FlatList
-        data={AGENTS}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderAgent}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-      />
-
-      <TerminalLog />
+        <View style={styles.terminalWrap}>
+          <TerminalLog />
+        </View>
+      </ScrollView>
 
       {complete && (
         <Animated.View entering={FadeInUp.duration(350)} style={styles.banner}>
           <Text style={styles.bannerText}>Pipeline Complete</Text>
         </Animated.View>
       )}
+      </TacticalBackground>
     </SafeAreaView>
   );
 }
@@ -192,11 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: theme.colors.surface,
   },
-  disabledBackText: {
-    color: theme.colors.textMuted,
-    fontFamily: theme.typography.fontBold,
-    fontSize: 14,
-  },
   headerText: {
     flex: 1,
     alignItems: 'center',
@@ -215,9 +224,78 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamily,
     fontSize: 12,
   },
-  list: {
+  scroll: {
     padding: theme.spacing.s16,
-    paddingBottom: theme.spacing.s24,
+    paddingBottom: 220,
+  },
+  stagePanel: {
+    gap: theme.spacing.s12,
+    marginBottom: theme.spacing.s16,
+    padding: theme.spacing.s16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.opacity.glass,
+  },
+  stageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.s4,
+  },
+  sectionTitle: {
+    color: theme.colors.textPrimary,
+    fontFamily: theme.typography.fontBold,
+    fontSize: 15,
+  },
+  stageCount: {
+    color: theme.colors.primary,
+    fontFamily: theme.typography.fontBold,
+    fontSize: 12,
+  },
+  stageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.s12,
+  },
+  stageIcon: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: 15,
+    backgroundColor: theme.colors.surface,
+  },
+  stageIconCurrent: {
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.opacity.primaryPill,
+  },
+  stageIconDone: {
+    borderColor: theme.colors.success,
+    backgroundColor: theme.colors.success,
+  },
+  stageBody: {
+    flex: 1,
+  },
+  stageText: {
+    color: theme.colors.textSecondary,
+    fontFamily: theme.typography.fontBold,
+    fontSize: 13,
+  },
+  stageTextCurrent: {
+    color: theme.colors.textPrimary,
+  },
+  stageMeta: {
+    marginTop: 2,
+    color: theme.colors.textMuted,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 11,
+  },
+  terminalWrap: {
+    minHeight: 220,
+    overflow: 'hidden',
+    borderRadius: theme.borderRadius.lg,
   },
   errorCard: {
     margin: theme.spacing.s16,
