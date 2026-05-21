@@ -22,6 +22,7 @@ import Svg, {
 } from 'react-native-svg';
 import { SCENARIO_METADATA } from '../config/appConfig';
 import { theme, withAlpha } from '../config/theme';
+import { MapPayload } from '../models/PipelineResult';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedLine = Animated.createAnimatedComponent(Line);
@@ -42,14 +43,15 @@ interface Props {
   scenarioId: string;
   showAfter?: boolean;
   locationHint?: string;
+  mapPayload?: MapPayload | null;
 }
 
-export default function MapCanvasWidget({ scenarioId, showAfter = true, locationHint = '' }: Props) {
-  const meta = SCENARIO_METADATA[scenarioId];
+export default function MapCanvasWidget({ scenarioId, showAfter = true, locationHint = '', mapPayload }: Props) {
+  const meta = SCENARIO_METADATA[scenarioId] ?? SCENARIO_METADATA.custom_permission_input;
   const [after, setAfter] = useState(showAfter);
   const [weatherVisible, setWeatherVisible] = useState(Boolean(meta?.weather.isCrisisFactor));
   const [mapZoom, setMapZoom] = useState(14);
-  const [mapCenter, setMapCenter] = useState<MapPoint>(resolveMapCenter(scenarioId, locationHint));
+  const [mapCenter, setMapCenter] = useState<MapPoint>(mapPayload?.center ?? resolveMapCenter(scenarioId, locationHint));
   const [query, setQuery] = useState('');
   const [placeLabel, setPlaceLabel] = useState('Search a road, shop, hospital, or area');
   const [nearbyPlaces, setNearbyPlaces] = useState<string[]>([]);
@@ -96,10 +98,36 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
   }));
 
   const drops = useMemo(() => buildRainDrops(scenarioId), [scenarioId]);
+  const effectiveLayout = useMemo(() => resolveMapLayout(meta.mapLayout, locationHint), [locationHint, meta.mapLayout]);
+  const addressQuery = useMemo(() => resolveAddressQuery(locationHint), [locationHint]);
 
   useEffect(() => {
+    if (mapPayload?.center) {
+      setMapCenter(mapPayload.center);
+      setPlaceLabel(String(mapPayload.route_intelligence?.destination ?? mapPayload.markers?.crisis?.label ?? 'Scenario address resolved'));
+      return;
+    }
     setMapCenter(resolveMapCenter(scenarioId, locationHint));
-  }, [scenarioId, locationHint]);
+  }, [mapPayload, scenarioId, locationHint]);
+
+  useEffect(() => {
+    if (mapPayload?.center || !addressQuery) {
+      return;
+    }
+
+    let cancelled = false;
+    searchPlace(addressQuery, resolveMapCenter(scenarioId, locationHint))
+      .then((result) => {
+        if (cancelled || !result) return;
+        setMapCenter({ lat: Number(result.lat), lng: Number(result.lon) });
+        setPlaceLabel(result.display_name);
+        setMapZoom((value) => Math.max(15, value));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [addressQuery, locationHint, mapPayload, scenarioId]);
 
   useEffect(() => {
     if (mapZoom < 16) {
@@ -150,9 +178,15 @@ export default function MapCanvasWidget({ scenarioId, showAfter = true, location
       <GestureDetector gesture={mapGesture}>
         <Animated.View style={[styles.mapFrame, mapStyle]}>
           <OsmTileLayer center={mapCenter} zoom={mapZoom} />
-          {meta.mapLayout === 'g10_grid' && <G10GridMap after={after} progress={progress} />}
-          {meta.mapLayout === 'peshawar_ring' && <PeshawarRingMap after={after} progress={progress} />}
-          {meta.mapLayout === 'city_intersection' && <CityIntersectionMap after={after} progress={progress} />}
+          {mapPayload ? (
+            <ScenarioRouteOverlay payload={mapPayload} center={mapCenter} zoom={mapZoom} showAfter={after} progress={progress} />
+          ) : (
+            <>
+              {effectiveLayout === 'g10_grid' && <G10GridMap after={after} progress={progress} />}
+              {effectiveLayout === 'peshawar_ring' && <PeshawarRingMap after={after} progress={progress} />}
+              {effectiveLayout === 'city_intersection' && <CityIntersectionMap after={after} progress={progress} />}
+            </>
+          )}
           {weatherVisible && meta.weather.isCrisisFactor && (
             <Svg pointerEvents="none" style={StyleSheet.absoluteFill} viewBox={`0 0 ${MAP_SIZE} ${MAP_SIZE}`}>
               {drops.map((drop) => <RainDrop key={drop.id} {...drop} />)}
@@ -235,6 +269,77 @@ function BaseMap({ children }: { children: React.ReactNode }) {
     <Svg width="100%" height="100%" viewBox={`0 0 ${MAP_SIZE} ${MAP_SIZE}`}>
       <Rect width="100%" height="100%" fill="rgba(12, 16, 14, 0.2)" />
       {children}
+    </Svg>
+  );
+}
+
+function ScenarioRouteOverlay({
+  payload,
+  center,
+  zoom,
+  showAfter,
+  progress,
+}: {
+  payload: MapPayload;
+  center: MapPoint;
+  zoom: number;
+  showAfter: boolean;
+  progress: SharedValue<number>;
+}) {
+  const blockedPath = pointsToPath(payload.blocked_route?.polyline ?? [], center, zoom);
+  const alternatePath = pointsToPath(payload.alternate_route?.polyline ?? [], center, zoom);
+  const markerEntries = Object.entries(payload.markers ?? {}).filter((entry): entry is [string, { label?: string; position: MapPoint }] => {
+    return Boolean(entry[1]?.position);
+  });
+
+  return (
+    <Svg pointerEvents="none" style={StyleSheet.absoluteFill} viewBox={`0 0 ${MAP_SIZE} ${MAP_SIZE}`}>
+      {markerEntries.map(([key, marker]) => {
+        const point = projectToScreen(marker.position, center, zoom);
+        const fill = key === 'rescue' ? theme.colors.primary : key === 'weather' ? theme.colors.warning : theme.colors.danger;
+        return (
+          <G key={key}>
+            <Circle cx={point.x} cy={point.y} r={key === 'crisis' ? 48 : 28} fill={withAlpha(fill, key === 'crisis' ? 0.16 : 0.1)} />
+            <Circle cx={point.x} cy={point.y} r={8} fill={fill} stroke={theme.colors.textPrimary} strokeWidth={2} />
+            <SvgText x={point.x + 12} y={point.y - 10} fill={theme.colors.textPrimary} fontSize={11}>
+              {marker.label ?? key}
+            </SvgText>
+          </G>
+        );
+      })}
+      {blockedPath.length > 0 && (
+        <Path
+          d={blockedPath}
+          fill="none"
+          stroke={theme.colors.danger}
+          strokeWidth={9}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="10 6"
+        />
+      )}
+      {showAfter && alternatePath.length > 0 && (
+        <>
+          <Path
+            d={alternatePath}
+            fill="none"
+            stroke={theme.colors.success}
+            strokeWidth={11}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d={alternatePath}
+            fill="none"
+            stroke={theme.colors.primary}
+            strokeWidth={3}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="8 5"
+          />
+          <RoutePulse progress={progress} pathPoints={payload.alternate_route?.polyline ?? []} center={center} zoom={zoom} />
+        </>
+      )}
     </Svg>
   );
 }
@@ -428,6 +533,36 @@ function EmergencyCircle({
   );
 }
 
+function RoutePulse({
+  progress,
+  pathPoints,
+  center,
+  zoom,
+}: {
+  progress: SharedValue<number>;
+  pathPoints: MapPoint[];
+  center: MapPoint;
+  zoom: number;
+}) {
+  const screenPoints = pathPoints.map((point) => projectToScreen(point, center, zoom));
+  const first = screenPoints[0] ?? { x: MAP_SIZE / 2, y: MAP_SIZE / 2 };
+  const last = screenPoints[screenPoints.length - 1] ?? first;
+  const animatedProps = useAnimatedProps(() => ({
+    cx: interpolate(progress.value, [0, 1], [first.x, last.x]),
+    cy: interpolate(progress.value, [0, 1], [first.y, last.y]),
+  }));
+
+  return (
+    <AnimatedCircle
+      r={7}
+      fill={theme.colors.primary}
+      stroke={theme.colors.textPrimary}
+      strokeWidth={2}
+      animatedProps={animatedProps}
+    />
+  );
+}
+
 function RainDrop({ x, delay, duration, radius }: { id: string; x: number; delay: number; duration: number; radius: number }) {
   const cy = useSharedValue(-20);
 
@@ -472,6 +607,48 @@ function resolveMapCenter(scenarioId: string, locationHint: string): MapPoint {
     return MAP_CENTERS.ambulance_rain_congestion;
   }
   return MAP_CENTERS[scenarioId] ?? MAP_CENTERS.custom_permission_input;
+}
+
+function resolveMapLayout(
+  defaultLayout: 'g10_grid' | 'peshawar_ring' | 'city_intersection',
+  locationHint: string,
+) {
+  const hint = locationHint.toLowerCase();
+  if (hint.includes('peshawar') || hint.includes('ring road') || hint.includes('sadar')) {
+    return 'peshawar_ring';
+  }
+  return defaultLayout;
+}
+
+function resolveAddressQuery(locationHint: string) {
+  const customMatch = locationHint.match(/custom approved crisis signal\s*-\s*([^.;]+)/i);
+  const raw = customMatch?.[1] ?? locationHint;
+  const cleaned = raw
+    .replace(/\burban flooding detected\b.*$/i, '')
+    .replace(/\bconfidence\b.*$/i, '')
+    .replace(/\bcrisis level\b.*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleaned.length > 2 ? cleaned : '';
+}
+
+function pointsToPath(points: MapPoint[], center: MapPoint, zoom: number) {
+  if (!points.length) return '';
+  return points
+    .map((point, index) => {
+      const screen = projectToScreen(point, center, zoom);
+      return `${index === 0 ? 'M' : 'L'} ${screen.x.toFixed(1)} ${screen.y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+function projectToScreen(point: MapPoint, center: MapPoint, zoom: number) {
+  const world = latLngToWorldPixel(point, zoom);
+  const centerWorld = latLngToWorldPixel(center, zoom);
+  return {
+    x: MAP_SIZE / 2 + world.x - centerWorld.x,
+    y: MAP_SIZE / 2 + world.y - centerWorld.y,
+  };
 }
 
 function buildTiles(center: MapPoint, zoom: number) {

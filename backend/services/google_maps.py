@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -26,6 +27,8 @@ GOOGLE_MAPS_KEY_ENV = "GOOGLE_MAPS_API_KEY"
 GEOCODING_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 WEATHER_URL = "https://weather.googleapis.com/v1/currentConditions:lookup"
 ROUTES_URL = "https://routes.googleapis.com/directions/v2:computeRoutes"
+OSM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
+DYNAMIC_RESPONSE_ORIGIN = "__scenario_nearby_response_origin__"
 
 
 FALLBACK_POINTS: dict[str, dict[str, Any]] = {
@@ -295,9 +298,11 @@ def build_scenario_map_payload(
 ) -> dict[str, Any]:
     config = SCENARIO_MAP_CONFIGS.get(scenario_id) or _scenario_map_config_from_input(scenario_id, scenario_name, scenario)
     incident = geocode_location(config["incident_location"])
-    origin = geocode_location(config["origin"])
+    origin_value = _resolve_origin_value(config["origin"], incident)
+    destination_value = incident if _same_place(config["destination"], config["incident_location"]) else config["destination"]
+    origin = _resolve_point(origin_value)
     weather = get_google_weather_signal(config["weather_location"], scenario)
-    route = get_google_route_data(config["origin"], config["destination"], config["blocked_route"])
+    route = get_google_route_data(origin_value, destination_value, config["blocked_route"])
 
     alternate_route = dict(route["alternate_route"])
     alternate_route["label"] = config["alternate_route_label"]
@@ -336,8 +341,8 @@ def build_scenario_map_payload(
         "alternate_route": route["alternate_route"],
         "dispatch_route": route["alternate_route"],
         "route_intelligence": {
-            "origin": config["origin"],
-            "destination": config["destination"],
+            "origin": _point_label(origin_value, route["origin"]),
+            "destination": _point_label(destination_value, route["destination"]),
             "blocked_route": route["blocked_route"],
             "alternate_route": route["alternate_route"]["label"],
             "original_route_status": route["normal_route"]["route_type"],
@@ -396,15 +401,10 @@ def _scenario_map_config_from_input(
     incident_location = scenario.weather.district or scenario.title
     blocked_route = scenario.traffic[0].road_name if scenario.traffic else incident_location
     location_hint = f"{incident_location} {scenario_name}".lower()
-    origin = (
-        "Peshawar Ring Road Simulation Depot"
-        if "peshawar" in location_hint or "peshawr" in location_hint or "peshaw" in location_hint
-        else "G-6 Markaz Emergency Centre, Islamabad"
-    )
     return {
         "incident_location": incident_location,
         "weather_location": incident_location,
-        "origin": origin,
+        "origin": DYNAMIC_RESPONSE_ORIGIN,
         "destination": incident_location,
         "blocked_route": blocked_route,
         "alternate_route_label": "Recommended emergency alternate route",
@@ -448,13 +448,13 @@ def _request_json(
 
 
 def _fallback_geocode(location: str, reason: str) -> dict[str, Any]:
-    point = _fallback_point(location)
+    point = _osm_geocode_location(location) or _fallback_point(location)
     result = {
         "location": location,
         "lat": point["lat"],
         "lng": point["lng"],
         "formatted_address": point["formatted_address"],
-        "source": "mock_fallback",
+        "source": point.get("source", "mock_fallback"),
         "fallback_used": True,
         "fallback_reason": reason,
     }
@@ -593,6 +593,26 @@ def _point_label(raw: str | dict[str, Any], point: dict[str, Any]) -> str:
     return str(point.get("formatted_address") or point.get("location") or "unknown")
 
 
+def _resolve_origin_value(origin: str, incident: dict[str, Any]) -> str | dict[str, Any]:
+    if origin != DYNAMIC_RESPONSE_ORIGIN:
+        return origin
+
+    incident_point = _lat_lng(incident)
+    origin_point = _offset_point(incident_point, -0.011, -0.018)
+    incident_label = incident.get("formatted_address") or incident.get("location") or "incident location"
+    return {
+        "lat": origin_point["lat"],
+        "lng": origin_point["lng"],
+        "location": f"Nearest simulated response unit near {incident_label}",
+        "formatted_address": f"Nearest simulated response unit near {incident_label}",
+        "source": "scenario_address_offset",
+    }
+
+
+def _same_place(left: str, right: str) -> bool:
+    return left.strip().lower() == right.strip().lower()
+
+
 def _route_from_google(
     route: dict[str, Any],
     label: str,
@@ -681,7 +701,59 @@ def _fallback_point(location: str) -> dict[str, Any]:
             return point
     if "peshawar" in normalized or "peshawr" in normalized or "peshaw" in normalized:
         return FALLBACK_POINTS["peshawar ring road"]
-    return FALLBACK_POINTS["islamabad"]
+    return _synthetic_pakistan_point(normalized or "unknown pakistan location")
+
+
+def _osm_geocode_location(location: str) -> dict[str, Any] | None:
+    clean_location = location.strip()
+    if not clean_location:
+        return None
+
+    query = _pakistan_query(clean_location)
+    try:
+        params = urlencode({"format": "jsonv2", "limit": 1, "countrycodes": "pk", "q": query})
+        payload = _request_json(
+            "GET",
+            f"{OSM_SEARCH_URL}?{params}",
+            headers={
+                "Accept": "application/json",
+                "User-Agent": "CIRO-Hackathon/1.0 scenario-address-geocoder",
+            },
+            timeout=7,
+        )
+        if not isinstance(payload, list) or not payload:
+            return None
+
+        first = payload[0]
+        return {
+            "lat": float(first["lat"]),
+            "lng": float(first["lon"]),
+            "formatted_address": first.get("display_name") or clean_location,
+            "source": "openstreetmap_geocoding_fallback",
+        }
+    except Exception:
+        return None
+
+
+def _pakistan_query(location: str) -> str:
+    lowered = location.lower()
+    if "pakistan" in lowered or ", pk" in lowered:
+        return location
+    return f"{location}, Pakistan"
+
+
+def _synthetic_pakistan_point(location: str) -> dict[str, Any]:
+    digest = hashlib.sha256(location.encode("utf-8")).digest()
+    lat_ratio = int.from_bytes(digest[:4], "big") / 0xFFFFFFFF
+    lng_ratio = int.from_bytes(digest[4:8], "big") / 0xFFFFFFFF
+    lat = 24.8 + (36.8 - 24.8) * lat_ratio
+    lng = 61.0 + (75.3 - 61.0) * lng_ratio
+    return {
+        "lat": round(lat, 6),
+        "lng": round(lng, 6),
+        "formatted_address": f"Approximate unresolved location for {location}",
+        "source": "deterministic_address_fallback",
+    }
 
 
 def _lat_lng(point: dict[str, Any]) -> dict[str, float]:

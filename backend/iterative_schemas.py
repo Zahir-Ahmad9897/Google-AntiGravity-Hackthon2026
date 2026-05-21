@@ -91,3 +91,4 @@ class IterativePipelineResult(StrictSchema):
     final_confidence_score: StrictFloat = Field(ge=0.0, le=1.0)
     mini_assistant_summary: StrictStr
     latest_artifact: Optional[StrictStr] = None
+    map_payload: Optional[Dict[str, Any]] = None

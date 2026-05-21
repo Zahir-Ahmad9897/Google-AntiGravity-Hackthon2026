@@ -188,6 +188,7 @@ def run_iterative_pipeline(
             "ignored unrelated/private content, and emitted emergency-relevant signals only."
         ),
         latest_artifact="final_crisis_report.md",
+        map_payload=map_payload,
     )
 
 

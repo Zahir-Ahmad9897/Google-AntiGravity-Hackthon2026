@@ -44,6 +44,29 @@ export interface HumanApprovalRecord {
   timestamp: string;
 }
 
+export interface MapPoint {
+  lat: number;
+  lng: number;
+}
+
+export interface MapRoute {
+  label: string;
+  route_type: string;
+  distance_text?: string;
+  duration_text?: string;
+  polyline: MapPoint[];
+}
+
+export interface MapPayload {
+  center: MapPoint;
+  markers?: Record<string, { label?: string; position?: MapPoint; severity?: string; status?: string; condition?: string }>;
+  blocked_route?: MapRoute;
+  alternate_route?: MapRoute;
+  dispatch_route?: MapRoute;
+  route_intelligence?: Record<string, unknown>;
+  weather_intelligence?: Record<string, unknown>;
+}
+
 export interface PipelineResult {
   scenario_id: string;
   scenario_name: string;
@@ -59,4 +82,5 @@ export interface PipelineResult {
   final_confidence_score: number;
   mini_assistant_summary: string;
   latest_artifact?: string | null;
+  map_payload?: MapPayload | null;
 }

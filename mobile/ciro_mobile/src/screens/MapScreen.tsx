@@ -8,13 +8,14 @@ export default function MapScreen({ route }: any) {
   const { result, scenarioId, showAfter = true } = route.params;
   const finalIteration = result?.iterations?.[result.iterations.length - 1];
   const locationHint = [
+    result?.map_payload?.route_intelligence?.destination,
     result?.scenario_name,
     finalIteration?.concise_reasoning_summary,
   ].filter(Boolean).join(' ');
   return (
     <View style={styles.container}>
       <ToastRail messages={['Interactive map ready', 'Nearby POIs load at high zoom', 'Weather and danger overlays active']} />
-      <MapCanvasWidget scenarioId={scenarioId} showAfter={showAfter} locationHint={locationHint} />
+      <MapCanvasWidget scenarioId={scenarioId} showAfter={showAfter} locationHint={locationHint} mapPayload={result?.map_payload} />
     </View>
   );
 }
