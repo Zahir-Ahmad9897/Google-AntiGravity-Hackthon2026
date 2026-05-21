@@ -1,13 +1,13 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
-  "generated_at": "2026-05-20T23:02:56.528538+00:00",
+  "scenario_name": "Custom approved crisis signal - mardan bazar",
+  "generated_at": "2026-05-21T07:39:39.459299+00:00",
   "simulation_only": true,
   "weather_intelligence": {
-    "location": "sadar bazar peshawar",
-    "resolved_location": "sadar bazar peshawar",
-    "lat": 34.0081,
-    "lng": 71.5739,
+    "location": "mardan bazar",
+    "resolved_location": "mardan bazar",
+    "lat": 31.185174,
+    "lng": 67.635052,
     "condition": "none",
     "condition_type": "none",
     "temperature": "unavailable",
@@ -20,6 +20,6 @@
     "confidence": 0.58,
     "source": "mock_fallback",
     "fallback_used": true,
-    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 472966256967 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/weather.googleapis.com/overview?project=472"
+    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com method google.maps.weather.v1.Weather.LookupCurrentConditions are blocked.\",\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@t"
   }
 }

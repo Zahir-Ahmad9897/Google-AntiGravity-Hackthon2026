@@ -1,26 +1,27 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
+  "scenario_name": "Custom approved crisis signal - mardan bazar",
   "simulation_only": true,
   "privacy_status": "user_approved_input_only",
   "mini_assistant_signal": {
     "is_crisis_related": true,
     "crisis_type": "road_blockage",
-    "location": "sadar bazar peshawar",
-    "urgency": "low",
-    "confidence": 0.47,
-    "language_detected": "english",
+    "location": "mardan bazar",
+    "urgency": "critical",
+    "confidence": 0.59,
+    "language_detected": "mixed",
     "entities": {
       "roads": [],
       "areas": [],
       "hazards": [
-        "road block"
+        "road block",
+        "block hai"
       ],
       "time_mentions": []
     },
-    "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block.",
+    "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai.",
     "privacy_status": "user_approved_input_only",
-    "source": "Dashboard manual report"
+    "source": "Mobile manual report"
   },
   "iterations": [
     {
@@ -28,21 +29,21 @@
       "crisis_level": "crisis",
       "confidence_score": 0.7,
       "risk_score": 0.7,
-      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=3/5; affected roads=sadar bazar peshawar.",
+      "concise_reasoning_summary": "Major accident and road blockage detected in Islamabad; confidence=0.7; severity=3/5; affected roads=mardan bazar.",
       "action_plan": [
-        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
-        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
-        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
+        "dispatch_emergency -> Islamabad: Dispatch response unit from F-8 Rescue Station to Islamabad.",
+        "send_alert -> Islamabad: Send public alert for Major accident and road blockage detected in Islamabad.",
+        "reroute_traffic -> Khayaban-e-Iqbal: Update mock map routing away from Khayaban-e-Iqbal."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Peshawar Ring Road.",
-        "Simulated public alert sent for Sadar Bazar Peshawar.",
-        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
+        "Mock map route updated away from Khayaban-e-Iqbal.",
+        "Simulated public alert sent for Islamabad.",
+        "Simulated ticket ticket-custom_permission_input assigned to F-8 Rescue Station.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Peshawar Ring Road: normalkm/h -> normalkm/h"
+        "traffic_speed_Khayaban-e-Iqbal: normal -> normal"
       ],
-      "evaluation_result": "Initial detection baseline established. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Initial detection baseline established. Simulated response for Major accident and road blockage detected in Islamabad: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Continue monitoring and run the next iteration with updated signals."
     },
     {
@@ -50,21 +51,21 @@
       "crisis_level": "crisis",
       "confidence_score": 0.7,
       "risk_score": 0.78,
-      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=4/5; affected roads=sadar bazar peshawar.",
+      "concise_reasoning_summary": "Major accident and road blockage detected in Islamabad; confidence=0.7; severity=4/5; affected roads=mardan bazar.",
       "action_plan": [
-        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
-        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
-        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
+        "dispatch_emergency -> Islamabad: Dispatch response unit from F-8 Rescue Station to Islamabad.",
+        "send_alert -> Islamabad: Send public alert for Major accident and road blockage detected in Islamabad.",
+        "reroute_traffic -> Khayaban-e-Iqbal: Update mock map routing away from Khayaban-e-Iqbal."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Peshawar Ring Road.",
-        "Simulated public alert sent for Sadar Bazar Peshawar.",
-        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
+        "Mock map route updated away from Khayaban-e-Iqbal.",
+        "Simulated public alert sent for Islamabad.",
+        "Simulated ticket ticket-custom_permission_input assigned to F-8 Rescue Station.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Peshawar Ring Road: 0.0km/h -> 16.0km/h"
+        "traffic_speed_Khayaban-e-Iqbal: 0.0 km/h -> 16.0 km/h"
       ],
-      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Islamabad: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Continue monitoring and run the next iteration with updated signals."
     },
     {
@@ -72,21 +73,21 @@
       "crisis_level": "crisis",
       "confidence_score": 0.7,
       "risk_score": 0.7,
-      "concise_reasoning_summary": "Major accident and road blockage detected in Sadar Bazar Peshawar; confidence=0.7; severity=3/5; affected roads=sadar bazar peshawar.",
+      "concise_reasoning_summary": "Major accident and road blockage detected in Islamabad; confidence=0.7; severity=3/5; affected roads=mardan bazar.",
       "action_plan": [
-        "dispatch_emergency -> Sadar Bazar Peshawar: Dispatch response unit from Peshawar Ring Road Simulation Depot to Sadar Bazar Peshawar.",
-        "send_alert -> Sadar Bazar Peshawar: Send public alert for Major accident and road blockage detected in Sadar Bazar Peshawar.",
-        "reroute_traffic -> Peshawar Ring Road: Update mock map routing away from Peshawar Ring Road."
+        "dispatch_emergency -> Islamabad: Dispatch response unit from F-8 Rescue Station to Islamabad.",
+        "send_alert -> Islamabad: Send public alert for Major accident and road blockage detected in Islamabad.",
+        "reroute_traffic -> Khayaban-e-Iqbal: Update mock map routing away from Khayaban-e-Iqbal."
       ],
       "simulated_actions": [
-        "Mock map route updated away from Peshawar Ring Road.",
-        "Simulated public alert sent for Sadar Bazar Peshawar.",
-        "Simulated ticket ticket-custom_permission_input assigned to Peshawar Ring Road Simulation Depot.",
+        "Mock map route updated away from Khayaban-e-Iqbal.",
+        "Simulated public alert sent for Islamabad.",
+        "Simulated ticket ticket-custom_permission_input assigned to F-8 Rescue Station.",
         "emergency_tickets_created: 0 -> 1",
         "public_alerts_sent: 0 -> 1",
-        "traffic_speed_Peshawar Ring Road: normalkm/h -> normalkm/h"
+        "traffic_speed_Khayaban-e-Iqbal: normal -> normal"
       ],
-      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Sadar Bazar Peshawar: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
+      "evaluation_result": "Re-planned: risk level stayed similar but latest signals updated the plan. Simulated response for Major accident and road blockage detected in Islamabad: 1 route update(s), 1 alert(s), and 1 emergency ticket(s).",
       "next_step": "Finalize crisis report and preserve artifacts for review."
     }
   ],

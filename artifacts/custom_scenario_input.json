@@ -1,6 +1,6 @@
 {
   "scenario_id": "custom_permission_input",
-  "title": "Custom approved crisis signal - sadar bazar peshawar",
+  "title": "Custom approved crisis signal - mardan bazar",
   "description": "User-approved custom crisis content routed through the existing CIRO iterative pipeline.",
   "steps": [
     {
@@ -8,35 +8,35 @@
       "update_note": "Approved custom report received; CIRO begins verification.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - sadar bazar peshawar",
+        "title": "Custom approved crisis signal - mardan bazar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i1-approved-1",
-            "text": "peshawar sadar road block due to accident",
-            "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T22:54:42.261495Z",
+            "text": "mardan bazar may blast howa hai road block hai",
+            "platform": "mobile_manual_report",
+            "timestamp": "2026-05-21T07:31:31.901137Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i1-weather",
-          "district": "sadar bazar peshawar",
+          "district": "mardan bazar",
           "rainfall_mm_per_hour": 0.0,
           "alert_active": false,
           "alert_type": "none",
           "alert_level": 0,
-          "timestamp": "2026-05-20T22:54:42.261495Z"
+          "timestamp": "2026-05-21T07:31:31.901137Z"
         },
         "traffic": [
           {
             "report_id": "custom-i1-traffic",
-            "road_name": "sadar bazar peshawar",
+            "road_name": "mardan bazar",
             "speed_kmh": 8.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T22:54:42.261495Z"
+            "timestamp": "2026-05-21T07:31:31.901137Z"
           }
         ],
         "expected_escalation": false,
@@ -52,35 +52,35 @@
       "update_note": "Custom signal correlated with weather and traffic simulation.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - sadar bazar peshawar",
+        "title": "Custom approved crisis signal - mardan bazar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i2-approved-1",
-            "text": "peshawar sadar road block due to accident",
-            "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T22:58:42.261495Z",
+            "text": "mardan bazar may blast howa hai road block hai",
+            "platform": "mobile_manual_report",
+            "timestamp": "2026-05-21T07:35:31.901137Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i2-weather",
-          "district": "sadar bazar peshawar",
+          "district": "mardan bazar",
           "rainfall_mm_per_hour": 0.0,
           "alert_active": false,
           "alert_type": "none",
           "alert_level": 0,
-          "timestamp": "2026-05-20T22:58:42.261495Z"
+          "timestamp": "2026-05-21T07:35:31.901137Z"
         },
         "traffic": [
           {
             "report_id": "custom-i2-traffic",
-            "road_name": "sadar bazar peshawar",
+            "road_name": "mardan bazar",
             "speed_kmh": 0.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 5,
-            "timestamp": "2026-05-20T22:58:42.261495Z"
+            "timestamp": "2026-05-21T07:35:31.901137Z"
           }
         ],
         "expected_escalation": true,
@@ -96,35 +96,35 @@
       "update_note": "Simulation applies route update and evaluates remaining risk.",
       "scenario": {
         "scenario_id": "custom_permission_input",
-        "title": "Custom approved crisis signal - sadar bazar peshawar",
+        "title": "Custom approved crisis signal - mardan bazar",
         "description": "Permission-based custom crisis report.",
         "social_posts": [
           {
             "post_id": "custom-i3-approved-1",
-            "text": "peshawar sadar road block due to accident",
-            "platform": "dashboard_manual_report",
-            "timestamp": "2026-05-20T23:01:42.261495Z",
+            "text": "mardan bazar may blast howa hai road block hai",
+            "platform": "mobile_manual_report",
+            "timestamp": "2026-05-21T07:38:31.901137Z",
             "language": "mixed",
             "reporter_hash": "custom_user_approved"
           }
         ],
         "weather": {
           "report_id": "custom-i3-weather",
-          "district": "sadar bazar peshawar",
+          "district": "mardan bazar",
           "rainfall_mm_per_hour": 0.0,
           "alert_active": false,
           "alert_type": "none",
           "alert_level": 0,
-          "timestamp": "2026-05-20T23:01:42.261495Z"
+          "timestamp": "2026-05-21T07:38:31.901137Z"
         },
         "traffic": [
           {
             "report_id": "custom-i3-traffic",
-            "road_name": "sadar bazar peshawar",
+            "road_name": "mardan bazar",
             "speed_kmh": 10.0,
             "normal_speed_kmh": 40.0,
             "congestion_level": 4,
-            "timestamp": "2026-05-20T23:01:42.261495Z"
+            "timestamp": "2026-05-21T07:38:31.901137Z"
           }
         ],
         "expected_escalation": true,

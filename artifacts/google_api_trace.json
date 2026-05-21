@@ -1,54 +1,39 @@
 [
   {
-    "timestamp": "2026-05-20T23:02:46.529150+00:00",
+    "timestamp": "2026-05-21T07:39:34.031162+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "sadar bazar peshawar"
+      "location": "mardan bazar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
-      "lat": 34.0081,
-      "lng": 71.5739,
+      "formatted_address": "Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+      "lat": 34.34694,
+      "lng": 72.28145,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T23:02:47.361324+00:00",
+    "timestamp": "2026-05-21T07:39:35.451470+00:00",
     "api_name": "Geocoding API",
     "input": {
-      "location": "Peshawar Ring Road Simulation Depot"
+      "location": "mardan bazar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "formatted_address": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
-      "lat": 34.0149,
-      "lng": 71.5785,
+      "formatted_address": "Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+      "lat": 34.34694,
+      "lng": 72.28145,
       "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
     }
   },
   {
-    "timestamp": "2026-05-20T23:02:50.074586+00:00",
-    "api_name": "Geocoding API",
-    "input": {
-      "location": "sadar bazar peshawar"
-    },
-    "success": false,
-    "fallback_used": true,
-    "summarized_output": {
-      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
-      "lat": 34.0081,
-      "lng": 71.5739,
-      "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
-    }
-  },
-  {
-    "timestamp": "2026-05-20T23:02:53.029148+00:00",
+    "timestamp": "2026-05-21T07:39:38.645102+00:00",
     "api_name": "Weather API",
     "input": {
-      "location": "sadar bazar peshawar"
+      "location": "mardan bazar"
     },
     "success": false,
     "fallback_used": true,
@@ -56,53 +41,23 @@
       "condition": "none",
       "rainfall_mm_per_hour": 0.0,
       "risk_level": "low",
-      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 4729662"
+      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com meth"
     }
   },
   {
-    "timestamp": "2026-05-20T23:02:53.880617+00:00",
-    "api_name": "Geocoding API",
-    "input": {
-      "location": "Peshawar Ring Road Simulation Depot"
-    },
-    "success": false,
-    "fallback_used": true,
-    "summarized_output": {
-      "formatted_address": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
-      "lat": 34.0149,
-      "lng": 71.5785,
-      "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
-    }
-  },
-  {
-    "timestamp": "2026-05-20T23:02:54.560113+00:00",
-    "api_name": "Geocoding API",
-    "input": {
-      "location": "sadar bazar peshawar"
-    },
-    "success": false,
-    "fallback_used": true,
-    "summarized_output": {
-      "formatted_address": "Sadar Bazar, Peshawar, Pakistan",
-      "lat": 34.0081,
-      "lng": 71.5739,
-      "reason": "RuntimeError: Google geocoding status=REQUEST_DENIED"
-    }
-  },
-  {
-    "timestamp": "2026-05-20T23:02:56.526013+00:00",
+    "timestamp": "2026-05-21T07:39:39.457264+00:00",
     "api_name": "Routes API",
     "input": {
-      "origin": "Peshawar Ring Road simulation depot, Peshawar, Pakistan",
-      "destination": "Sadar Bazar, Peshawar, Pakistan",
-      "blocked_route": "sadar bazar peshawar"
+      "origin": "Nearest simulated response unit near Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+      "destination": "Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+      "blocked_route": "mardan bazar"
     },
     "success": false,
     "fallback_used": true,
     "summarized_output": {
-      "normal_distance_m": 866,
-      "alternate_distance_m": 5284,
-      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API routes.googleapis.com metho"
+      "normal_distance_m": 2056,
+      "alternate_distance_m": 5862,
+      "reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Routes API has not been used in project 47296625"
     }
   }
 ]

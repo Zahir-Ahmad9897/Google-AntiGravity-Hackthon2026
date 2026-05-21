@@ -1,54 +1,54 @@
 {
   "scenario_id": "custom_permission_input",
-  "scenario_name": "Custom approved crisis signal - sadar bazar peshawar",
-  "generated_at": "2026-05-20T23:02:56.528538+00:00",
+  "scenario_name": "Custom approved crisis signal - mardan bazar",
+  "generated_at": "2026-05-21T07:39:39.459299+00:00",
   "simulation_only": true,
   "center": {
-    "lat": 34.0081,
-    "lng": 71.5739
+    "lat": 34.346941,
+    "lng": 72.2814528
   },
   "markers": {
     "crisis": {
-      "label": "Custom approved crisis signal - sadar bazar peshawar",
+      "label": "Custom approved crisis signal - mardan bazar",
       "position": {
-        "lat": 34.0081,
-        "lng": 71.5739
+        "lat": 34.346941,
+        "lng": 72.2814528
       },
       "severity": "low"
     },
     "weather": {
       "label": "Weather risk: low",
       "position": {
-        "lat": 34.0121,
-        "lng": 71.5709
+        "lat": 34.350941,
+        "lng": 72.278453
       },
       "condition": "none"
     },
     "rescue": {
       "label": "Simulated rescue unit",
       "position": {
-        "lat": 34.0149,
-        "lng": 71.5785
+        "lat": 34.335941,
+        "lng": 72.263453
       },
       "status": "simulated_dispatch_ready"
     }
   },
   "blocked_route": {
-    "label": "sadar bazar peshawar",
+    "label": "mardan bazar",
     "route_type": "blocked",
-    "distance_meters": 866,
-    "distance_text": "866 m",
-    "duration_seconds": 180,
-    "duration_text": "3 min",
+    "distance_meters": 2056,
+    "distance_text": "2.1 km",
+    "duration_seconds": 211,
+    "duration_text": "4 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 34.0149,
-        "lng": 71.5785
+        "lat": 34.335941,
+        "lng": 72.263453
       },
       {
-        "lat": 34.0081,
-        "lng": 71.5739
+        "lat": 34.346941,
+        "lng": 72.2814528
       }
     ],
     "source": "mock_fallback"
@@ -56,27 +56,27 @@
   "alternate_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 5284,
-    "distance_text": "5.3 km",
-    "duration_seconds": 543,
-    "duration_text": "9 min",
+    "distance_meters": 5862,
+    "distance_text": "5.9 km",
+    "duration_seconds": 603,
+    "duration_text": "10 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 34.0149,
-        "lng": 71.5785
+        "lat": 34.335941,
+        "lng": 72.263453
       },
       {
-        "lat": 34.03052,
-        "lng": 71.56089
+        "lat": 34.357791,
+        "lng": 72.253753
       },
       {
-        "lat": 34.02814,
-        "lng": 71.55928
+        "lat": 34.361641,
+        "lng": 72.260053
       },
       {
-        "lat": 34.0081,
-        "lng": 71.5739
+        "lat": 34.346941,
+        "lng": 72.2814528
       }
     ],
     "source": "mock_fallback"
@@ -84,49 +84,49 @@
   "dispatch_route": {
     "label": "Recommended emergency alternate route",
     "route_type": "alternate",
-    "distance_meters": 5284,
-    "distance_text": "5.3 km",
-    "duration_seconds": 543,
-    "duration_text": "9 min",
+    "distance_meters": 5862,
+    "distance_text": "5.9 km",
+    "duration_seconds": 603,
+    "duration_text": "10 min",
     "encoded_polyline": "",
     "polyline": [
       {
-        "lat": 34.0149,
-        "lng": 71.5785
+        "lat": 34.335941,
+        "lng": 72.263453
       },
       {
-        "lat": 34.03052,
-        "lng": 71.56089
+        "lat": 34.357791,
+        "lng": 72.253753
       },
       {
-        "lat": 34.02814,
-        "lng": 71.55928
+        "lat": 34.361641,
+        "lng": 72.260053
       },
       {
-        "lat": 34.0081,
-        "lng": 71.5739
+        "lat": 34.346941,
+        "lng": 72.2814528
       }
     ],
     "source": "mock_fallback"
   },
   "route_intelligence": {
-    "origin": "Peshawar Ring Road Simulation Depot",
-    "destination": "sadar bazar peshawar",
-    "blocked_route": "sadar bazar peshawar",
+    "origin": "Nearest simulated response unit near Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+    "destination": "Rustam - Mardan Road, Rustam Main Bazar, \u0631\u0633\u062a\u0645, \u062a\u062d\u0635\u06cc\u0644 \u0631\u0633\u062a\u0645, \u0636\u0644\u0639 \u0645\u0631\u062f\u0627\u0646, \u0645\u0631\u062f\u0627\u0646 \u0688\u0648\u06cc\u0698\u0646, \u062e\u06cc\u0628\u0631 \u067e\u062e\u062a\u0648\u0646\u062e\u0648\u0627, \u067e\u0627\u06a9\u0633\u062a\u0627\u0646",
+    "blocked_route": "mardan bazar",
     "alternate_route": "Recommended emergency alternate route",
     "original_route_status": "blocked",
     "alternate_route_status": "alternate",
-    "estimated_travel_time": "9 min",
-    "distance": "5.3 km",
-    "rerouting_reason": "Custom scenario reroutes around sadar bazar peshawar while preserving simulation-only safety.",
+    "estimated_travel_time": "10 min",
+    "distance": "5.9 km",
+    "rerouting_reason": "Custom scenario reroutes around mardan bazar while preserving simulation-only safety.",
     "source": "mock_fallback",
     "fallback_used": true
   },
   "weather_intelligence": {
-    "location": "sadar bazar peshawar",
-    "resolved_location": "sadar bazar peshawar",
-    "lat": 34.0081,
-    "lng": 71.5739,
+    "location": "mardan bazar",
+    "resolved_location": "mardan bazar",
+    "lat": 31.185174,
+    "lng": 67.635052,
     "condition": "none",
     "condition_type": "none",
     "temperature": "unavailable",
@@ -139,7 +139,7 @@
     "confidence": 0.58,
     "source": "mock_fallback",
     "fallback_used": true,
-    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Weather API has not been used in project 472966256967 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/weather.googleapis.com/overview?project=472"
+    "fallback_reason": "RuntimeError: HTTP 403: {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Requests to this API weather.googleapis.com method google.maps.weather.v1.Weather.LookupCurrentConditions are blocked.\",\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@t"
   },
   "map_behavior": {
     "before_response": "Show crisis marker, weather marker, and blocked route in red.",

@@ -1,19 +1,20 @@
 {
   "is_crisis_related": true,
   "crisis_type": "road_blockage",
-  "location": "sadar bazar peshawar",
-  "urgency": "low",
-  "confidence": 0.47,
-  "language_detected": "english",
+  "location": "mardan bazar",
+  "urgency": "critical",
+  "confidence": 0.59,
+  "language_detected": "mixed",
   "entities": {
     "roads": [],
     "areas": [],
     "hazards": [
-      "road block"
+      "road block",
+      "block hai"
     ],
     "time_mentions": []
   },
-  "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block.",
+  "reasoning_summary": "Detected road_blockage indicators from approved text using terms: road block, block hai.",
   "privacy_status": "user_approved_input_only",
-  "source": "Dashboard manual report"
+  "source": "Mobile manual report"
 }

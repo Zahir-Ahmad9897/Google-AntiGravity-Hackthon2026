@@ -22,7 +22,7 @@ import Svg, {
 } from 'react-native-svg';
 import { SCENARIO_METADATA } from '../config/appConfig';
 import { theme, withAlpha } from '../config/theme';
-import { MapPayload } from '../models/PipelineResult';
+import type { MapPayload } from '../models/PipelineResult';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedLine = Animated.createAnimatedComponent(Line);
