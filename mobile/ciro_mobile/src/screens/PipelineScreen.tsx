@@ -165,7 +165,17 @@ export default function PipelineScreen({ route, navigation }: any) {
       {status === 'error' && (
         <View style={styles.errorCard}>
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={() => runPipeline(scenarioId)}>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => {
+              reset();
+              if (customReport) {
+                runCustomPipeline(customReport);
+              } else {
+                runPipeline(scenarioId);
+              }
+            }}
+          >
             <Text style={styles.retryText}>Retry Pipeline</Text>
           </TouchableOpacity>
         </View>
